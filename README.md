@@ -19,8 +19,8 @@
 		* monthly
 		* 	by date
 		* 	by weekday
-		* weekly
-		* biweekly
+	* weekly
+	* biweekly
 		* 	1st and 3rd
 		* 	2nd and 4th
 	* multi-day
