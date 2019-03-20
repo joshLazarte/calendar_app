@@ -1,4 +1,4 @@
-#ideal final version workflow:
+# ideal final application features:
 
 * 1 user registers
 * 2 user is asked to confirm email
