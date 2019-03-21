@@ -6,7 +6,6 @@ module.exports = function validateLoginInput(data) {
 
   data.userName = !isEmpty(data.userName) ? data.userName : "";
   data.password = !isEmpty(data.password) ? data.password : "";
-  
 
   if (Validator.isEmpty(data.userName)) {
     errors.userName = "Username field is required";

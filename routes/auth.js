@@ -64,33 +64,26 @@ router.post("/login", async (req, res) => {
       errors.email = "User not found";
       return res.status(404).json(errors);
     }
-    
+
     //check password
     bcrypt.compare(password, currentUser.password).then(isMatch => {
       if (isMatch) {
         //User matched
+
         //create jwt payload
-        const payload = { id: currentUser._id, userName: currentUser.userName};
+        const payload = { id: currentUser._id, userName: currentUser.userName };
         //Sign token
         jwt.sign(
           payload,
           process.env.SECRET_KEY,
           { expiresIn: 3600 },
           (err, token) => {
-            if(err){
+            if (err) {
               errors.token = "token was not created";
               res.status(400).json(errors);
-            } 
-            res.cookie("jwt", token, { 
-              maxAge: 3600,
-              httpOnly: true,
-              sameSite: true,
-              signed: true,
-              secure: true
-            });
-            res.json({
-              jwt: token
-            });
+            }
+            res.cookie("jwt", token, { httpOnly: true });
+            res.status(200).json({ status: "logged in" });
           }
         );
       } else {
@@ -98,16 +91,15 @@ router.post("/login", async (req, res) => {
         return res.status(400).json(errors);
       }
     });
-    });
+  });
 });
-
 
 // @route    GET /current
 // @desc     return current user
 // @access   Private
 router.get(
   "/current",
-  passport.authenticate("jwt-cookiecombo", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     res.json({
       id: req.user.id,
@@ -117,30 +109,20 @@ router.get(
   }
 );
 
-
-
-//create cookie route
-router.post("/create-cookie", (req, res) => {
-  const cookieData = {
-    name: "cookie",
-    body: "I am a cookie"
-  };
-
-  res.cookie("firstCookie", cookieData, { httpOnly: true, maxAge: 3600000 });
-  
-  res.json({status: "success"});
-});
-
-//get cookie route
+// @route    GET /get-cookie
+// @desc     return current token from cookie (will be deleted in production)
+// @access   Private
 router.get("/get-cookie", (req, res) => {
-  console.log(req.cookies);
+  passport.authenticate("jwt", { session: false }), console.log(req.cookies);
   res.json(req.cookies);
 });
 
-//destroy cookies
-router.delete("/delete-cookie", (req, res) => {
-  res.clearCookie("firstCookie");
-  res.send("cookie deleted");
+// @route    DELETE /logout
+// @desc     makeshift logout, destroys cookie
+// @access   Private
+router.delete("/logout", (req, res) => {
+  passport.authenticate("jwt", { session: false }), res.clearCookie("jwt");
+  res.status(200).json({ status: "logged out" });
 });
 
 module.exports = router;
