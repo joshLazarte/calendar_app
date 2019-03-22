@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-
 import "./App.css";
+
+import Register from "./components/auth/Register";
 
 class App extends Component {
   render() {
-    return <h1>Calendar App</h1>;
+    return <Register />;
   }
 }
 
