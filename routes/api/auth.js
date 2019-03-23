@@ -57,11 +57,11 @@ router.post("/login", async (req, res) => {
   const userName = req.body.userName;
   const password = req.body.password;
 
-  //find user by email
+  //find user by userName
   User.findOne({ userName }).then(currentUser => {
     // check for user
     if (!currentUser) {
-      errors.email = "User not found";
+      errors.userName = "User not found";
       return res.status(404).json(errors);
     }
 
@@ -71,7 +71,11 @@ router.post("/login", async (req, res) => {
         //User matched
 
         //create jwt payload
-        const payload = { id: currentUser._id, userName: currentUser.userName };
+        const payload = {
+          id: currentUser._id,
+          userName: currentUser.userName,
+          email: currentUser.email
+        };
         //Sign token
         jwt.sign(
           payload,
@@ -83,7 +87,7 @@ router.post("/login", async (req, res) => {
               res.status(400).json(errors);
             }
             res.cookie("jwt", token, { httpOnly: true });
-            res.status(200).json({ status: "logged in" });
+            res.status(200).json(payload);
           }
         );
       } else {

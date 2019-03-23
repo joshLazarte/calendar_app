@@ -1,18 +1,16 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { loginUser } from "../../actions/authActions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { registerUser } from "../../actions/authActions";
 import InputGroup from "../common/InputGroup";
 
-class Register extends Component {
+class Login extends Component {
   constructor() {
     super();
     this.state = {
       userName: "",
-      email: "",
       password: "",
-      password2: "",
       errors: {}
     };
   }
@@ -26,57 +24,42 @@ class Register extends Component {
   onSubmit = e => {
     e.preventDefault();
 
-    const { userName, email, password, password2 } = this.state;
+    const { userName, password } = this.state;
 
-    const newUser = { userName, email, password, password2 };
+    const user = { userName, password };
 
-    this.props.registerUser(newUser, this.props.history);
+    this.props.loginUser(user, this.props.history);
   };
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
+
   render() {
-    const { errors } = this.state;
+    const { errors, userName, password } = this.state;
     return (
       <div>
         <form onSubmit={this.onSubmit}>
           <InputGroup
-            placeholder="Username"
             name="userName"
-            value={this.state.userName}
+            placeholder="Username"
+            value={userName}
             onChange={this.onChange}
             error={errors.userName}
           />
 
           <InputGroup
-            placeholder="Email"
-            name="email"
-            value={this.state.email}
-            onChange={this.onChange}
-            error={errors.email}
-          />
-
-          <InputGroup
-            placeholder="Password"
             name="password"
-            value={this.state.password}
+            placeholder="Password"
+            value={password}
             onChange={this.onChange}
             error={errors.password}
-          />
-
-          <InputGroup
-            placeholder="Confirm Password"
-            name="password2"
-            value={this.state.password2}
-            onChange={this.onChange}
-            error={errors.password2}
           />
 
           <input
             style={{ display: "block", width: "250px", marginTop: "20px" }}
             type="submit"
-            value="Sign Up"
+            value="Log In"
           />
         </form>
       </div>
@@ -84,9 +67,8 @@ class Register extends Component {
   }
 }
 
-Register.propTypes = {
-  registerUser: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired
+Login.propTypes = {
+  loginUser: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -95,5 +77,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { registerUser }
-)(withRouter(Register));
+  { loginUser }
+)(withRouter(Login));
