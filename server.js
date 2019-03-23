@@ -15,8 +15,8 @@ mongoose.connect(databaseConfig.database, databaseConfig.options);
 app.use(passport.initialize());
 require("./config/passport")(passport);
 
-const authRoutes = require("./routes/auth.js");
-app.use(authRoutes);
+const authRoutes = require("./routes/api/auth.js");
+app.use("/api/user", authRoutes);
 
 app.listen(process.env.PORT, () =>
   console.log(`server started on port ${process.env.PORT}`)

@@ -1,14 +1,14 @@
 const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
-  User = require("../models/Users"),
+  User = require("../../models/Users"),
   jwt = require("jsonwebtoken"),
   passport = require("passport");
 
-const validateRegisterInput = require("../validation/register");
-const validateLoginInput = require("../validation/login");
+const validateRegisterInput = require("../../validation/register");
+const validateLoginInput = require("../../validation/login");
 
-// @route    POST /register
+// @route    POST /api/user/register
 // @desc     Register a user
 // @access   Public
 router.post("/register", async (req, res) => {
@@ -43,7 +43,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// @route    POST /login
+// @route    POST /api/user/login
 // @desc     login a user, create JWT and store in httpOnly cookie
 // @access   Public
 router.post("/login", async (req, res) => {
@@ -94,7 +94,7 @@ router.post("/login", async (req, res) => {
   });
 });
 
-// @route    GET /current
+// @route    GET /api/user/current
 // @desc     return current user
 // @access   Private
 router.get(
@@ -109,7 +109,7 @@ router.get(
   }
 );
 
-// @route    GET /get-cookie
+// @route    GET /api/user/get-cookie
 // @desc     return current token from cookie (will be deleted in production)
 // @access   Private
 router.get("/get-cookie", (req, res) => {
@@ -117,7 +117,7 @@ router.get("/get-cookie", (req, res) => {
   res.json(req.cookies);
 });
 
-// @route    DELETE /logout
+// @route    DELETE /api/user/logout
 // @desc     makeshift logout, destroys cookie
 // @access   Private
 router.delete("/logout", (req, res) => {
