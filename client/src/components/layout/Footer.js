@@ -6,12 +6,10 @@ class Footer extends Component {
       <div>
         <footer
           style={{
-            position: "fixed",
-            bottom: "0",
-            left: "0",
             width: "100%",
             padding: "20px",
-            backgroundColor: "green"
+            backgroundColor: "green",
+            marginTop: "10px"
           }}
         >
           <span style={{ color: "white" }}>

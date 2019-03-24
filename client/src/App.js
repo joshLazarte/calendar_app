@@ -18,12 +18,20 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router>
-          <div style={{ backgroundColor: "lightblue", height: "100vh" }}>
+          <div
+            style={{
+              backgroundColor: "lightblue",
+              height: "100vh",
+              display: "flex",
+              flexDirection: "column"
+            }}
+          >
             <Navbar />
             <Route exact path="/" component={Landing} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/dashboard" component={DashBoard} />
+            <div style={{ flex: 1 }} />
             <Footer />
           </div>
         </Router>
