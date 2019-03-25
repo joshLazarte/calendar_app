@@ -16,7 +16,9 @@ app.use(passport.initialize());
 require("./config/passport")(passport);
 
 const authRoutes = require("./routes/api/auth.js");
+const eventRoutes = require("./routes/api/event.js");
 app.use("/api/user", authRoutes);
+app.use("/api/event", eventRoutes);
 
 app.listen(process.env.PORT, () =>
   console.log(`server started on port ${process.env.PORT}`)
