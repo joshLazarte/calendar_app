@@ -18,7 +18,9 @@ router.post("/register", async (req, res) => {
     return res.status(400).json(errors);
   }
 
-  const existingUser = await User.findOne({ userName: req.body.userName });
+  const lowerCaseUserName = req.body.userName.toLowerCase();
+  
+  const existingUser = await User.findOne({ lower_case_username: lowerCaseUserName });
 
   if (existingUser) {
     errors.userName = "Username already exists";
@@ -26,6 +28,7 @@ router.post("/register", async (req, res) => {
   } else {
     const newUser = new User({
       userName: req.body.userName,
+      lower_case_username: lowerCaseUserName,
       email: req.body.email
     });
 
@@ -36,6 +39,7 @@ router.post("/register", async (req, res) => {
         newUser.password = hash;
         newUser.save((err, user) => {
           if (err) return console.log(err);
+          //@TODO: implement email validation
           res.json(user);
         });
       });
@@ -53,12 +57,12 @@ router.post("/login", async (req, res) => {
   if (!isValid) {
     return res.status(400).json(errors);
   }
-
-  const userName = req.body.userName;
+  
+  const lower_case_username = req.body.userName.toLowerCase();
   const password = req.body.password;
 
   //find user by userName
-  User.findOne({ userName }).then(currentUser => {
+  User.findOne({ lower_case_username }).then(currentUser => {
     // check for user
     if (!currentUser) {
       errors.userName = "User not found";

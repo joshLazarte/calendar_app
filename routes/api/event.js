@@ -3,7 +3,8 @@ const validateCreateEventInput = require("../../validation/createEvent"),
       router = express.Router(),
       Event = require('../../models/Event'),
       User  = require('../../models/Users'),
-      utils = require('../../utils');
+      utils = require('../../utils'),
+      isEmpty = require("../../validation/is-empty");
          
       
 // @route    POST /api/event/new
@@ -17,7 +18,7 @@ router.post('/new', async (req, res) => {
     }
     
     try {
-        const eventOwner = await utils.eventUtilities.getEventCreator(req.body.createdBy);
+        const eventOwner = await utils.eventUtilities.getEventCreatorByUsername(req.body.createdBy);
         
         const attendeesToAdd = await utils.eventUtilities.getEventAttendees(
             eventOwner, 
@@ -47,6 +48,46 @@ router.post('/new', async (req, res) => {
         errors.error = err.message;
         res.status(400).json(errors);
     }
+});
+
+
+// @route    GET /api/event/:userName/all
+// @desc     Get all events associated with current logged in user (both owned and attended)
+// @access   Private
+router.get('/:userName/all', async (req, res) => {
+    const errors = {};
+  try {
+      const currentUser = await utils.eventUtilities.getEventCreatorByUsername(req.params.userName);    
+        
+      const usersEvents = await Event.find({attendees: currentUser});
+   
+      res.json(usersEvents);
+  } catch(err) {
+      errors.error = err.message;
+      res.status(404).json(errors);
+  }
+});
+
+// @route    GET /api/event/:userName/:id
+// @desc     Get a single event if current user is an attendee
+// @access   Private
+router.get('/:userName/id/:id', async (req, res) => {
+   const errors = {};
+   try {
+      const currentUser = await utils.eventUtilities.getEventCreatorByUsername(req.params.userName);
+       
+      const foundEvent = await Event.find({attendees: currentUser,_id: req.params.id});
+       
+      if(isEmpty(foundEvent)) {
+          throw new Error();
+      } 
+       
+      res.json(foundEvent);
+       
+   } catch(err) {
+       errors.error = 'Event Not Found';
+       res.status(404).json(errors);
+   }
 });
       
 module.exports = router;
