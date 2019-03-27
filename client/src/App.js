@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store";
 import "./App.css";
+
+import { verifyUser } from "./actions/authActions";
 
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
@@ -12,6 +14,9 @@ import DashBoard from "./components/dashboard/Dashboard";
 import Landing from "./components/layout/Landing";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
+
+//@TODO remove reset auth state after cookie timeout
+store.dispatch(verifyUser());
 
 class App extends Component {
   render() {

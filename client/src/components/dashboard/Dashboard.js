@@ -1,14 +1,27 @@
 import React, { Component } from "react";
 import Calendar from "../calendar/Calendar";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { getEvents } from "../../actions/eventActions";
 
 class Dashboard extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       monthValue: new Date().getMonth(),
       month: this.getMonthNameFromMonthValue(new Date().getMonth()),
       year: new Date().getFullYear()
     };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevProps.auth.isAuthenticated !== this.props.auth.isAuthenticated ||
+      prevProps.event.events.length !== this.props.event.events.length
+    ) {
+      const { user } = this.props.auth;
+      this.props.getEvents(user.userName);
+    }
   }
 
   getMonthNameFromMonthValue = monthValue => {
@@ -96,4 +109,18 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+Dashboard.propTypes = {
+  getEvents: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  event: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  event: state.event,
+  auth: state.auth
+});
+
+export default connect(
+  mapStateToProps,
+  { getEvents }
+)(Dashboard);

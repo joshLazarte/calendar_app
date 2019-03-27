@@ -5,12 +5,36 @@ class CalendarDayCell extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      events: []
+      events: [],
+      today: new Date().toDateString()
     };
   }
+
   render() {
-    const { emptyCell, day } = this.props;
-    return <td>{emptyCell ? <span>X</span> : <span>{day}</span>}</td>;
+    const { emptyCell, day, monthValue, year } = this.props;
+    const { today } = this.state;
+
+    let cellData;
+
+    if (emptyCell) {
+      cellData = <span>X</span>;
+    } else if (new Date(year, monthValue, day).toDateString() === today) {
+      cellData = (
+        <span
+          style={{
+            border: "1px solid black",
+            borderRadius: "50%",
+            padding: "5px 7px 5px 5px"
+          }}
+        >
+          {day}
+        </span>
+      );
+    } else {
+      cellData = day;
+    }
+
+    return <td>{cellData}</td>;
   }
 }
 

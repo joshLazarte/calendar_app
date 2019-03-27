@@ -28,6 +28,14 @@ export const loginUser = (user, history) => dispatch => {
     );
 };
 
+//Verify logged in
+export const verifyUser = () => dispatch => {
+  axios
+    .get("/api/user/current")
+    .then(res => dispatch(setCurrentUser(res.data)))
+    .catch(err => dispatch(setCurrentUser({})));
+};
+
 export const setCurrentUser = user => {
   return {
     type: SET_CURRENT_USER,

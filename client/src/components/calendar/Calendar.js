@@ -52,10 +52,7 @@ class Calendar extends Component {
     } else {
       for (let i = 0; i < numberOfBlankCells; i++) {
         beginningBlankCells.push({
-          emptyCell: true,
-          day: null,
-          monthValue: null,
-          year: null
+          emptyCell: true
         });
       }
     }
@@ -67,10 +64,7 @@ class Calendar extends Component {
     const numberOfBlankCells = this.getNumberOfEndingBlankCells();
     for (let i = 0; i < numberOfBlankCells; i++) {
       endingBlankCells.push({
-        emptyCell: true,
-        day: null,
-        monthValue: null,
-        year: null
+        emptyCell: true
       });
     }
     return endingBlankCells;
@@ -91,26 +85,17 @@ class Calendar extends Component {
     return cellsWithData;
   };
 
-  getUnsortedCalendarCells = () => {
-    const blanks = this.getBeginningBlankCells();
-    if (blanks === null) {
-      const rawCalendarData = [
-        ...this.getCellsWithData(),
-        ...this.getEndingBlankCells()
-      ];
-      return rawCalendarData;
-    } else {
-      const rawCalendarData = [
-        ...this.getBeginningBlankCells(),
-        ...this.getCellsWithData(),
-        ...this.getEndingBlankCells()
-      ];
-      return rawCalendarData;
-    }
+  getCalendarData = () => {
+    const rawCalendarData = [
+      ...(this.getBeginningBlankCells() || []),
+      ...this.getCellsWithData(),
+      ...this.getEndingBlankCells()
+    ];
+    return rawCalendarData;
   };
 
   getFilledOutCalendarRows = () => {
-    const rawData = this.getUnsortedCalendarCells();
+    const rawData = this.getCalendarData();
     const filledRows = [];
     const rowLength = 7;
     for (let i = 0; i < rawData.length; i += rowLength) {
@@ -141,9 +126,10 @@ class Calendar extends Component {
             {calendarRows.map((row, index) => {
               return (
                 <tr key={index}>
-                  {row.map(cell => {
+                  {row.map((cell, index) => {
                     return (
                       <CalendarDayCell
+                        key={index}
                         emptyCell={cell.emptyCell}
                         day={cell.day}
                         monthValue={cell.monthValue}
