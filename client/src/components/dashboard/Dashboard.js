@@ -3,6 +3,7 @@ import Calendar from "../calendar/Calendar";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getEvents } from "../../actions/eventActions";
+import Spinner from "../common/Spinner";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -10,18 +11,13 @@ class Dashboard extends Component {
     this.state = {
       monthValue: new Date().getMonth(),
       month: this.getMonthNameFromMonthValue(new Date().getMonth()),
-      year: new Date().getFullYear()
+      year: new Date().getFullYear(),
+      events: []
     };
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      prevProps.auth.isAuthenticated !== this.props.auth.isAuthenticated ||
-      prevProps.event.events.length !== this.props.event.events.length
-    ) {
-      const { user } = this.props.auth;
-      this.props.getEvents(user.userName);
-    }
+  componentDidMount() {
+    this.props.getEvents();
   }
 
   getMonthNameFromMonthValue = monthValue => {
@@ -78,34 +74,52 @@ class Dashboard extends Component {
 
   render() {
     const { monthValue, month, year } = this.state;
-    return (
-      <div style={{ width: "70%", margin: "0 auto" }}>
-        <div
-          className="dashboard-header-container"
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            margin: "50px 0",
-            fontSize: "28px"
-          }}
-        >
-          <div
-            style={{ cursor: "pointer" }}
-            onClick={this.setMonthToPreviousMonth}
-          >
-            &#60;
-          </div>{" "}
-          <div>
-            {month} {year}
-          </div>{" "}
-          <div style={{ cursor: "pointer" }} onClick={this.setMonthToNextMonth}>
-            &#62;
-          </div>
-        </div>
+    const { loading, events } = this.props.event;
 
-        <Calendar month={month} monthValue={monthValue} year={year} />
-      </div>
-    );
+    let dashboardContent;
+
+    if (loading) {
+      dashboardContent = <Spinner />;
+    } else {
+      dashboardContent = (
+        <div style={{ width: "70%", margin: "0 auto" }}>
+          <div
+            className="dashboard-header-container"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              margin: "50px 0",
+              fontSize: "28px"
+            }}
+          >
+            <div
+              style={{ cursor: "pointer" }}
+              onClick={this.setMonthToPreviousMonth}
+            >
+              &#60;
+            </div>{" "}
+            <div>
+              {month} {year}
+            </div>{" "}
+            <div
+              style={{ cursor: "pointer" }}
+              onClick={this.setMonthToNextMonth}
+            >
+              &#62;
+            </div>
+          </div>
+
+          <Calendar
+            events={events}
+            month={month}
+            monthValue={monthValue}
+            year={year}
+          />
+        </div>
+      );
+    }
+
+    return <div>{dashboardContent}</div>;
   }
 }
 

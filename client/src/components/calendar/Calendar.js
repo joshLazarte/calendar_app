@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import CalendarDayCell from "./CalendarDayCell";
+import isEmpty from "../../validation/is-empty";
 
 class Calendar extends Component {
   constructor(props) {
@@ -108,6 +109,11 @@ class Calendar extends Component {
 
   render() {
     const calendarRows = this.getFilledOutCalendarRows();
+    const { events } = this.props;
+    if (!isEmpty(events)) {
+      console.log(events);
+    }
+
     return (
       <div>
         <table>

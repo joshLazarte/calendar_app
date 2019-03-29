@@ -1,11 +1,12 @@
 import axios from "axios";
-import { GET_ERRORS, GET_EVENTS } from "./types";
+import { GET_ERRORS, GET_EVENTS, EVENTS_LOADING } from "./types";
 
 //Get Events
 ///api/event/:userName/all
-export const getEvents = user => dispatch => {
+export const getEvents = () => dispatch => {
+  dispatch(setEventLoading());
   axios
-    .get(`/api/event/${user}/all`, user)
+    .get(`/api/event/all`)
     .then(res =>
       dispatch({
         type: GET_EVENTS,
@@ -18,4 +19,11 @@ export const getEvents = user => dispatch => {
         payload: err.response.data
       })
     );
+};
+
+//set loading to true, display spinner
+export const setEventLoading = () => {
+  return {
+    type: EVENTS_LOADING
+  };
 };
