@@ -19,8 +19,10 @@ router.post("/register", async (req, res) => {
   }
 
   const lowerCaseUserName = req.body.userName.toLowerCase();
-  
-  const existingUser = await User.findOne({ lower_case_username: lowerCaseUserName });
+
+  const existingUser = await User.findOne({
+    lower_case_username: lowerCaseUserName
+  });
 
   if (existingUser) {
     errors.userName = "Username already exists";
@@ -57,7 +59,7 @@ router.post("/login", async (req, res) => {
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  
+
   const lower_case_username = req.body.userName.toLowerCase();
   const password = req.body.password;
 

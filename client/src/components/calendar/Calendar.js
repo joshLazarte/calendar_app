@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import CalendarDayCell from "./CalendarDayCell";
 import isEmpty from "../../validation/is-empty";
+import moment from "moment";
 
 class Calendar extends Component {
   constructor(props) {
@@ -111,7 +112,9 @@ class Calendar extends Component {
     const calendarRows = this.getFilledOutCalendarRows();
     const { events } = this.props;
     if (!isEmpty(events)) {
-      console.log(events);
+      const day1 = moment(events[0].startDate).format("YYYY-MM-DD");
+      const day2 = "2019-03-10";
+      console.log(day1 === day2);
     }
 
     return (
