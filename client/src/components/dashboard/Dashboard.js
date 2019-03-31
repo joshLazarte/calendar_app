@@ -74,7 +74,7 @@ class Dashboard extends Component {
 
   render() {
     const { monthValue, month, year } = this.state;
-    const { loading, events } = this.props.event;
+    const { loading } = this.props.event;
 
     let dashboardContent;
 
@@ -109,12 +109,7 @@ class Dashboard extends Component {
             </div>
           </div>
 
-          <Calendar
-            events={events}
-            month={month}
-            monthValue={monthValue}
-            year={year}
-          />
+          <Calendar month={month} monthValue={monthValue} year={year} />
         </div>
       );
     }
