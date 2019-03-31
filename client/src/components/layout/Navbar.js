@@ -1,8 +1,29 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { logoutUser } from "../../actions/authActions";
+import { withRouter } from "react-router-dom";
 
 class Navbar extends Component {
+  onLogoutClick = e => {
+    e.preventDefault();
+    this.props.logoutUser(this.props.history);
+  };
+
   render() {
+    const { isAuthenticated } = this.props;
+
+    const authLinks = (
+      <a
+        onClick={this.onLogoutClick}
+        style={{ color: "white", textDecoration: "none" }}
+        href="!#"
+      >
+        Logout
+      </a>
+    );
+
     return (
       <div>
         <nav
@@ -22,10 +43,26 @@ class Navbar extends Component {
           >
             Calendar App
           </Link>
+          {isAuthenticated ? (
+            <div style={{ float: "right", marginRight: "25px" }}>
+              {authLinks}
+            </div>
+          ) : null}
         </nav>
       </div>
     );
   }
 }
 
-export default Navbar;
+Navbar.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired
+};
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(
+  mapStateToProps,
+  { logoutUser }
+)(withRouter(Navbar));

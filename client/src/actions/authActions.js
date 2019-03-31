@@ -18,7 +18,10 @@ export const registerUser = (user, history) => dispatch => {
 export const loginUser = (user, history) => dispatch => {
   axios
     .post("/api/user/login", user)
-    .then(res => dispatch(setCurrentUser(res.data)))
+    .then(res => {
+      localStorage.setItem("user", JSON.stringify(res.data));
+      dispatch(setCurrentUser(res.data));
+    })
     .then(() => history.push("/dashboard"))
     .catch(err =>
       dispatch({
@@ -28,12 +31,21 @@ export const loginUser = (user, history) => dispatch => {
     );
 };
 
-//Verify logged in
-export const verifyUser = () => dispatch => {
+//Logout action
+export const logoutUser = history => dispatch => {
   axios
-    .get("/api/user/current")
-    .then(res => dispatch(setCurrentUser(res.data)))
-    .catch(err => dispatch(setCurrentUser({})));
+    .delete("/api/user/logout")
+    .then(res => {
+      localStorage.removeItem("user");
+      dispatch(setCurrentUser({}));
+    })
+    .then(() => history.push("/"))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
 };
 
 export const setCurrentUser = user => {
