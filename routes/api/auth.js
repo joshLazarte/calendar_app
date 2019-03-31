@@ -80,7 +80,8 @@ router.post("/login", async (req, res) => {
         const payload = {
           id: currentUser._id,
           userName: currentUser.userName,
-          email: currentUser.email
+          email: currentUser.email,
+          loggedInTime: Date.now()
         };
         //Sign token
         jwt.sign(

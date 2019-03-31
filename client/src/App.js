@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import store from "./store";
 import "./App.css";
 
-import { setCurrentUser } from "./actions/authActions";
+import { setCurrentUser, logoutUser } from "./actions/authActions";
 
 import PrivateRoute from "./components/common/PrivateRoute";
 
@@ -17,10 +17,16 @@ import Landing from "./components/layout/Landing";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 
-//@TODO remove reset auth state after cookie timeout
-
-if (localStorage.user) {
-  store.dispatch(setCurrentUser(JSON.parse(localStorage.user)));
+//Auto setCurrentUser or logoutUser
+if (localStorage.user && localStorage.TTL) {
+  if (
+    JSON.parse(localStorage.TTL) < JSON.parse(localStorage.user).loggedInTime
+  ) {
+    store.dispatch(logoutUser());
+    window.location.href = "/login";
+  } else {
+    store.dispatch(setCurrentUser(JSON.parse(localStorage.user)));
+  }
 }
 
 class App extends Component {
