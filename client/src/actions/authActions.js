@@ -20,7 +20,6 @@ export const loginUser = (user, history) => dispatch => {
     .post("/api/user/login", user)
     .then(res => {
       localStorage.setItem("user", JSON.stringify(res.data));
-      localStorage.setItem("TTL", JSON.stringify(Date.now() + 3600000));
       dispatch(setCurrentUser(res.data));
     })
     .then(() => history.push("/dashboard"))
@@ -38,7 +37,6 @@ export const logoutUser = () => dispatch => {
     .delete("/api/user/logout")
     .then(res => {
       localStorage.removeItem("user");
-      localStorage.removeItem("TTL");
       dispatch(setCurrentUser({}));
     })
     .catch(err =>

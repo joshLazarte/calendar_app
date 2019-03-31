@@ -2,7 +2,6 @@ import axios from "axios";
 import { GET_ERRORS, GET_EVENTS, EVENTS_LOADING } from "./types";
 
 //Get Events
-///api/event/:userName/all
 export const getEvents = () => dispatch => {
   dispatch(setEventLoading());
   axios
@@ -13,6 +12,19 @@ export const getEvents = () => dispatch => {
         payload: res.data
       })
     )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+//Add Event
+export const addEvent = (event, history) => dispatch => {
+  axios
+    .post(`/api/event/new`, event)
+    .then(res => history.push("/dashboard"))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

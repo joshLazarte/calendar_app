@@ -45,7 +45,11 @@ class Login extends Component {
     const { errors, userName, password } = this.state;
     return (
       <div>
-        <form onSubmit={this.onSubmit}>
+        <h1 style={{ textAlign: "center", marginTop: "50px" }}>Log In</h1>
+        <form
+          style={{ margin: "50px auto", width: "250px" }}
+          onSubmit={this.onSubmit}
+        >
           <InputGroup
             name="userName"
             placeholder="Username"

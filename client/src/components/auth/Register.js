@@ -45,7 +45,11 @@ class Register extends Component {
     const { errors } = this.state;
     return (
       <div>
-        <form onSubmit={this.onSubmit}>
+        <h1 style={{ textAlign: "center", marginTop: "50px" }}>Sign Up</h1>
+        <form
+          style={{ margin: "50px auto", width: "250px" }}
+          onSubmit={this.onSubmit}
+        >
           <InputGroup
             placeholder="Username"
             name="userName"

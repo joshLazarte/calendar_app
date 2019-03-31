@@ -14,13 +14,27 @@ class Navbar extends Component {
     const { isAuthenticated } = this.props;
 
     const authLinks = (
-      <a
-        onClick={this.onLogoutClick}
-        style={{ color: "white", textDecoration: "none" }}
-        href="!#"
-      >
-        Logout
-      </a>
+      <span>
+        <Link
+          to="/event/add"
+          style={{
+            color: "white",
+            textDecoration: "none",
+            marginRight: "15px"
+          }}
+          href="!#"
+        >
+          Add Event
+        </Link>
+
+        <a
+          onClick={this.onLogoutClick}
+          style={{ color: "white", textDecoration: "none" }}
+          href="!#"
+        >
+          Logout
+        </a>
+      </span>
     );
 
     return (

@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getEvents } from "../../actions/eventActions";
 import Spinner from "../common/Spinner";
+import autoLogOutIfNeeded from "../../validation/autoLogOut";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -18,6 +19,7 @@ class Dashboard extends Component {
 
   componentDidMount() {
     this.props.getEvents();
+    autoLogOutIfNeeded();
   }
 
   getMonthNameFromMonthValue = monthValue => {

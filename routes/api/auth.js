@@ -81,7 +81,7 @@ router.post("/login", async (req, res) => {
           id: currentUser._id,
           userName: currentUser.userName,
           email: currentUser.email,
-          loggedInTime: Date.now()
+          expireTime: Date.now() + 3600000
         };
         //Sign token
         jwt.sign(
