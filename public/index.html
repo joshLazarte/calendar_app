@@ -7,6 +7,8 @@
     
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    
     <title>Test Login Theme</title>
   </head>
   <body>
@@ -17,6 +19,24 @@
               margin: 0;
               padding: 0;
               box-sizing: border-box;
+          }
+          
+          td {
+              height: 6rem;
+              width: 14.286%;
+          }
+          
+          .calendar-event {
+              width: 0; 
+              min-width: 100%; 
+              overflow: hidden; 
+              text-overflow: ellipsis; 
+              white-space: nowrap;
+              font-size: .7rem;
+          }
+          
+          .calendar-event:hover {
+              text-decoration: none!important;
           }
       </style>
       
@@ -42,33 +62,126 @@
     </nav>
     <!-- END NAVBAR -->
     
-    <div class="container">
-            <h1 class="text-center mb-5">Login</h1>
+    <div class="container mb-5">
+            <!-- <h1 class="text-center mb-5">Login</h1> -->
             
             <!-- START LOGIN FORM -->
-            <div class="row">
-                <div class="col-md-6 m-auto">
-                    <div class="card p-3">
-                        <form>
-                           <div class="form-group my-3">
-                               <input class="form-control" type="text" name="userName" placeholder="User Name"/>
-                           </div>
-                           <div class="form-group mb-4">
-                               <input class="form-control" type="text" name="password" placeholder="Password"/>
-                           </div>
-                           <div class="form-group">
-                               <button type="submit" class="btn btn-primary btn-block">Sign in</button>
-                           </div>
-                        </form>
-                    </div>
+            <!--<div class="row">-->
+            <!--    <div class="col-md-6 m-auto">-->
+            <!--        <div class="card p-3">-->
+            <!--            <form>-->
+            <!--               <div class="form-group my-3">-->
+            <!--                   <input class="form-control" type="text" name="userName" placeholder="User Name"/>-->
+            <!--               </div>-->
+            <!--               <div class="form-group mb-4">-->
+            <!--                   <input class="form-control" type="text" name="password" placeholder="Password"/>-->
+            <!--               </div>-->
+            <!--               <div class="form-group">-->
+            <!--                   <button type="submit" class="btn btn-primary btn-block">Sign in</button>-->
+            <!--               </div>-->
+            <!--            </form>-->
+            <!--        </div>-->
+            <!--    </div>-->
+            <!--</div>-->
+            <!-- END LOGIN FORM -->
+            
+            
+            <!-- START DASHBOARD -->
+            <div class="my-5">
+                <div class="d-flex justify-content-center align-items-center">
+                    <a style="font-size: 2rem"  href="#"><i class="fas fa-chevron-left"></i></a>
+                    <h1 class="mx-5">April 2019</h1>
+                    <a style="font-size: 2rem" href="#"><i class="fas fa-chevron-right"></i></a>
                 </div>
             </div>
-            <!-- END LOGIN FORM -->
+            <!-- END DASHBOARD -->
+            
+            <!-- START CALENDAR -->
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr class="text-center">
+                        <th scope="col">Sun</th>
+                        <th scope="col">Mon</th>
+                        <th scope="col">Tue</th>
+                        <th scope="col">Wed</th>
+                        <th scope="col">Thu</th>
+                        <th scope="col">Fri</th>
+                        <th scope="col">Sat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><small class="text-muted">Mar 31</small></td>
+                        <td><small>1</small></td>
+                        <td><small>2</small></td>
+                        <td><small>3</small></td>
+                        <td><small>4</small></td>
+                        <td><small>5</small></td>
+                        <td><small>6</small></td>
+                    </tr>
+                    <tr>
+                        <td><small>7</small></td>
+                        <td><small>8</small></td>
+                        <td><small>9</small></td>
+                        <td><small>10</small></td>
+                        <td><small>11</small></td>
+                        <td><small>12</small></td>
+                        <td><small>13</small></td>
+                    </tr>
+                    <tr>
+                        <td><small>14</small></td>
+                        <td><small>15</small></td>
+                        <td>
+                            <small>16</small>
+                            <a href="#" class="calendar-event bg-primary text-white d-block px-1">9:00am Report to first day of work</a>
+                        </td>
+                        <td><small>17</small></td>
+                        <td><small>18</small></td>
+                        <td><small>19</small></td>
+                        <td><small>20</small></td>
+                    </tr>
+                    <tr>
+                        <td><small>21</small></td>
+                        <td><small>22</small></td>
+                        <td><small>23</small></td>
+                        <td><small>24</small></td>
+                        <td>
+                            <small>25</small>
+                            <a href="#" class="calendar-event bg-warning text-dark d-block px-1">10:30am Staff meeting</a>
+                        </td>
+                        <td><small>26</small></td>
+                        <td><small>27</small></td>
+                    </tr>
+                    <tr>
+                        <td><small>28</small></td>
+                        <td><small>29</small></td>
+                        <td><small>30</small></td>
+                        <td><small class="text-muted">May 1</small></td>
+                        <td><small class="text-muted">2</small></td>
+                        <td><small class="text-muted">3</small></td>
+                        <td><small class="text-muted">4</small></td>
+                    </tr>
+                    <tr>
+                        <td><small class="text-muted">5</small></td>
+                        <td><small class="text-muted">6</small></td>
+                        <td><small class="text-muted">7</small></td>
+                        <td><small class="text-muted">8</small></td>
+                        <td><small class="text-muted">9</small></td>
+                        <td><small class="text-muted">10</small></td>
+                        <td><small class="text-muted">11</small></td>
+                    </tr>
+                </tbody>
+                
+            </table>
+            <!-- END CALENDAR -->
+            
+            
             
     </div>
     
     <!-- START FOOTER -->
-    <footer style="position: absolute; bottom: 0; width: 100%" class="bg-success text-white mt-5 p-4 text-center">
+    <div style="height: 50px"></div>
+    <footer class="bg-dark text-white p-4 mt-5">
         &copy; 2019 J3L webDesign
     </footer>
     <!-- END FOOTER -->
