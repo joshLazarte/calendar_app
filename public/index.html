@@ -36,6 +36,16 @@
       td {
         height: 6rem;
         width: 14.286%;
+        padding: 0 !important;
+        cursor: pointer;
+      }
+      
+      td:hover {
+        background-color: lightblue;
+      }
+      
+      .calendar-cell-number {
+        padding: 5px;
       }
 
       .calendar-event {
@@ -46,10 +56,15 @@
         white-space: nowrap;
         font-size: 0.7rem;
       }
-
-      .calendar-event:hover {
+      
+      .multi-day-calendar-event {
+        font-size: 0.7rem;
+      }
+      
+      a:hover {
         text-decoration: none !important;
       }
+      
     </style>
 
     <!--START NAVBAR  -->
@@ -85,40 +100,40 @@
       <h1 class="text-center mb-5">Login</h1>
 
       <!-- START LOGIN FORM -->
-      <div class="row">
-        <div class="col-md-6 m-auto">
-          <div class="card p-3">
-            <form>
-              <div class="form-group my-3">
-                <input
-                  class="form-control"
-                  type="text"
-                  name="userName"
-                  placeholder="User Name"
-                />
-              </div>
-              <div class="form-group mb-4">
-                <input
-                  class="form-control"
-                  type="text"
-                  name="password"
-                  placeholder="Password"
-                />
-              </div>
-              <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block">
-                  Sign in
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+      <!--<div class="row">-->
+      <!--  <div class="col-md-6 m-auto">-->
+      <!--    <div class="card p-3">-->
+      <!--      <form>-->
+      <!--        <div class="form-group my-3">-->
+      <!--          <input-->
+      <!--            class="form-control"-->
+      <!--            type="text"-->
+      <!--            name="userName"-->
+      <!--            placeholder="User Name"-->
+      <!--          />-->
+      <!--        </div>-->
+      <!--        <div class="form-group mb-4">-->
+      <!--          <input-->
+      <!--            class="form-control"-->
+      <!--            type="text"-->
+      <!--            name="password"-->
+      <!--            placeholder="Password"-->
+      <!--          />-->
+      <!--        </div>-->
+      <!--        <div class="form-group">-->
+      <!--          <button type="submit" class="btn btn-primary btn-block">-->
+      <!--            Sign in-->
+      <!--          </button>-->
+      <!--        </div>-->
+      <!--      </form>-->
+      <!--    </div>-->
+      <!--  </div>-->
+      <!--</div>-->
       <!-- END LOGIN FORM
             
             
             <!-- START DASHBOARD -->
-      <!-- <div class="my-5">
+       <div class="my-5">
         <div class="d-flex justify-content-center align-items-center">
           <a style="font-size: 2rem" href="#"
             ><i class="fas fa-chevron-left"></i
@@ -128,11 +143,40 @@
             ><i class="fas fa-chevron-right"></i
           ></a>
         </div>
-      </div> -->
+      </div> 
       <!-- END DASHBOARD -->
+      
+      <!--START CALENDAR NOTES-->
+      <!--multi day events-->
+
+      <!--type = Multi day-->
+      <!--get start date-->
+      <!--get end date-->
+      
+      <!--determine how many days the event is (harder for events from one month to next)-->
+      
+      <!--const totalDays = [day1, day2, ...dayN]-->
+      
+      <!--create eventsInCell array for each cell.-->
+      
+      <!--put an event in each day, first day has event name, all subsequent days have &nbsp;, but href-->
+      <!--still links to event and still have tooltip with event info-->
+      
+      <!--make sure multi day events are allways eventsInCell[0];-->
+      
+      <!--when you click on a cell, you are redirected to create event-->
+      
+      <!--need to build a combo show/edit event page-->
+      <!--it will be a form that does not allow you to change anything.-->
+      <!--each field will have a label-->
+      <!--then, if you are the owner, you can click and 'edit' button-->
+      <!--and the form will become editable-->
+      
+      <!--END CALENDAR NOTES-->
+      
 
       <!-- START CALENDAR -->
-      <!-- <table class="table table-bordered">
+       <table style="table-layout: fixed;" class="table table-bordered">
         <thead class="thead-light">
           <tr class="text-center">
             <th scope="col">Sun</th>
@@ -146,75 +190,179 @@
         </thead>
         <tbody>
           <tr>
-            <td><small class="text-muted">Mar 31</small></td>
-            <td><small>1</small></td>
-            <td><small>2</small></td>
-            <td><small>3</small></td>
-            <td><small>4</small></td>
-            <td><small>5</small></td>
-            <td><small>6</small></td>
+            <td><small class="text-muted calendar-cell-number">Mar 31</small></td>
+            <td><small class="calendar-cell-number"><strong>Apr 1</strong></small></td>
+            <td><small class="calendar-cell-number">2</small></td>
+            <td><small class="calendar-cell-number">3</small></td>
+            <td><small class="calendar-cell-number">4</small></td>
+            <td><small class="calendar-cell-number">5</small></td>
+            <td><small class="calendar-cell-number">6</small></td>
           </tr>
           <tr>
-            <td><small>7</small></td>
-            <td><small>8</small></td>
-            <td><small>9</small></td>
-            <td><small>10</small></td>
-            <td><small>11</small></td>
-            <td><small>12</small></td>
-            <td><small>13</small></td>
-          </tr>
-          <tr>
-            <td><small>14</small></td>
-            <td><small>15</small></td>
+            <td><small class="calendar-cell-number">7</small></td>
             <td>
-              <small>16</small>
+              <small class="calendar-cell-number">8</small>
+              
+            </td>
+            <td><small class="calendar-cell-number">9</small></td>
+            <td><small class="calendar-cell-number">10</small></td>
+            <td><small class="calendar-cell-number">11</small></td>
+            <td class="p-1">
+              <small class="calendar-cell-number">12</small>
+              <a href="#" class="bg-info text-white d-block p-1" 
+                data-toggle="tooltip" 
+                data-placement="bottom" 
+                data-html="true"
+                title="
+                  <p>Buy New Car</p>
+                  <p>Kids Birthday Party</p>
+                  <p>Some Other Event</p>
+                ">
+                See All Events <i class="fas fa-chevron-down"></i>
+              </a>
+            </td>
+            <td><small class="calendar-cell-number">13</small></td>
+          </tr>
+          <tr>
+            <td><small class="calendar-cell-number">14</small></td>
+            <td><small class="calendar-cell-number">15</small></td>
+            <td class="p-1">
+              <small class="calendar-cell-number">16</small>
               <a
                 href="#"
-                class="calendar-event bg-primary text-white d-block px-1"
+                class="calendar-event bg-primary text-white d-block p-1 mb-1"
+                data-toggle="tooltip" 
+                data-placement="bottom" 
+                data-html="true"
+                title="
+                  <p>9:00am Report to first day of work</p>
+                  <small>*Click to see full event details</small>
+                ">
+                9:00am Report to first day of work</a
+              >
+              <a
+                href="#"
+                class="calendar-event bg-primary text-white d-block p-1 mb-1"
+                data-toggle="tooltip" 
+                data-placement="bottom" 
+                data-html="true"
+                title="
+                  <p>9:00am Report to first day of work</p>
+                  <small>*Click to see full event details</small>
+                ">
+                9:00am Report to first day of work</a
+              >
+            </td>
+            <td><small class="calendar-cell-number">17</small></td>
+            <td><small class="calendar-cell-number">18</small></td>
+            <td><small class="calendar-cell-number">19</small></td>
+            <td>
+              <small class="calendar-cell-number">20</small>
+            </td>
+          </tr>
+          <tr>
+            <td><small class="calendar-cell-number">21</small></td>
+            <td><small class="calendar-cell-number">22</small></td>
+            <td><small class="calendar-cell-number">23</small></td>
+            <td><small class="calendar-cell-number">24</small></td>
+            <td class="p-1">
+              <small class="calendar-cell-number">25</small>
+              <a
+                href="#"
+                class="calendar-event bg-warning text-dark d-block p-1"
+                data-toggle="tooltip" 
+                data-placement="bottom" 
+                data-html="true"
+                title="
+                  <p>9:00am Report to first day of work</p>
+                  <small>*Click to see full event details</small>
+                ">
+                10:30am Staff meeting</a
+              >
+            </td>
+            <td><small class="calendar-cell-number">26</small></td>
+            <td><small class="calendar-cell-number">27</small></td>
+          </tr>
+          <tr>
+            <td>
+              <small class="calendar-cell-number">28</small>
+              <a href="#" class="multi-day-calendar-event bg-success text-white d-block p-1"
+              data-toggle="tooltip" 
+                data-placement="bottom" 
+                data-html="true"
+                title="
+                  <p>9:00am Report to first day of work</p>
+                  <small>*Click to see full event details</small>
+                ">
+                Multi Day Event
+              </a>
+            </td>
+            <td>
+              <small class="calendar-cell-number">29</small>
+              <a href="#" class="multi-day-calendar-event bg-success text-white d-block p-1 mb-1"
+              data-toggle="tooltip" 
+                data-placement="bottom" 
+                data-html="true"
+                title="
+                  <p>9:00am Report to first day of work</p>
+                  <small>*Click to see full event details</small>
+                ">
+                &nbsp;
+              </a>
+              <a
+                href="#"
+                class="calendar-event bg-warning text-dark d-block p-1 mb-1"
+                data-toggle="tooltip" 
+                data-placement="bottom" 
+                data-html="true"
+                title="
+                  <p>9:00am Report to first day of work</p>
+                  <small>*Click to see full event details</small>
+                "
+                >9:00am Report to first day of work</a
+              >
+              <a
+                href="#"
+                class="calendar-event bg-primary text-white d-block p-1 mb-1"
+                data-toggle="tooltip" 
+                data-placement="bottom" 
+                data-html="true"
+                title="
+                  <p>9:00am Report to first day of work</p>
+                  <small>*Click to see full event details</small>
+                "
                 >9:00am Report to first day of work</a
               >
             </td>
-            <td><small>17</small></td>
-            <td><small>18</small></td>
-            <td><small>19</small></td>
-            <td><small>20</small></td>
-          </tr>
-          <tr>
-            <td><small>21</small></td>
-            <td><small>22</small></td>
-            <td><small>23</small></td>
-            <td><small>24</small></td>
             <td>
-              <small>25</small>
-              <a
-                href="#"
-                class="calendar-event bg-warning text-dark d-block px-1"
-                >10:30am Staff meeting</a
-              >
+              <small class="calendar-cell-number">30</small>
+              <a href="#" class="multi-day-calendar-event bg-success text-white d-block p-1"
+              data-toggle="tooltip" 
+                data-placement="bottom" 
+                data-html="true"
+                title="
+                  <p>9:00am Report to first day of work</p>
+                  <small>*Click to see full event details</small>
+                ">
+                &nbsp;
+              </a>
             </td>
-            <td><small>26</small></td>
-            <td><small>27</small></td>
+            <td><small class="text-muted calendar-cell-number">May 1</small></td>
+            <td><small class="text-muted calendar-cell-number">2</small></td>
+            <td><small class="text-muted calendar-cell-number">3</small></td>
+            <td><small class="text-muted calendar-cell-number">4</small></td>
           </tr>
           <tr>
-            <td><small>28</small></td>
-            <td><small>29</small></td>
-            <td><small>30</small></td>
-            <td><small class="text-muted">May 1</small></td>
-            <td><small class="text-muted">2</small></td>
-            <td><small class="text-muted">3</small></td>
-            <td><small class="text-muted">4</small></td>
-          </tr>
-          <tr>
-            <td><small class="text-muted">5</small></td>
-            <td><small class="text-muted">6</small></td>
-            <td><small class="text-muted">7</small></td>
-            <td><small class="text-muted">8</small></td>
-            <td><small class="text-muted">9</small></td>
-            <td><small class="text-muted">10</small></td>
-            <td><small class="text-muted">11</small></td>
+            <td><small class="text-muted calendar-cell-number">5</small></td>
+            <td><small class="text-muted calendar-cell-number">6</small></td>
+            <td><small class="text-muted calendar-cell-number">7</small></td>
+            <td><small class="text-muted calendar-cell-number">8</small></td>
+            <td><small class="text-muted calendar-cell-number">9</small></td>
+            <td><small class="text-muted calendar-cell-number">10</small></td>
+            <td><small class="text-muted calendar-cell-number">11</small></td>
           </tr>
         </tbody>
-      </table> -->
+      </table>
       <!-- END CALENDAR -->
     </div>
 
@@ -224,6 +372,7 @@
       &copy; 2019 J3L webDesign
     </footer>
     <!-- END FOOTER -->
+    
 
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -240,5 +389,11 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    
+    <script>
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      });
+    </script>
   </body>
 </html>
