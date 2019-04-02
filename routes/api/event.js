@@ -109,7 +109,13 @@ router.get(
 router.put('/:id/edit', 
   passport.authenticate("jwt", { session: false }),
   async (req,res) => {
-    const errors = {};
+    
+    const { errors, isValid } = validateCreateEventInput(req.body);
+
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+    
       try {
         const currentUser = await utils.eventUtilities.getEventCreatorByUsername(
           req.user.userName
