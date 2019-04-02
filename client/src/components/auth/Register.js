@@ -45,49 +45,52 @@ class Register extends Component {
     const { errors } = this.state;
     return (
       <div>
-        <h1 style={{ textAlign: "center", marginTop: "50px" }}>Sign Up</h1>
-        <form
-          style={{ margin: "50px auto", width: "250px" }}
-          onSubmit={this.onSubmit}
-        >
-          <InputGroup
-            placeholder="Username"
-            name="userName"
-            value={this.state.userName}
-            onChange={this.onChange}
-            error={errors.userName}
-          />
+        <h1 className="mb-5 text-center">Sign Up</h1>
+        <div class="row">
+          <div class="col-md-6 m-auto">
+            <div class="card p-3">
+              <form onSubmit={this.onSubmit}>
+                <InputGroup
+                  placeholder="Username"
+                  name="userName"
+                  value={this.state.userName}
+                  onChange={this.onChange}
+                  error={errors.userName}
+                />
 
-          <InputGroup
-            placeholder="Email"
-            name="email"
-            value={this.state.email}
-            onChange={this.onChange}
-            error={errors.email}
-          />
+                <InputGroup
+                  placeholder="Email"
+                  name="email"
+                  value={this.state.email}
+                  onChange={this.onChange}
+                  error={errors.email}
+                />
 
-          <InputGroup
-            placeholder="Password"
-            name="password"
-            value={this.state.password}
-            onChange={this.onChange}
-            error={errors.password}
-          />
+                <InputGroup
+                  placeholder="Password"
+                  name="password"
+                  value={this.state.password}
+                  onChange={this.onChange}
+                  error={errors.password}
+                />
 
-          <InputGroup
-            placeholder="Confirm Password"
-            name="password2"
-            value={this.state.password2}
-            onChange={this.onChange}
-            error={errors.password2}
-          />
+                <InputGroup
+                  placeholder="Confirm Password"
+                  name="password2"
+                  value={this.state.password2}
+                  onChange={this.onChange}
+                  error={errors.password2}
+                />
 
-          <input
-            style={{ display: "block", width: "250px", marginTop: "20px" }}
-            type="submit"
-            value="Sign Up"
-          />
-        </form>
+                <div class="form-group">
+                  <button type="submit" className="btn btn-primary btn-block">
+                    Sign Up
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

@@ -45,33 +45,35 @@ class Login extends Component {
     const { errors, userName, password } = this.state;
     return (
       <div>
-        <h1 style={{ textAlign: "center", marginTop: "50px" }}>Log In</h1>
-        <form
-          style={{ margin: "50px auto", width: "250px" }}
-          onSubmit={this.onSubmit}
-        >
-          <InputGroup
-            name="userName"
-            placeholder="Username"
-            value={userName}
-            onChange={this.onChange}
-            error={errors.userName}
-          />
+        <h1 class="text-center mb-5">Login</h1>
+        <div className="row">
+          <div class="col-md-6 m-auto">
+            <div class="card p-3">
+              <form onSubmit={this.onSubmit}>
+                <InputGroup
+                  name="userName"
+                  placeholder="User Name"
+                  value={userName}
+                  onChange={this.onChange}
+                  error={errors.userName}
+                />
 
-          <InputGroup
-            name="password"
-            placeholder="Password"
-            value={password}
-            onChange={this.onChange}
-            error={errors.password}
-          />
-
-          <input
-            style={{ display: "block", width: "250px", marginTop: "20px" }}
-            type="submit"
-            value="Log In"
-          />
-        </form>
+                <InputGroup
+                  name="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={this.onChange}
+                  error={errors.password}
+                />
+                <div class="form-group">
+                  <button type="submit" className="btn btn-primary btn-block">
+                    Sign in
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

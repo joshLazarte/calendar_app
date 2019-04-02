@@ -14,55 +14,52 @@ class Navbar extends Component {
     const { isAuthenticated } = this.props;
 
     const authLinks = (
-      <span>
-        <Link
-          to="/event/add"
-          style={{
-            color: "white",
-            textDecoration: "none",
-            marginRight: "15px"
-          }}
-          href="!#"
-        >
-          Add Event
-        </Link>
-
-        <a
-          onClick={this.onLogoutClick}
-          style={{ color: "white", textDecoration: "none" }}
-          href="!#"
-        >
-          Logout
-        </a>
-      </span>
+      <ul className="navbar-nav ml-auto">
+        <li className="nav-item mr-4">
+          <Link className="align-middle text-white" to="/event/add">
+            Add Event
+          </Link>
+        </li>
+        <li className="nav-item">
+          <a
+            className="align-middle text-white"
+            onClick={this.onLogoutClick}
+            href="!#"
+          >
+            Logout
+          </a>
+        </li>
+      </ul>
     );
 
     return (
-      <div>
-        <nav
-          style={{
-            width: "100%",
-            padding: "20px",
-            backgroundColor: "blue"
-          }}
-        >
-          <Link
-            to="/"
-            style={{
-              fontSize: "18px",
-              textDecoration: "none",
-              color: "white"
-            }}
-          >
+      <nav className="navbar navbar-expand-md navbar-dark bg-primary p-3 mb-5">
+        <div className="container">
+          <Link to="/" className="navbar-brand">
             Calendar App
           </Link>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon" />
+          </button>
           {isAuthenticated ? (
-            <div style={{ float: "right", marginRight: "25px" }}>
-              {authLinks}
+            <div
+              className="collapse navbar-collapse"
+              id="navbarSupportedContent"
+            >
+              {" "}
+              {authLinks}{" "}
             </div>
           ) : null}
-        </nav>
-      </div>
+        </div>
+      </nav>
     );
   }
 }

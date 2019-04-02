@@ -30,23 +30,17 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router>
-          <div
-            style={{
-              backgroundColor: "lightblue",
-              height: "100vh",
-              display: "flex",
-              flexDirection: "column"
-            }}
-          >
+          <div style={{ minHeight: "100vh" }} className="d-flex flex-column">
             <Navbar />
-            <Route exact path="/" component={Landing} />
-            <Route exact path="/register" component={Register} />
-            <Route exact path="/login" component={Login} />
-            <Switch>
-              <PrivateRoute exact path="/dashboard" component={DashBoard} />
-              <PrivateRoute exact path="/event/add" component={AddEvent} />
-            </Switch>
-            <div style={{ flex: 1 }} />
+            <div className="container">
+              <Route exact path="/" component={Landing} />
+              <Route exact path="/register" component={Register} />
+              <Route exact path="/login" component={Login} />
+              <Switch>
+                <PrivateRoute exact path="/dashboard" component={DashBoard} />
+                <PrivateRoute exact path="/event/add" component={AddEvent} />
+              </Switch>
+            </div>
             <Footer />
           </div>
         </Router>

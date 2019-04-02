@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 
 const InputGroup = ({ name, placeholder, value, type, onChange, error }) => {
   return (
-    <div>
+    <div className="form-group my-3">
       <input
-        style={{ display: "block", width: "250px", marginTop: "20px" }}
+        className="form-control"
         type={type}
         placeholder={placeholder}
         name={name}
