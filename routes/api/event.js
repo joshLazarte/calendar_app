@@ -73,11 +73,11 @@ router.get(
   }
 );
 
-// @route    GET /api/event/id/:id
+// @route    GET /api/event/:id
 // @desc     Get a single event if current user is an attendee
 // @access   Private
 router.get(
-  "/id/:id",
+  "/:id",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     const errors = {};
@@ -102,5 +102,85 @@ router.get(
     }
   }
 );
+
+// @route    PUT /api/event/:id/edit
+// @desc     update an event
+// @access   Private
+router.put('/:id/edit', 
+  passport.authenticate("jwt", { session: false }),
+  async (req,res) => {
+    const errors = {};
+      try {
+        const currentUser = await utils.eventUtilities.getEventCreatorByUsername(
+          req.user.userName
+        );
+  
+        const foundEvent = await Event.find({
+          createdBy: currentUser,
+          _id: req.params.id
+        });
+  
+        if (isEmpty(foundEvent)) {
+          throw new Error();
+        }
+        
+        const attendeesToAdd = await utils.eventUtilities.getEventAttendees(
+          currentUser,
+          utils.parseStringToBool(req.body.shared),
+          req.body.attendees
+        );
+        
+        foundEvent.name = req.body.name;
+        foundEvent.startDate = req.body.startDate;
+        foundEvent.endDate = req.body.endDate;
+        foundEvent.startTime = req.body.startTime;
+        foundEvent.endTime = req.body.endTime;
+        foundEvent.description = req.body.description;
+        foundEvent.type = req.body.type;
+        foundEvent.location = req.body.location;
+        foundEvent.attendees = attendeesToAdd;
+        foundEvent.shared = req.body.shared;
+        foundEvent.save();
+  
+        res.json(foundEvent);
+      } catch (err) {
+        errors.error = "Unable to edit specified event";
+        res.status(404).json(errors);
+      }
+});
+
+
+// @route    DELETE /api/event/:id/delete
+// @desc     delete an event
+// @access   Private
+router.delete('/:id/delete', 
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    const errors = {};
+    try {
+      
+      const currentUser = await utils.eventUtilities.getEventCreatorByUsername(
+        req.user.userName
+      );
+      
+      const foundEvent = await Event.find({
+        createdBy: currentUser,
+        _id: req.params.id
+      });
+      
+      if (isEmpty(foundEvent)) {
+        throw new Error();
+      }
+      
+      foundEvent.remove();
+      
+      res.status(200).json({status: 'success'});
+        
+    } catch(err) {
+      errors.error = "Unable to delete specified event";
+      res.status(401).json(errors);
+    }
+});
+
 
 module.exports = router;
