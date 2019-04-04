@@ -18,6 +18,11 @@ class EventInCalendarCell extends Component {
     });
     return currentEvents;
   };
+
+  onClick = e => {
+    e.preventDefault();
+  };
+
   render() {
     const { events, date } = this.props;
     const currentEvents = this.getCurrentEventsByDate(date, events);
@@ -25,11 +30,24 @@ class EventInCalendarCell extends Component {
 
     if (!isEmpty(currentEvents)) {
       eventContent = (
-        <ul>
+        <span>
           {currentEvents.map(event => {
-            return <li key={event._id}>{event.name}</li>;
+            return (
+              <a
+                key={event._id}
+                href="!#"
+                className="calendar-event bg-primary text-white d-block p-1 mb-1"
+                data-toggle="tooltip"
+                data-placement="bottom"
+                data-html="true"
+                title="Don't have this working yet"
+                onClick={this.onClick}
+              >
+                {event.startTime ? event.startTime : null} {event.name}
+              </a>
+            );
           })}
-        </ul>
+        </span>
       );
     } else {
       eventContent = null;

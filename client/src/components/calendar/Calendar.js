@@ -111,16 +111,16 @@ class Calendar extends Component {
 
     return (
       <div>
-        <table>
-          <thead>
-            <tr>
-              <th>Sunday</th>
-              <th>Monday</th>
-              <th>Tuesday</th>
-              <th>Wednesday</th>
-              <th>Thursday</th>
-              <th>Friday</th>
-              <th>Saturday</th>
+        <table className="table table-bordered">
+          <thead className="thead-light">
+            <tr className="text-center">
+              <th scope="col">Sun</th>
+              <th scope="col">Mon</th>
+              <th scope="col">Tue</th>
+              <th scope="col">Wed</th>
+              <th scope="col">Thu</th>
+              <th scope="col">Fri</th>
+              <th scope="col">Sat</th>
             </tr>
           </thead>
           <tbody>

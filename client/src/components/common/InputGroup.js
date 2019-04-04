@@ -1,18 +1,21 @@
 import React from "react";
 import PropTypes from "prop-types";
+import classnames from "classnames";
 
 const InputGroup = ({ name, placeholder, value, type, onChange, error }) => {
   return (
     <div className="form-group my-3">
       <input
-        className="form-control"
+        className={classnames("form-control", {
+          "is-invalid": error
+        })}
         type={type}
         placeholder={placeholder}
         name={name}
         value={value}
         onChange={onChange}
       />
-      {error ? <span>{error}</span> : null}
+      {error && <div className="invalid-feedback">{error}</div>}
     </div>
   );
 };

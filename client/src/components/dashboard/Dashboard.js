@@ -40,7 +40,8 @@ class Dashboard extends Component {
     return months[monthValue];
   };
 
-  setMonthToPreviousMonth = () => {
+  setMonthToPreviousMonth = e => {
+    e.preventDefault();
     const { monthValue, year } = this.state;
     if (monthValue === 0) {
       this.setState({
@@ -57,7 +58,8 @@ class Dashboard extends Component {
     }
   };
 
-  setMonthToNextMonth = () => {
+  setMonthToNextMonth = e => {
+    e.preventDefault();
     const { monthValue, year } = this.state;
     if (monthValue === 11) {
       this.setState({
@@ -84,30 +86,26 @@ class Dashboard extends Component {
       dashboardContent = <Spinner />;
     } else {
       dashboardContent = (
-        <div style={{ width: "70%", margin: "0 auto" }}>
-          <div
-            className="dashboard-header-container"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              margin: "50px 0",
-              fontSize: "28px"
-            }}
-          >
-            <div
-              style={{ cursor: "pointer" }}
-              onClick={this.setMonthToPreviousMonth}
-            >
-              &#60;
-            </div>{" "}
-            <div>
-              {month} {year}
-            </div>{" "}
-            <div
-              style={{ cursor: "pointer" }}
-              onClick={this.setMonthToNextMonth}
-            >
-              &#62;
+        <div className="mb-5">
+          <div className="my-5">
+            <div className="d-flex justify-content-center align-items-center">
+              <a
+                style={{ fontSize: "2rem" }}
+                href="!#"
+                onClick={this.setMonthToPreviousMonth}
+              >
+                <i className="fas fa-chevron-left" />
+              </a>
+              <h1 className="mx-5">
+                {month} {year}
+              </h1>
+              <a
+                style={{ fontSize: "2rem" }}
+                href="!#"
+                onClick={this.setMonthToNextMonth}
+              >
+                <i className="fas fa-chevron-right" />
+              </a>
             </div>
           </div>
 

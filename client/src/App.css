@@ -6,18 +6,30 @@
   box-sizing: border-box;
 }
 
-table,
-th,
 td {
-  border: 1px solid black;
-  border-collapse: collapse;
+  height: 6rem;
+  width: 14.286%;
+  padding: 0 !important;
+  cursor: pointer;
 }
 
-th {
-  padding: 10px;
+.calendar-cell-number {
+  padding: 5px;
 }
 
-td {
-  width: 50px;
-  height: 50px;
+.today-cell {
+  background-color: lightblue;
+}
+
+.calendar-event {
+  width: 0;
+  min-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.7rem;
+}
+
+.calendar-event:hover {
+  text-decoration: none;
 }

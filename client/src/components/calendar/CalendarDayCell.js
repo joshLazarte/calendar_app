@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import EventInCalendarCell from "../events/EventInCalendarCell";
+import classnames from "classnames";
 
 class CalendarDayCell extends Component {
   constructor(props) {
@@ -34,32 +35,21 @@ class CalendarDayCell extends Component {
     let cellData;
 
     if (emptyCell) {
-      cellData = <span>X</span>;
-    } else if (cellDate === today) {
-      cellData = (
-        <span>
-          <span
-            style={{
-              border: "1px solid black",
-              borderRadius: "50%",
-              padding: "5px 7px 5px 5px"
-            }}
-          >
-            {day}
-          </span>
-          <EventInCalendarCell date={cellDate} />
-        </span>
-      );
+      cellData = <small className="calendar-cell-number text-muted">X</small>;
     } else {
       cellData = (
-        <span>
+        <small className="calendar-cell-number">
           {day}
           <EventInCalendarCell date={cellDate} />
-        </span>
+        </small>
       );
     }
 
-    return <td>{cellData}</td>;
+    return (
+      <td className={classnames({ "today-cell": cellDate === today })}>
+        {cellData}
+      </td>
+    );
   }
 }
 
