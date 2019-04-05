@@ -25,4 +25,18 @@ module.exports = {
         };
         return eventCreator;
     },
+    removeAttendeeFromEvent: (attendee, event) => {
+        const newAttendees = event.attendees.filter(attendee => attendee.userName !== attendee); 
+      
+        let shared = true;
+        
+        if(newAttendees.length <= 1) shared = false;
+        
+        const updatedEventData = {
+          attendees: newAttendees,
+          shared
+        };
+        
+        return updatedEventData;
+    }
 };
