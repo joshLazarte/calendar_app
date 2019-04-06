@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import InputGroup from "../common/InputGroup";
+import SelectInputGroup from "../common/SelectInputGroup";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { addEvent } from "../../actions/eventActions";
@@ -67,99 +68,125 @@ class AddEvent extends Component {
   render() {
     const { errors } = this.state;
     return (
-      <div>
-        <h1 style={{ textAlign: "center", marginTop: "25px" }}>Add Event</h1>
-        <form
-          style={{ margin: "50px auto", width: "250px" }}
-          onSubmit={this.onSubmit}
-        >
-          <InputGroup
-            placeholder="Event Name"
-            name="name"
-            value={this.state.name}
-            onChange={this.onChange}
-            error={errors.name}
-          />
+      <div className="row">
+        <div className="col-md-10 col-lg-6 mx-auto">
+          <div className="card">
+            <div className="card-header text-center">
+              <h1>Add Event</h1>
+            </div>
+            <div className="card-body">
+              <form onSubmit={this.onSubmit}>
+                <div className="form-group row">
+                  <label className="col-form-label col-sm-3" htmlFor="name">
+                    Event Name
+                  </label>
+                  <div className="col-sm-8">
+                    <InputGroup
+                      placeholder="Event Name"
+                      name="name"
+                      value={this.state.name}
+                      onChange={this.onChange}
+                      error={errors.name}
+                    />
+                  </div>
+                </div>
 
-          <InputGroup
-            placeholder="Start Date"
-            name="startDate"
-            value={this.state.startDate}
-            onChange={this.onChange}
-            error={errors.startDate}
-          />
+                <div className="form-group row">
+                  <label className="col-form-label col-sm-3" htmlFor="name">
+                    Event Description
+                  </label>
+                  <div className="col-sm-8">
+                    <textarea
+                      className="form-control"
+                      placeholder="Event Description"
+                      name="description"
+                      value={this.state.description}
+                      onChange={this.onChange}
+                      error={errors.description}
+                    />
+                  </div>
+                </div>
 
-          <InputGroup
-            placeholder="End Date"
-            name="endDate"
-            value={this.state.endDate}
-            onChange={this.onChange}
-            error={errors.endDate}
-          />
+                <div className="form-group row">
+                  <label className="col-form-label col-sm-3" htmlFor="name">
+                    Event Type
+                  </label>
+                  <div className="col-sm-8">
+                    <SelectInputGroup
+                      name="type"
+                      options={["Single", "Weekly", "Bi-Weekly", "Monthly"]}
+                      value={this.state.type}
+                      onChange={this.onChange}
+                      error={errors.type}
+                    />
+                  </div>
+                </div>
 
-          <InputGroup
-            placeholder="Start Time"
-            name="startTime"
-            value={this.state.startTime}
-            onChange={this.onChange}
-            error={errors.startTime}
-          />
+                <InputGroup
+                  placeholder="Start Date"
+                  name="startDate"
+                  value={this.state.startDate}
+                  onChange={this.onChange}
+                  error={errors.startDate}
+                />
 
-          <InputGroup
-            placeholder="End Time"
-            name="endTime"
-            value={this.state.endTime}
-            onChange={this.onChange}
-            error={errors.endTime}
-          />
+                <InputGroup
+                  placeholder="End Date"
+                  name="endDate"
+                  value={this.state.endDate}
+                  onChange={this.onChange}
+                  error={errors.endDate}
+                />
 
-          <textarea
-            style={{ width: "250px", height: "100px", marginTop: "20px" }}
-            placeholder="Event Description"
-            name="description"
-            value={this.state.description}
-            onChange={this.onChange}
-            error={errors.description}
-          />
+                <InputGroup
+                  placeholder="Start Time"
+                  name="startTime"
+                  value={this.state.startTime}
+                  onChange={this.onChange}
+                  error={errors.startTime}
+                />
 
-          <InputGroup
-            placeholder="Event Type"
-            name="type"
-            value={this.state.type}
-            onChange={this.onChange}
-            error={errors.type}
-          />
+                <InputGroup
+                  placeholder="End Time"
+                  name="endTime"
+                  value={this.state.endTime}
+                  onChange={this.onChange}
+                  error={errors.endTime}
+                />
 
-          <InputGroup
-            placeholder="Location"
-            name="location"
-            value={this.state.location}
-            onChange={this.onChange}
-            error={errors.location}
-          />
+                <InputGroup
+                  placeholder="Location"
+                  name="location"
+                  value={this.state.location}
+                  onChange={this.onChange}
+                  error={errors.location}
+                />
 
-          <InputGroup
-            placeholder="Shared"
-            name="shared"
-            value={this.state.shared}
-            onChange={this.onChange}
-            error={errors.shared}
-          />
+                <InputGroup
+                  placeholder="Shared"
+                  name="shared"
+                  value={this.state.shared}
+                  onChange={this.onChange}
+                  error={errors.shared}
+                />
 
-          <InputGroup
-            placeholder="Attendees"
-            name="attendees"
-            value={this.state.attendees}
-            onChange={this.onChange}
-            error={errors.attendees}
-          />
+                <InputGroup
+                  placeholder="Attendees"
+                  name="attendees"
+                  value={this.state.attendees}
+                  onChange={this.onChange}
+                  error={errors.attendees}
+                />
 
-          <input
-            style={{ width: "250px", marginTop: "20px" }}
-            type="submit"
-            value="Add Event"
-          />
-        </form>
+                <div className="form-group">
+                  <button type="submit" className="btn btn-primary btn-block">
+                    Sign Up
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

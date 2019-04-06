@@ -41,6 +41,7 @@ class App extends Component {
                 <PrivateRoute exact path="/event/add" component={AddEvent} />
               </Switch>
             </div>
+            <div style={{ height: "5rem" }} />
             <Footer />
           </div>
         </Router>
