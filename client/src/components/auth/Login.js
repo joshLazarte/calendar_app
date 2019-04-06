@@ -50,21 +50,26 @@ class Login extends Component {
           <div class="col-md-6 m-auto">
             <div class="card p-3">
               <form onSubmit={this.onSubmit}>
-                <InputGroup
-                  name="userName"
-                  placeholder="User Name"
-                  value={userName}
-                  onChange={this.onChange}
-                  error={errors.userName}
-                />
+                <div className="form-group my-3">
+                  <InputGroup
+                    name="userName"
+                    placeholder="User Name"
+                    value={userName}
+                    onChange={this.onChange}
+                    error={errors.userName}
+                  />
+                </div>
 
-                <InputGroup
-                  name="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={this.onChange}
-                  error={errors.password}
-                />
+                <div className="form-group my-3">
+                  <InputGroup
+                    name="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={this.onChange}
+                    error={errors.password}
+                  />
+                </div>
+
                 <div class="form-group">
                   <button type="submit" className="btn btn-primary btn-block">
                     Sign in

@@ -50,37 +50,45 @@ class Register extends Component {
           <div class="col-md-6 m-auto">
             <div class="card p-3">
               <form onSubmit={this.onSubmit}>
-                <InputGroup
-                  placeholder="Username"
-                  name="userName"
-                  value={this.state.userName}
-                  onChange={this.onChange}
-                  error={errors.userName}
-                />
+                <div className="form-group my-3">
+                  <InputGroup
+                    placeholder="Username"
+                    name="userName"
+                    value={this.state.userName}
+                    onChange={this.onChange}
+                    error={errors.userName}
+                  />
+                </div>
 
-                <InputGroup
-                  placeholder="Email"
-                  name="email"
-                  value={this.state.email}
-                  onChange={this.onChange}
-                  error={errors.email}
-                />
+                <div className="form-group my-3">
+                  <InputGroup
+                    placeholder="Email"
+                    name="email"
+                    value={this.state.email}
+                    onChange={this.onChange}
+                    error={errors.email}
+                  />
+                </div>
 
-                <InputGroup
-                  placeholder="Password"
-                  name="password"
-                  value={this.state.password}
-                  onChange={this.onChange}
-                  error={errors.password}
-                />
+                <div className="form-group my-3">
+                  <InputGroup
+                    placeholder="Password"
+                    name="password"
+                    value={this.state.password}
+                    onChange={this.onChange}
+                    error={errors.password}
+                  />
+                </div>
 
-                <InputGroup
-                  placeholder="Confirm Password"
-                  name="password2"
-                  value={this.state.password2}
-                  onChange={this.onChange}
-                  error={errors.password2}
-                />
+                <div className="form-group my-3">
+                  <InputGroup
+                    placeholder="Confirm Password"
+                    name="password2"
+                    value={this.state.password2}
+                    onChange={this.onChange}
+                    error={errors.password2}
+                  />
+                </div>
 
                 <div class="form-group">
                   <button type="submit" className="btn btn-primary btn-block">
