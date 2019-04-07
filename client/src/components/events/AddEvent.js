@@ -6,6 +6,8 @@ import CheckboxInput from "../common/CheckboxInput";
 import Single from "../event_form_options/Single";
 import MultiDay from "../event_form_options/MultiDay";
 import Weekly from "../event_form_options/Weekly";
+import BiWeekly from "../event_form_options/BiWeekly";
+import Monthly from "../event_form_options/Monthly";
 
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -29,7 +31,14 @@ class AddEvent extends Component {
       shared: "false",
       attendees: "",
       errors: {},
-      typeOption: ""
+      typeOption: "",
+      weeklyDay: "",
+      biWeeklyType: "",
+      biWeeklyWeekday: "",
+      monthlyTypeOption: "",
+      monthlyDate: "",
+      monthlyFrequency: "",
+      monthlyWeekday: ""
     };
   }
 
@@ -134,7 +143,7 @@ class AddEvent extends Component {
                     <SelectInputGroup
                       name="typeOption"
                       options={[
-                        "Event Type",
+                        "Choose One",
                         "Single",
                         "Multi-Day",
                         "Weekly",
@@ -169,6 +178,35 @@ class AddEvent extends Component {
                     value={[this.state.weeklyDay]}
                     onChange={this.onChange}
                     error={errors.weeklyDay}
+                  />
+                ) : null}
+
+                {typeOption === "Bi-Weekly" ? (
+                  <BiWeekly
+                    values={[
+                      this.state.biWeeklyType,
+                      this.state.biWeeklyWeekday
+                    ]}
+                    onChange={this.onChange}
+                    errors={[errors.biWeeklyType, errors.biWeeklyWeekday]}
+                  />
+                ) : null}
+
+                {typeOption === "Monthly" ? (
+                  <Monthly
+                    values={[
+                      this.state.monthlyTypeOption,
+                      this.state.monthlyDate,
+                      this.state.monthlyWeekday,
+                      this.state.monthlyFrequency
+                    ]}
+                    onChange={this.onChange}
+                    errors={[
+                      errors.monthlyTypeOption,
+                      errors.monthlyDate,
+                      errors.monthlyWeekday,
+                      errors.monthlyFrequency
+                    ]}
                   />
                 ) : null}
 
@@ -226,7 +264,7 @@ class AddEvent extends Component {
                       />
 
                       <button type="submit" className="btn btn-primary ml-2">
-                        <i class="fas fa-plus" />
+                        <i className="fas fa-plus" />
                       </button>
                     </form>
                   </div>
@@ -242,7 +280,7 @@ class AddEvent extends Component {
                       />
 
                       <button type="submit" className="btn btn-primary ml-2">
-                        <i class="fas fa-plus" />
+                        <i className="fas fa-plus" />
                       </button>
                     </form>
                   </div>
