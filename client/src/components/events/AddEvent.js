@@ -4,13 +4,14 @@ import SelectInputGroup from "../common/SelectInputGroup";
 import CheckboxInput from "../common/CheckboxInput";
 
 import Single from "../event_form_options/Single";
+import MultiDay from "../event_form_options/MultiDay";
+import Weekly from "../event_form_options/Weekly";
 
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { addEvent } from "../../actions/eventActions";
 import { withRouter } from "react-router-dom";
 import autoLogOutIfNeeded from "../../validation/autoLogOut";
-import MultiDay from "../event_form_options/MultiDay";
 
 class AddEvent extends Component {
   constructor() {
@@ -146,6 +147,7 @@ class AddEvent extends Component {
                     />
                   </div>
                 </div>
+
                 {typeOption === "Single" ? (
                   <Single
                     value={this.state.startDate}
@@ -159,6 +161,14 @@ class AddEvent extends Component {
                     values={[this.state.startDate, this.state.endDate]}
                     onChange={this.onChange}
                     errors={[errors.startDate, errors.endDate]}
+                  />
+                ) : null}
+
+                {typeOption === "Weekly" ? (
+                  <Weekly
+                    value={[this.state.weeklyDay]}
+                    onChange={this.onChange}
+                    error={errors.weeklyDay}
                   />
                 ) : null}
 
