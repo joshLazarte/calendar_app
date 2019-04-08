@@ -14,6 +14,7 @@ const Single = props => {
           type="Date"
           value={props.value}
           onChange={props.onChange}
+          readOnly={props.readOnly}
           error={props.error}
         />
       </div>

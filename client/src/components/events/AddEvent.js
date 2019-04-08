@@ -3,11 +3,13 @@ import InputGroup from "../common/InputGroup";
 import SelectInputGroup from "../common/SelectInputGroup";
 import CheckboxInput from "../common/CheckboxInput";
 
+import NameDescriptionAndLocation from "../event_form_options/NameDescriptionAndLocation";
 import Single from "../event_form_options/Single";
 import MultiDay from "../event_form_options/MultiDay";
 import Weekly from "../event_form_options/Weekly";
 import BiWeekly from "../event_form_options/BiWeekly";
 import Monthly from "../event_form_options/Monthly";
+import StartAndEndTime from "../event_form_options/StartAndEndTime";
 
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -23,12 +25,13 @@ class AddEvent extends Component {
       createdBy: "",
       startDate: "",
       endDate: "",
+      allDay: true,
       startTime: "",
       endTime: "",
       description: "",
       type: "",
       location: "",
-      shared: "false",
+      shared: false,
       attendees: "",
       errors: {},
       typeOption: "",
@@ -54,6 +57,18 @@ class AddEvent extends Component {
     }
     return null;
   }
+
+  toggleAllDay = () => {
+    this.setState({ allDay: !this.state.allDay });
+  };
+
+  toggleShared = () => {
+    this.setState({ shared: !this.state.shared });
+  };
+
+  onAddAttendeeClick = e => {
+    e.preventDefault();
+  };
 
   onSubmit = e => {
     e.preventDefault();
@@ -92,51 +107,21 @@ class AddEvent extends Component {
             </div>
             <div className="card-body">
               <form onSubmit={this.onSubmit}>
+                <NameDescriptionAndLocation
+                  values={[
+                    this.state.name,
+                    this.state.description,
+                    this.state.location
+                  ]}
+                  errors={[errors.name, errors.description, errors.location]}
+                  onChange={this.onChange}
+                />
+
                 <div className="form-group row">
-                  <label className="col-form-label col-sm-3" htmlFor="name">
-                    Name
-                  </label>
-                  <div className="col-sm-8">
-                    <InputGroup
-                      placeholder="Event Name"
-                      name="name"
-                      value={this.state.name}
-                      onChange={this.onChange}
-                      error={errors.name}
-                    />
-                  </div>
-                </div>
-                <div className="form-group row">
-                  <label className="col-form-label col-sm-3" htmlFor="name">
-                    Description
-                  </label>
-                  <div className="col-sm-8">
-                    <textarea
-                      className="form-control"
-                      placeholder="Event Description"
-                      name="description"
-                      value={this.state.description}
-                      onChange={this.onChange}
-                      error={errors.description}
-                    />
-                  </div>
-                </div>
-                <div className="form-group row">
-                  <label className="col-form-label col-sm-3" htmlFor="name">
-                    Location
-                  </label>
-                  <div className="col-sm-8">
-                    <InputGroup
-                      placeholder="Event Location"
-                      name="location"
-                      value={this.state.location}
-                      onChange={this.onChange}
-                      error={errors.location}
-                    />
-                  </div>
-                </div>
-                <div className="form-group row">
-                  <label className="col-form-label col-sm-3" htmlFor="name">
+                  <label
+                    className="col-form-label col-sm-3"
+                    htmlFor="typeOption"
+                  >
                     Type
                   </label>
                   <div className="col-sm-8">
@@ -157,31 +142,28 @@ class AddEvent extends Component {
                   </div>
                 </div>
 
-                {typeOption === "Single" ? (
+                {typeOption === "Single" && (
                   <Single
                     value={this.state.startDate}
                     onChange={this.onChange}
                     error={errors.startDate}
                   />
-                ) : null}
-
-                {typeOption === "Multi-Day" ? (
+                )}
+                {typeOption === "Multi-Day" && (
                   <MultiDay
                     values={[this.state.startDate, this.state.endDate]}
                     onChange={this.onChange}
                     errors={[errors.startDate, errors.endDate]}
                   />
-                ) : null}
-
-                {typeOption === "Weekly" ? (
+                )}
+                {typeOption === "Weekly" && (
                   <Weekly
                     value={[this.state.weeklyDay]}
                     onChange={this.onChange}
                     error={errors.weeklyDay}
                   />
-                ) : null}
-
-                {typeOption === "Bi-Weekly" ? (
+                )}
+                {typeOption === "Bi-Weekly" && (
                   <BiWeekly
                     values={[
                       this.state.biWeeklyType,
@@ -190,9 +172,8 @@ class AddEvent extends Component {
                     onChange={this.onChange}
                     errors={[errors.biWeeklyType, errors.biWeeklyWeekday]}
                   />
-                ) : null}
-
-                {typeOption === "Monthly" ? (
+                )}
+                {typeOption === "Monthly" && (
                   <Monthly
                     values={[
                       this.state.monthlyTypeOption,
@@ -208,53 +189,35 @@ class AddEvent extends Component {
                       errors.monthlyFrequency
                     ]}
                   />
-                ) : null}
+                )}
 
-                <div className="form-check my-4">
-                  <CheckboxInput
-                    name="shared"
-                    value={this.state.shared}
+                <CheckboxInput
+                  name="allDay"
+                  value={this.state.allDay}
+                  onChange={this.toggleAllDay}
+                  checked={this.state.allDay}
+                  label="All Day Event"
+                />
+
+                {!this.state.allDay && (
+                  <StartAndEndTime
+                    values={[this.state.startTime, this.state.endTime]}
+                    error={errors.startTime}
                     onChange={this.onChange}
                   />
-                  <label className="form-check-label" htmlFor="shared">
-                    All Day Event
-                  </label>
-                </div>
-                <div className="form-group row">
-                  <div className="col-sm-6">
-                    <label htmlFor="startTime">Start Time</label>
-                    <InputGroup
-                      placeholder="Start Time"
-                      name="startTime"
-                      value={this.state.startTime}
-                      onChange={this.onChange}
-                      error={errors.startTime}
-                    />
-                  </div>
-                  <div className="col-sm-6">
-                    <label htmlFor="endTime">End Time</label>
-                    <InputGroup
-                      placeholder="End Time"
-                      name="endTime"
-                      value={this.state.endTime}
-                      onChange={this.onChange}
-                      error={errors.endTime}
-                    />
-                  </div>
-                </div>
-                <div className="form-check my-4">
-                  <CheckboxInput
-                    name="shared"
-                    value={this.state.shared}
-                    onChange={this.onChange}
-                  />
-                  <label className="form-check-label" htmlFor="shared">
-                    Share This Event
-                  </label>
-                </div>
-                <div className="row">
-                  <div className="col-sm-6">
-                    <form className="form-inline my-3">
+                )}
+
+                <CheckboxInput
+                  name="shared"
+                  value={this.state.shared}
+                  onChange={this.toggleShared}
+                  checked={this.state.shared}
+                  label="Share This Event"
+                />
+
+                {this.state.shared && (
+                  <div className="row">
+                    <div className="col-sm-5 pr-1">
                       <InputGroup
                         placeholder="Attendee"
                         name="attendees"
@@ -262,30 +225,20 @@ class AddEvent extends Component {
                         onChange={this.onChange}
                         error={errors.attendees}
                       />
-
-                      <button type="submit" className="btn btn-primary ml-2">
+                    </div>
+                    <div className="col-sm-1 pl-0">
+                      <a
+                        href="!#"
+                        onClick={this.onAddAttendeeClick}
+                        className="btn btn-primary"
+                      >
                         <i className="fas fa-plus" />
-                      </button>
-                    </form>
+                      </a>
+                    </div>
                   </div>
+                )}
 
-                  <div className="col-sm-6">
-                    <form className="form-inline my-3">
-                      <InputGroup
-                        placeholder="Attendee"
-                        name="attendees"
-                        value={this.state.attendees}
-                        onChange={this.onChange}
-                        error={errors.attendees}
-                      />
-
-                      <button type="submit" className="btn btn-primary ml-2">
-                        <i className="fas fa-plus" />
-                      </button>
-                    </form>
-                  </div>
-                </div>
-                <div className="form-group">
+                <div className="form-group my-5">
                   <button type="submit" className="btn btn-primary btn-block">
                     Add Event
                   </button>

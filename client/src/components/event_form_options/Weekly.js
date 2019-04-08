@@ -22,6 +22,7 @@ const Weekly = props => {
           ]}
           value={props.value}
           onChange={props.onChange}
+          readOnly={props.readOnly}
           error={props.error}
         />
       </div>

@@ -23,6 +23,7 @@ const BiWeekly = props => {
           value={props.values[1]}
           onChange={props.onChange}
           error={props.errors[1]}
+          readOnly={props.readOnly}
         />
       </div>
     );
@@ -40,6 +41,7 @@ const BiWeekly = props => {
           value={props.values[0]}
           onChange={props.onChange}
           error={props.errors[0]}
+          readOnly={props.readOnly}
         />
       </div>
       {biWeeklyDay}

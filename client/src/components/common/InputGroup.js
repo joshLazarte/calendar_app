@@ -2,7 +2,15 @@ import React from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 
-const InputGroup = ({ name, placeholder, value, type, onChange, error }) => {
+const InputGroup = ({
+  name,
+  placeholder,
+  value,
+  type,
+  onChange,
+  readOnly,
+  error
+}) => {
   return (
     <div>
       <input
@@ -14,6 +22,7 @@ const InputGroup = ({ name, placeholder, value, type, onChange, error }) => {
         name={name}
         value={value}
         onChange={onChange}
+        readOnly={readOnly}
       />
       {error && <div className="invalid-feedback">{error}</div>}
     </div>

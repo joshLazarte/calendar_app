@@ -12,6 +12,7 @@ const MultiDay = props => {
           type="Date"
           value={props.values[0]}
           onChange={props.onChange}
+          readOnly={props.readOnly}
           error={props.errors[0]}
         />
       </div>
@@ -23,6 +24,7 @@ const MultiDay = props => {
           type="Date"
           value={props.values[1]}
           onChange={props.onChange}
+          readOnly={props.readOnly}
           error={props.errors[1]}
         />
       </div>

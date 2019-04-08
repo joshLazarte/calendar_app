@@ -2,7 +2,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 
-const SelectInputGroup = ({ name, onChange, options: [...options], error }) => {
+const SelectInputGroup = ({
+  name,
+  onChange,
+  options: [...options],
+  readOnly,
+  error
+}) => {
   return (
     <div>
       <select
@@ -11,6 +17,7 @@ const SelectInputGroup = ({ name, onChange, options: [...options], error }) => {
         })}
         name={name}
         onChange={onChange}
+        readOnly={readOnly}
       >
         {options.map(option => (
           <option value={option} key={option}>
