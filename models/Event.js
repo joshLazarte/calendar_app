@@ -25,9 +25,30 @@ const eventSchema = new mongoose.Schema({
     description: {
         type: String
     },
-    type: {
+    frequency: {
         type: String,
         required: true
+    },
+    biWeeklySchedule: {
+        type: String
+    },
+    biWeeklyDay: {
+        type: String
+    },
+    weeklyDay: {
+        type: String
+    },
+    monthlyType: {
+        String
+    },
+    monthlyDate: {
+        type: String
+    },
+    monthlySchedule: {
+        type: String
+    },
+    monthlyDay: {
+        type: String
     },
     location: {
         type: String

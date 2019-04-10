@@ -28,19 +28,25 @@ router.post("/new", async (req, res) => {
       req.body.attendees
     );
 
-    const newEventData = {
-      name: req.body.name,
-      createdBy: eventOwner,
-      startDate: req.body.startDate,
-      endDate: req.body.endDate,
-      startTime: req.body.startTime,
-      endTime: req.body.endTime,
-      description: req.body.description,
-      type: req.body.type,
-      location: req.body.location,
-      attendees: attendeesToAdd,
-      shared: req.body.shared
-    };
+    const newEventData = {};
+    newEventData.name = req.body.name;
+    newEventData.createdBy = eventOwner;
+    newEventData.startDate = req.body.startDate;
+    newEventData.attendees = attendeesToAdd;
+    newEventData.shared = req.body.shared;
+    newEventData.frequency = req.body.frequency;
+    if(req.body.endDate) newEventData.endDate = req.body.endDate;
+    if(req.body.startTime) newEventData.startTime = req.body.startTime;
+    if(req.body.endTime) newEventData.endTime = req.body.endTime;
+    if(req.body.description) newEventData.description = req.body.description;
+    if(req.body.biWeeklySchedule) newEventData.biWeeklySchedule = req.body.biWeeklySchedule;
+    if(req.body.biWeeklyDay) newEventData.biWeeklyDay = req.body.biWeeklyDay;
+    if(req.body.weeklyDay) newEventData.weeklyDay = req.body.weeklyDay;
+    if(req.body.monthlyType) newEventData.monthlyType = req.body.monthlyType;
+    if(req.body.monthlyDate) newEventData.monthlyDate = req.body.monthlyDate;
+    if(req.body.monthlySchedule) newEventData.monthlySchedule = req.body.monthlySchedule;
+    if(req.body.monthlyDay) newEventData.monthlyDay = req.body.monthlyDay;
+    if(req.body.location) newEventData.location = req.body.location;
 
     const newEvent = await Event.create(newEventData);
 
