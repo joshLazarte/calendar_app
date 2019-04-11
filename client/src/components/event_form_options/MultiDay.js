@@ -1,5 +1,6 @@
 import React from "react";
 import InputGroup from "../common/InputGroup";
+import PropTypes from "prop-types";
 
 const MultiDay = props => {
   return (
@@ -30,6 +31,12 @@ const MultiDay = props => {
       </div>
     </div>
   );
+};
+
+MultiDay.propTypes = {
+  values: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+  errors: PropTypes.array
 };
 
 export default MultiDay;

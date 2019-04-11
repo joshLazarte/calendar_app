@@ -1,5 +1,6 @@
 import React from "react";
 import SelectInputGroup from "../common/SelectInputGroup";
+import PropTypes from "prop-types";
 
 const Weekly = props => {
   return (
@@ -28,6 +29,12 @@ const Weekly = props => {
       </div>
     </div>
   );
+};
+
+Weekly.propTypes = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  error: PropTypes.string
 };
 
 export default Weekly;

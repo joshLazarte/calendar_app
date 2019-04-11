@@ -45,7 +45,7 @@ class Login extends Component {
     const { errors, userName, password } = this.state;
     return (
       <div>
-        <h1 class="text-center mb-5">Login</h1>
+        <h1 className="text-center mb-5">Login</h1>
         <div className="row">
           <div class="col-md-6 m-auto">
             <div class="card p-3">

@@ -1,5 +1,6 @@
 import React from "react";
 import SelectInputGroup from "../common/SelectInputGroup";
+import PropTypes from "prop-types";
 
 const BiWeekly = props => {
   let biWeeklyDay;
@@ -34,9 +35,9 @@ const BiWeekly = props => {
   return (
     <div className="form-group row">
       <div className="col-sm-6">
-        <label htmlFor="biWeeklyType">Bi-Weekly Type</label>
+        <label htmlFor="biWeeklySchedule">Bi-Weekly Schedule</label>
         <SelectInputGroup
-          name="biWeeklyType"
+          name="biWeeklySchedule"
           options={["Choose One", "1st and 2nd", "3rd and 4th"]}
           value={props.values[0]}
           onChange={props.onChange}
@@ -47,6 +48,12 @@ const BiWeekly = props => {
       {biWeeklyDay}
     </div>
   );
+};
+
+BiWeekly.propTypes = {
+  values: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+  errors: PropTypes.array
 };
 
 export default BiWeekly;

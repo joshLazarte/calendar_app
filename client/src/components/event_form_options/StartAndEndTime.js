@@ -1,5 +1,6 @@
 import React from "react";
 import InputGroup from "../common/InputGroup";
+import PropTypes from "prop-types";
 
 const StartAndEndTime = props => {
   return (
@@ -9,7 +10,7 @@ const StartAndEndTime = props => {
         <InputGroup
           placeholder="Start Time"
           name="startTime"
-          values={props.values[0]}
+          value={props.values[0]}
           onChange={props.onChange}
           error={props.error}
         />
@@ -19,12 +20,17 @@ const StartAndEndTime = props => {
         <InputGroup
           placeholder="End Time"
           name="endTime"
-          values={props.values[1]}
+          value={props.values[1]}
           onChange={props.onChange}
         />
       </div>
     </div>
   );
+};
+
+StartAndEndTime.propTypes = {
+  values: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired
 };
 
 export default StartAndEndTime;

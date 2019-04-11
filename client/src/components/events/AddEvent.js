@@ -29,24 +29,48 @@ class AddEvent extends Component {
       startTime: "",
       endTime: "",
       description: "",
-      type: "",
+      frequency: "",
       location: "",
       shared: false,
       attendees: "",
       errors: {},
-      typeOption: "",
       weeklyDay: "",
-      biWeeklyType: "",
-      biWeeklyWeekday: "",
-      monthlyTypeOption: "",
+      biWeeklySchedule: "",
+      biWeeklyDay: "",
+      monthlyType: "",
       monthlyDate: "",
-      monthlyFrequency: "",
-      monthlyWeekday: ""
+      monthlySchedule: "",
+      monthlyDay: ""
     };
   }
 
   componentDidMount() {
     autoLogOutIfNeeded();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { frequency } = this.state;
+    if (prevState.frequency !== frequency) {
+      return this.setState({
+        startDate: "",
+        endDate: "",
+        weeklyDay: "",
+        biWeeklySchedule: "",
+        biWeeklyDay: "",
+        monthlyType: "",
+        monthlyDate: "",
+        monthlySchedule: "",
+        monthlyDay: ""
+      });
+    }
+
+    if (prevState.monthlyType !== this.state.monthlyType) {
+      return this.setState({
+        monthlyDate: "",
+        monthlySchedule: "",
+        monthlyDay: ""
+      });
+    }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -83,7 +107,7 @@ class AddEvent extends Component {
       startTime: this.state.startTime,
       endTime: this.state.endTime,
       description: this.state.description,
-      type: this.state.type,
+      frequency: this.state.frequency,
       location: this.state.location,
       attendees: this.state.attendees,
       shared: this.state.shared
@@ -97,7 +121,7 @@ class AddEvent extends Component {
   };
 
   render() {
-    const { errors, typeOption } = this.state;
+    const { errors, frequency } = this.state;
     return (
       <div className="row">
         <div className="col-md-10 col-lg-8 mx-auto">
@@ -120,13 +144,13 @@ class AddEvent extends Component {
                 <div className="form-group row">
                   <label
                     className="col-form-label col-sm-3"
-                    htmlFor="typeOption"
+                    htmlFor="frequency"
                   >
-                    Type
+                    Frequency
                   </label>
                   <div className="col-sm-8">
                     <SelectInputGroup
-                      name="typeOption"
+                      name="frequency"
                       options={[
                         "Choose One",
                         "Single",
@@ -135,58 +159,58 @@ class AddEvent extends Component {
                         "Bi-Weekly",
                         "Monthly"
                       ]}
-                      value={this.state.typeOption}
+                      value={this.state.frequency}
                       onChange={this.onChange}
-                      error={errors.type}
+                      error={errors.frequency}
                     />
                   </div>
                 </div>
 
-                {typeOption === "Single" && (
+                {frequency === "single" && (
                   <Single
                     value={this.state.startDate}
                     onChange={this.onChange}
                     error={errors.startDate}
                   />
                 )}
-                {typeOption === "Multi-Day" && (
+                {frequency === "multi-day" && (
                   <MultiDay
                     values={[this.state.startDate, this.state.endDate]}
                     onChange={this.onChange}
                     errors={[errors.startDate, errors.endDate]}
                   />
                 )}
-                {typeOption === "Weekly" && (
+                {frequency === "weekly" && (
                   <Weekly
-                    value={[this.state.weeklyDay]}
+                    value={this.state.weeklyDay}
                     onChange={this.onChange}
                     error={errors.weeklyDay}
                   />
                 )}
-                {typeOption === "Bi-Weekly" && (
+                {frequency === "bi-weekly" && (
                   <BiWeekly
                     values={[
-                      this.state.biWeeklyType,
-                      this.state.biWeeklyWeekday
+                      this.state.biWeeklySchedule,
+                      this.state.biWeeklyDay
                     ]}
                     onChange={this.onChange}
-                    errors={[errors.biWeeklyType, errors.biWeeklyWeekday]}
+                    errors={[errors.biWeeklySchedule, errors.biWeeklyDay]}
                   />
                 )}
-                {typeOption === "Monthly" && (
+                {frequency === "monthly" && (
                   <Monthly
                     values={[
-                      this.state.monthlyTypeOption,
+                      this.state.monthlyType,
                       this.state.monthlyDate,
-                      this.state.monthlyWeekday,
-                      this.state.monthlyFrequency
+                      this.state.monthlyDay,
+                      this.state.monthlySchedule
                     ]}
                     onChange={this.onChange}
                     errors={[
-                      errors.monthlyTypeOption,
+                      errors.monthlyType,
                       errors.monthlyDate,
-                      errors.monthlyWeekday,
-                      errors.monthlyFrequency
+                      errors.monthlyDay,
+                      errors.monthlySchedule
                     ]}
                   />
                 )}

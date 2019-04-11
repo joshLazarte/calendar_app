@@ -1,5 +1,6 @@
 import React from "react";
 import InputGroup from "../common/InputGroup";
+import PropTypes from "prop-types";
 
 const NameDescriptionAndLocation = props => {
   return (
@@ -52,6 +53,12 @@ const NameDescriptionAndLocation = props => {
       </div>
     </div>
   );
+};
+
+NameDescriptionAndLocation.propTypes = {
+  values: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+  errors: PropTypes.array
 };
 
 export default NameDescriptionAndLocation;

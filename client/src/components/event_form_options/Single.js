@@ -1,5 +1,6 @@
 import React from "react";
 import InputGroup from "../common/InputGroup";
+import PropTypes from "prop-types";
 
 const Single = props => {
   return (
@@ -20,6 +21,12 @@ const Single = props => {
       </div>
     </div>
   );
+};
+
+Single.propTypes = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  error: PropTypes.string
 };
 
 export default Single;

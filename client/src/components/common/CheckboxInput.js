@@ -21,7 +21,7 @@ const CheckboxInput = ({ name, value, onChange, type, checked, label }) => {
 
 CheckboxInput.propTypes = {
   name: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.bool.isRequired,
   type: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired
 };

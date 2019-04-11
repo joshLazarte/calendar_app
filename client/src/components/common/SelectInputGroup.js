@@ -20,7 +20,10 @@ const SelectInputGroup = ({
         readOnly={readOnly}
       >
         {options.map(option => (
-          <option value={option} key={option}>
+          <option
+            value={option === "Choose One" ? "" : option.toLowerCase()}
+            key={option}
+          >
             {option}
           </option>
         ))}
