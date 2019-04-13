@@ -1,17 +1,27 @@
 const Validator = require("validator");
 const isEmpty = require("./is-empty");
+const utils = require("../utils");
 
 module.exports = function validateCreateEventInput(data) {
   let errors = {};
 
   data.name = !isEmpty(data.name) ? data.name : "";
   data.startDate = !isEmpty(data.startDate) ? data.startDate : "";
+  data.endDate = !isEmpty(data.endDate) ? data.endDate : "";
   data.frequency = !isEmpty(data.frequency) ? data.frequency : "";
   data.createdBy = !isEmpty(data.createdBy) ? data.createdBy : "";
-
-  if (!Validator.isLength(data.name, { min: 2, max: 30 })) {
-    errors.name = "Event name must be between 2 and 30 characters";
-  }
+  data.weeklyDay = !isEmpty(data.weeklyDay) ? data.weeklyDay : "";
+  data.biWeeklySchedule = !isEmpty(data.biWeeklySchedule)
+    ? data.biWeeklySchedule
+    : "";
+  data.biWeeklyDay = !isEmpty(data.biWeeklyDay) ? data.biWeeklyDay : "";
+  data.monthlyType = !isEmpty(data.monthlyType) ? data.monthlyType : "";
+  data.monthlyDate = !isEmpty(data.monthlyDate) ? data.monthlyDate : "";
+  data.monthlySchedule = !isEmpty(data.monthlySchedule)
+    ? data.monthlySchedule
+    : "";
+  data.monthlyDay = !isEmpty(data.monthlyDay) ? data.monthlyDay : "";
+  data.attendees = !isEmpty(data.attendees) ? data.attendees : "";
 
   if (Validator.isEmpty(data.name)) {
     errors.name = "Event Name field is required";
@@ -63,11 +73,17 @@ module.exports = function validateCreateEventInput(data) {
     }
 
     if (data.monthlyType === "by day") {
-      if (Validator.isEmpty(data.MonthlySchedule)) {
-        errors.MonthlySchedule = "Monthly schedule field is required";
+      if (Validator.isEmpty(data.monthlySchedule)) {
+        errors.monthlySchedule = "Monthly schedule field is required";
       } else if (Validator.isEmpty(data.monthlyDay)) {
         errors.monthlyDay = "Weekday field is required";
       }
+    }
+  }
+
+  if (utils.parseStringToBool(data.shared)) {
+    if (Validator.isEmpty(data.attendees)) {
+      errors.attendees = "Add an attendee or uncheck 'Share This Event'";
     }
   }
 

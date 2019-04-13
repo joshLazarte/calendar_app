@@ -13,13 +13,18 @@ import StartAndEndTime from "../event_form_options/StartAndEndTime";
 
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { addEvent } from "../../actions/eventActions";
+import {
+  addEvent,
+  stageAttendee,
+  unstageAttendee,
+  clearErrors
+} from "../../actions/eventActions";
 import { withRouter } from "react-router-dom";
 import autoLogOutIfNeeded from "../../validation/autoLogOut";
 
 class AddEvent extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       name: "",
       createdBy: "",
@@ -32,7 +37,7 @@ class AddEvent extends Component {
       frequency: "",
       location: "",
       shared: false,
-      attendees: "",
+      attendeeSearchField: "",
       errors: {},
       weeklyDay: "",
       biWeeklySchedule: "",
@@ -46,6 +51,7 @@ class AddEvent extends Component {
 
   componentDidMount() {
     autoLogOutIfNeeded();
+    this.props.clearErrors();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -91,13 +97,25 @@ class AddEvent extends Component {
   };
 
   onAddAttendeeClick = e => {
+    e.target.blur();
     e.preventDefault();
+    this.props.stageAttendee(this.state.attendeeSearchField);
+    this.setState({ attendeeSearchField: "" });
   };
+
+  onDeleteAttendeeClick(attendee, e) {
+    e.target.blur();
+    e.preventDefault();
+    this.props.unstageAttendee(attendee);
+  }
 
   onSubmit = e => {
     e.preventDefault();
 
-    const { addEvent, history, auth } = this.props;
+    const { addEvent, history, auth, event } = this.props;
+
+    const attendees = event.stagedAttendees.join(",");
+    console.log(attendees);
 
     const newEvent = {
       name: this.state.name,
@@ -109,8 +127,15 @@ class AddEvent extends Component {
       description: this.state.description,
       frequency: this.state.frequency,
       location: this.state.location,
-      attendees: this.state.attendees,
-      shared: this.state.shared
+      attendees,
+      shared: this.state.shared.toString(),
+      weeklyDay: this.state.weeklyDay,
+      biWeeklySchedule: this.state.biWeeklySchedule,
+      biWeeklyDay: this.state.biWeeklyDay,
+      monthlyType: this.state.monthlyType,
+      monthlyDate: this.state.monthlyDate,
+      monthlySchedule: this.state.monthlySchedule,
+      monthlyDay: this.state.monthlyDay
     };
 
     addEvent(newEvent, history);
@@ -121,6 +146,31 @@ class AddEvent extends Component {
   };
 
   render() {
+    const { stagedAttendees, attendeeLoading } = this.props.event;
+    let addAttendeeButton;
+
+    if (attendeeLoading) {
+      addAttendeeButton = (
+        <a
+          href="!#"
+          onClick={e => e.preventDefault()}
+          className="btn btn-primary ml-1"
+        >
+          <i className="fas fa-circle-notch fa-spin" />
+        </a>
+      );
+    } else {
+      addAttendeeButton = (
+        <a
+          href="!#"
+          onClick={this.onAddAttendeeClick}
+          className="btn btn-primary ml-1"
+        >
+          <i className="fas fa-plus" />
+        </a>
+      );
+    }
+
     const { errors, frequency } = this.state;
     return (
       <div className="row">
@@ -241,23 +291,38 @@ class AddEvent extends Component {
 
                 {this.state.shared && (
                   <div className="row">
-                    <div className="col-sm-5 pr-1">
+                    {stagedAttendees.map(attendee => (
+                      <div
+                        key={attendee}
+                        className="col-sm-6 d-flex align-items-start pt-3"
+                      >
+                        <InputGroup
+                          value={attendee}
+                          readOnly={true}
+                          name={attendee}
+                        />
+                        <a
+                          href="!#"
+                          onClick={this.onDeleteAttendeeClick.bind(
+                            this,
+                            attendee
+                          )}
+                          value={attendee}
+                          className="btn btn-danger ml-1"
+                        >
+                          <i className="fas fa-ban" />
+                        </a>
+                      </div>
+                    ))}
+                    <div className="col-sm-6 d-flex align-items-start pt-3">
                       <InputGroup
                         placeholder="Attendee"
-                        name="attendees"
-                        value={this.state.attendees}
+                        name="attendeeSearchField"
+                        value={this.state.attendeeSearchField}
                         onChange={this.onChange}
                         error={errors.attendees}
                       />
-                    </div>
-                    <div className="col-sm-1 pl-0">
-                      <a
-                        href="!#"
-                        onClick={this.onAddAttendeeClick}
-                        className="btn btn-primary"
-                      >
-                        <i className="fas fa-plus" />
-                      </a>
+                      {addAttendeeButton}
                     </div>
                   </div>
                 )}
@@ -279,15 +344,19 @@ class AddEvent extends Component {
 AddEvent.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
-  addEvent: PropTypes.func.isRequired
+  addEvent: PropTypes.func.isRequired,
+  stageAttendee: PropTypes.func.isRequired,
+  unstageAttendee: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
+  event: state.event,
   errors: state.errors
 });
 
 export default connect(
   mapStateToProps,
-  { addEvent }
+  { addEvent, stageAttendee, unstageAttendee, clearErrors }
 )(withRouter(AddEvent));

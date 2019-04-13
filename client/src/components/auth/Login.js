@@ -47,8 +47,8 @@ class Login extends Component {
       <div>
         <h1 className="text-center mb-5">Login</h1>
         <div className="row">
-          <div class="col-md-6 m-auto">
-            <div class="card p-3">
+          <div className="col-md-6 m-auto">
+            <div className="card p-3">
               <form onSubmit={this.onSubmit}>
                 <div className="form-group my-3">
                   <InputGroup
@@ -70,7 +70,7 @@ class Login extends Component {
                   />
                 </div>
 
-                <div class="form-group">
+                <div className="form-group">
                   <button type="submit" className="btn btn-primary btn-block">
                     Sign in
                   </button>

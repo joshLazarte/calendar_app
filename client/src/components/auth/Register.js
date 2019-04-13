@@ -46,9 +46,9 @@ class Register extends Component {
     return (
       <div>
         <h1 className="mb-5 text-center">Sign Up</h1>
-        <div class="row">
-          <div class="col-md-6 m-auto">
-            <div class="card p-3">
+        <div className="row">
+          <div className="col-md-6 m-auto">
+            <div className="card p-3">
               <form onSubmit={this.onSubmit}>
                 <div className="form-group my-3">
                   <InputGroup
@@ -90,7 +90,7 @@ class Register extends Component {
                   />
                 </div>
 
-                <div class="form-group">
+                <div className="form-group">
                   <button type="submit" className="btn btn-primary btn-block">
                     Sign Up
                   </button>

@@ -31,22 +31,24 @@ router.post("/new", async (req, res) => {
     const newEventData = {};
     newEventData.name = req.body.name;
     newEventData.createdBy = eventOwner;
-    newEventData.startDate = req.body.startDate;
+    if (req.body.startDate) newEventData.startDate = req.body.startDate;
     newEventData.attendees = attendeesToAdd;
     newEventData.shared = req.body.shared;
     newEventData.frequency = req.body.frequency;
-    if(req.body.endDate) newEventData.endDate = req.body.endDate;
-    if(req.body.startTime) newEventData.startTime = req.body.startTime;
-    if(req.body.endTime) newEventData.endTime = req.body.endTime;
-    if(req.body.description) newEventData.description = req.body.description;
-    if(req.body.biWeeklySchedule) newEventData.biWeeklySchedule = req.body.biWeeklySchedule;
-    if(req.body.biWeeklyDay) newEventData.biWeeklyDay = req.body.biWeeklyDay;
-    if(req.body.weeklyDay) newEventData.weeklyDay = req.body.weeklyDay;
-    if(req.body.monthlyType) newEventData.monthlyType = req.body.monthlyType;
-    if(req.body.monthlyDate) newEventData.monthlyDate = req.body.monthlyDate;
-    if(req.body.monthlySchedule) newEventData.monthlySchedule = req.body.monthlySchedule;
-    if(req.body.monthlyDay) newEventData.monthlyDay = req.body.monthlyDay;
-    if(req.body.location) newEventData.location = req.body.location;
+    if (req.body.endDate) newEventData.endDate = req.body.endDate;
+    if (req.body.startTime) newEventData.startTime = req.body.startTime;
+    if (req.body.endTime) newEventData.endTime = req.body.endTime;
+    if (req.body.description) newEventData.description = req.body.description;
+    if (req.body.biWeeklySchedule)
+      newEventData.biWeeklySchedule = req.body.biWeeklySchedule;
+    if (req.body.biWeeklyDay) newEventData.biWeeklyDay = req.body.biWeeklyDay;
+    if (req.body.weeklyDay) newEventData.weeklyDay = req.body.weeklyDay;
+    if (req.body.monthlyType) newEventData.monthlyType = req.body.monthlyType;
+    if (req.body.monthlyDate) newEventData.monthlyDate = req.body.monthlyDate;
+    if (req.body.monthlySchedule)
+      newEventData.monthlySchedule = req.body.monthlySchedule;
+    if (req.body.monthlyDay) newEventData.monthlyDay = req.body.monthlyDay;
+    if (req.body.location) newEventData.location = req.body.location;
 
     const newEvent = await Event.create(newEventData);
 
@@ -191,7 +193,7 @@ router.delete(
       });
 
       if (isEmpty(foundEvent)) throw new Error();
-      
+
       const deletedEvent = await Event.findOneAndRemove({
         _id: req.params.id
       });
@@ -205,59 +207,71 @@ router.delete(
 );
 
 // @route    GET /api/event/attendee/:userName
-// @desc     
+// @desc
 // @access   Private
-router.get('/attendee/:userName',
+router.get(
+  "/attendee/:userName",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     const errors = {};
     try {
-      const attendee = await User.findOne({lower_case_username: req.params.userName.toLowerCase()});
-      
-      if(isEmpty(attendee)) throw new Error();
-      
+      const attendee = await User.findOne({
+        lower_case_username: req.params.userName.toLowerCase()
+      });
+
+      if (isEmpty(attendee)) throw new Error();
+
+      if (attendee.userName === req.user.userName) {
+        errors.attendees = "You can not add yourself";
+        return res.status(400).json(errors);
+      }
+
       res.status(200).json(attendee.userName);
-    } catch(err) {
-      errors.error = 'That attendee does not exist';
+    } catch (err) {
+      errors.attendees = `Attendee ${req.params.userName} was not found`;
       res.status(404).json(errors);
     }
-});
+  }
+);
 
 // @route    DELETE /api/event/:id/attendee/:userName/delete
 // @desc     remove attendee from event
 // @access   Private
-router.delete('/:id/attendee/:userName/delete',
+router.delete(
+  "/:id/attendee/:userName/delete",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     const errors = {};
     try {
-      const event = await Event.findOne({_id: req.params.id});
-      
-      if(event.createdBy.userName === req.params.userName) {
-        
-        errors.invalid = 'You cannot remove yourself from an event you created';
+      const event = await Event.findOne({ _id: req.params.id });
+
+      if (event.createdBy.userName === req.params.userName) {
+        errors.invalid = "You cannot remove yourself from an event you created";
         res.status(400).json(errors);
-        
-      } else if(event.createdBy.userName === req.user.userName || req.user.userName === req.params.userName) {
-        
-      const updatedEventData = utils.eventUtilities.removeAttendeeFromEvent(req.params.userName, event);
-        
-      const updatedEvent = await Event.findByIdAndUpdate(
+      } else if (
+        event.createdBy.userName === req.user.userName ||
+        req.user.userName === req.params.userName
+      ) {
+        const updatedEventData = utils.eventUtilities.removeAttendeeFromEvent(
+          req.params.userName,
+          event
+        );
+
+        const updatedEvent = await Event.findByIdAndUpdate(
           req.params.id,
           updatedEventData
-      );
-      
-      res.json({status: 'success'});
-      
+        );
+
+        res.json({ status: "success" });
       } else {
-        errors.unauthorized = 'You are not authorized to remove that attendee';
+        errors.unauthorized = "You are not authorized to remove that attendee";
         res.status(400).json(errors);
       }
-      
-    } catch(err) {
-      errors.error = 'Unable to remove attendee';
+    } catch (err) {
+      errors.error = "Unable to remove attendee";
       res.status(400).json(errors);
     }
-});
+  }
+);
 
 module.exports = router;
