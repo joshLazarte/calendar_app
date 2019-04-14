@@ -5,6 +5,18 @@ import moment from "moment";
 import isEmpty from "../../validation/is-empty";
 
 class EventInCalendarCell extends Component {
+  constructor(props) {
+    super(props);
+    const { rawDate } = props;
+    this.state = {
+      year: rawDate.getFullYear(),
+      month: rawDate.getMonth(),
+      date: rawDate.getDate(),
+      weekOrder: Math.ceil(rawDate.getDate() / 7),
+      day: rawDate.getDay()
+    };
+  }
+
   getCurrentEventsByDate = (date, events) => {
     const currentEvents = [];
     events.map(event => {
@@ -24,9 +36,12 @@ class EventInCalendarCell extends Component {
   };
 
   render() {
-    const { events, date } = this.props;
-    const currentEvents = this.getCurrentEventsByDate(date, events);
+    const { events, formattedDate } = this.props;
+    const currentEvents = this.getCurrentEventsByDate(formattedDate, events);
     let eventContent;
+    if (formattedDate === "2019-04-15") {
+      console.table(this.state);
+    }
 
     if (!isEmpty(currentEvents)) {
       eventContent = (

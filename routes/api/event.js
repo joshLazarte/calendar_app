@@ -17,6 +17,11 @@ router.post("/new", async (req, res) => {
     return res.status(400).json(errors);
   }
 
+  if (req.body.unsavedAttendee) {
+    errors.attendees = "Please save this attendee";
+    return res.status(400).json(errors);
+  }
+
   try {
     const eventOwner = await utils.eventUtilities.getEventCreatorByUsername(
       req.body.createdBy

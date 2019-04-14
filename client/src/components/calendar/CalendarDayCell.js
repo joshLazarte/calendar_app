@@ -7,11 +7,12 @@ import classnames from "classnames";
 class CalendarDayCell extends Component {
   constructor(props) {
     super(props);
-    const { day, monthValue, year } = this.props;
+    const { day, monthValue, year } = props;
     this.state = {
       events: [],
       today: moment(new Date()).format("YYYY-MM-DD"),
-      cellDate: moment(new Date(year, monthValue, day)).format("YYYY-MM-DD")
+      cellDate: moment(new Date(year, monthValue, day)).format("YYYY-MM-DD"),
+      rawDate: new Date(year, monthValue, day)
     };
   }
 
@@ -30,7 +31,7 @@ class CalendarDayCell extends Component {
 
   render() {
     const { emptyCell, day } = this.props;
-    const { today, cellDate } = this.state;
+    const { today, cellDate, rawDate } = this.state;
 
     let cellData;
 
@@ -40,7 +41,7 @@ class CalendarDayCell extends Component {
       cellData = (
         <small className="calendar-cell-number">
           {day}
-          <EventInCalendarCell date={cellDate} />
+          <EventInCalendarCell formattedDate={cellDate} rawDate={rawDate} />
         </small>
       );
     }

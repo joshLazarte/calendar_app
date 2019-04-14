@@ -135,7 +135,8 @@ class AddEvent extends Component {
       monthlyType: this.state.monthlyType,
       monthlyDate: this.state.monthlyDate,
       monthlySchedule: this.state.monthlySchedule,
-      monthlyDay: this.state.monthlyDay
+      monthlyDay: this.state.monthlyDay,
+      unsavedAttendee: this.state.attendeeSearchField
     };
 
     addEvent(newEvent, history);
