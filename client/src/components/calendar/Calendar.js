@@ -77,7 +77,7 @@ class Calendar extends Component {
     for (let i = 1; i <= daysInMonth; i++) {
       cellsWithData.push({
         emptyCell: false,
-        day: i,
+        date: i,
         monthValue: monthValue,
         year: year
       });
@@ -128,11 +128,16 @@ class Calendar extends Component {
               return (
                 <tr key={index}>
                   {row.map((cell, index) => {
-                    return (
+                    return cell.emptyCell ? (
+                      <td key={index}>
+                        <small className="calendar-cell-number text-muted">
+                          X
+                        </small>
+                      </td>
+                    ) : (
                       <CalendarDayCell
                         key={index}
-                        emptyCell={cell.emptyCell}
-                        day={cell.day}
+                        date={cell.date}
                         monthValue={cell.monthValue}
                         year={cell.year}
                       />

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import moment from "moment";
 import EventInCalendarCell from "../events/EventInCalendarCell";
 import classnames from "classnames";
 
@@ -9,18 +8,14 @@ class CalendarDayCell extends Component {
     super(props);
     const { day, monthValue, year } = props;
     this.state = {
-      events: [],
-      today: moment(new Date()).format("YYYY-MM-DD"),
-      cellDate: moment(new Date(year, monthValue, day)).format("YYYY-MM-DD"),
-      rawDate: new Date(year, monthValue, day)
+      today: new Date(),
+      cellDate: new Date(year, monthValue, day)
     };
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { day, monthValue, year } = nextProps;
-    const newCellDate = moment(new Date(year, monthValue, day)).format(
-      "YYYY-MM-DD"
-    );
+    const { date, monthValue, year } = nextProps;
+    const newCellDate = new Date(year, monthValue, date);
     if (newCellDate !== prevState.cellDate) {
       return {
         cellDate: newCellDate
@@ -30,24 +25,24 @@ class CalendarDayCell extends Component {
   }
 
   render() {
-    const { emptyCell, day } = this.props;
-    const { today, cellDate, rawDate } = this.state;
+    const { date } = this.props;
+    const { today, cellDate } = this.state;
 
     let cellData;
 
-    if (emptyCell) {
-      cellData = <small className="calendar-cell-number text-muted">X</small>;
-    } else {
-      cellData = (
-        <small className="calendar-cell-number">
-          {day}
-          <EventInCalendarCell formattedDate={cellDate} rawDate={rawDate} />
-        </small>
-      );
-    }
+    cellData = (
+      <small className="calendar-cell-number">
+        {date}
+        <EventInCalendarCell date={cellDate} />
+      </small>
+    );
 
     return (
-      <td className={classnames({ "today-cell": cellDate === today })}>
+      <td
+        className={classnames({
+          "today-cell": cellDate.toDateString() === today.toDateString()
+        })}
+      >
         {cellData}
       </td>
     );
@@ -55,7 +50,6 @@ class CalendarDayCell extends Component {
 }
 
 CalendarDayCell.propTypes = {
-  emptyCell: PropTypes.bool.isRequired,
   day: PropTypes.number,
   monthValue: PropTypes.number,
   year: PropTypes.number
