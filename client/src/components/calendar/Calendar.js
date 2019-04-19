@@ -138,7 +138,7 @@ class Calendar extends Component {
                       <CalendarDayCell
                         key={index}
                         date={cell.date}
-                        monthValue={cell.monthValue}
+                        month={cell.monthValue}
                         year={cell.year}
                       />
                     );
