@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import isEmpty from "../../validation/is-empty";
-//import EventInCalendarCell from "../events/EventInCalendarCell";
+import EventsInCalendarCell from "../events/EventsInCalendarCell";
 import classnames from "classnames";
 import moment from "moment";
 
@@ -20,6 +20,25 @@ class CalendarDayCell extends Component {
     return days[day];
   };
 
+  compareScheduleAndWeekOrder = (schedule, weekOrder) => {
+    switch (schedule) {
+      case "1st and 3rd":
+        return weekOrder === 1 || weekOrder === 3;
+      case "2nd and 4th":
+        return weekOrder === 2 || weekOrder === 4;
+      case "1st":
+        return weekOrder === 1;
+      case "2nd":
+        return weekOrder === 2;
+      case "3rd":
+        return weekOrder === 3;
+      case "4th":
+        return weekOrder === 4;
+      default:
+        return null;
+    }
+  };
+
   singleEventHandler = event => {
     const { cellDate } = this.props;
     const { match, format } = this;
@@ -35,21 +54,25 @@ class CalendarDayCell extends Component {
   biWeeklyEventHandler = event => {
     const { day, weekOrder } = this.props;
     const { match, getWeekday } = this;
-    const weekOrderMatches = this.compareBiWeeklyScheduleAndWeekOrder(
+    const weekOrderMatches = this.compareScheduleAndWeekOrder(
       event.biWeeklySchedule,
       weekOrder
     );
     return match(event.biWeeklyDay, getWeekday(day)) && weekOrderMatches;
   };
 
-  compareBiWeeklyScheduleAndWeekOrder = (schedule, weekOrder) => {
-    switch (schedule) {
-      case "1st and 3rd":
-        return weekOrder === 1 || weekOrder === 3;
-      case "2nd and 4th":
-        return weekOrder === 2 || weekOrder === 4;
-      default:
-        return null;
+  monthlyEventHandler = event => {
+    const { day, weekOrder, date } = this.props;
+    const { match, getWeekday } = this;
+
+    if (event.monthlyType === "by date") {
+      return match(Number(event.monthlyDate.replace(/st|nd|rd|th/, "")), date);
+    } else {
+      const weekOrderMatches = this.compareScheduleAndWeekOrder(
+        event.monthlySchedule,
+        weekOrder
+      );
+      return match(event.monthlyDay, getWeekday(day)) && weekOrderMatches;
     }
   };
 
@@ -61,6 +84,8 @@ class CalendarDayCell extends Component {
         return this.weeklyEventHandler(event);
       case "bi-weekly":
         return this.biWeeklyEventHandler(event);
+      case "monthly":
+        return this.monthlyEventHandler(event);
       default:
         return null;
     }
@@ -91,10 +116,16 @@ class CalendarDayCell extends Component {
 
     const eventsInCell = this.sortEventsIntoCells(events);
 
-    if (!isEmpty(eventsInCell.notMultiDayEvents)) {
+    const { multiDayEvents, notMultiDayEvents } = eventsInCell;
+
+    if (!isEmpty(multiDayEvents) || !isEmpty(notMultiDayEvents)) {
       cellData = (
         <small className="calendar-cell-number">
-          {date} <p>Event</p>
+          {date}{" "}
+          <EventsInCalendarCell
+            multiDayEvents={multiDayEvents}
+            notMultiDayEvents={notMultiDayEvents}
+          />
         </small>
       );
     } else {
