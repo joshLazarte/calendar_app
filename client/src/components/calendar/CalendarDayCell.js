@@ -2,27 +2,11 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import isEmpty from "../../validation/is-empty";
-import EventInCalendarCell from "../events/EventInCalendarCell";
+//import EventInCalendarCell from "../events/EventInCalendarCell";
 import classnames from "classnames";
 import moment from "moment";
 
 class CalendarDayCell extends Component {
-  constructor(props) {
-    super(props);
-    const { date, month, year } = props;
-    this.state = {
-      today: new Date(),
-      cellDate: new Date(year, month, date),
-      year,
-      month,
-      date,
-      day: new Date(year, month, date).getDay(),
-      weekOrder: Math.ceil(new Date(year, month, date).getDate() / 7),
-      singleEvents: [],
-      multiDayEvents: []
-    };
-  }
-
   format = date => {
     return moment(date)
       .utc()
@@ -37,67 +21,77 @@ class CalendarDayCell extends Component {
   };
 
   singleEventHandler = event => {
-    const { cellDate, singleEvents } = this.state;
+    const { cellDate } = this.props;
     const { match, format } = this;
-    if (match(format(event.startDate), format(cellDate))) {
-      this.setState({ singleEvents: [...singleEvents, event] });
+    return match(format(event.startDate), format(cellDate));
+  };
+
+  weeklyEventHandler = event => {
+    const { day } = this.props;
+    const { match, getWeekday } = this;
+    return match(event.weeklyDay, getWeekday(day));
+  };
+
+  biWeeklyEventHandler = event => {
+    const { day, weekOrder } = this.props;
+    const { match, getWeekday } = this;
+    const weekOrderMatches = this.compareBiWeeklyScheduleAndWeekOrder(
+      event.biWeeklySchedule,
+      weekOrder
+    );
+    return match(event.biWeeklyDay, getWeekday(day)) && weekOrderMatches;
+  };
+
+  compareBiWeeklyScheduleAndWeekOrder = (schedule, weekOrder) => {
+    switch (schedule) {
+      case "1st and 3rd":
+        return weekOrder === 1 || weekOrder === 3;
+      case "2nd and 4th":
+        return weekOrder === 2 || weekOrder === 4;
+      default:
+        return null;
     }
   };
 
-  // weeklyEventHandler = event => {
-  //   const { singleEvents, day } = this.state;
-  //   const { match, getWeekday } = this;
-  //   if (match(event.weeklyDay, getWeekday(day))) {
-  //     this.setState({ singleEvents: [...singleEvents, event] });
-  //   }
-  // };
+  handleEventFrequency = event => {
+    switch (event.frequency) {
+      case "single":
+        return this.singleEventHandler(event);
+      case "weekly":
+        return this.weeklyEventHandler(event);
+      case "bi-weekly":
+        return this.biWeeklyEventHandler(event);
+      default:
+        return null;
+    }
+  };
 
   sortEventsIntoCells = events => {
-    events.map(event => {
-      switch (event.frequency) {
-        case "single":
-          this.singleEventHandler(event);
-          break;
-        // case "weekly":
-        //   this.weeklyEventHandler(event);
-        //   break;
-        default:
-          return [];
+    const multiDayEvents = [];
+    const notMultiDayEvents = [];
+
+    events.forEach(event => {
+      if (event.frequency === "multi-day") {
+        //TODO handleMultiDay(event)
+      } else {
+        this.handleEventFrequency(event) && notMultiDayEvents.push(event);
       }
     });
+
+    return {
+      multiDayEvents,
+      notMultiDayEvents
+    };
   };
 
-  componentDidMount() {
-    const { events } = this.props;
-    this.sortEventsIntoCells(events);
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    const { month, events } = this.props;
-    if (prevProps.month !== month) {
-      this.setState((prevState, props) => ({
-        cellDate: new Date(props.year, props.month, props.date),
-        year: props.year,
-        month: props.month,
-        date: props.date,
-        day: new Date(props.year, props.month, props.date).getDay(),
-        weekOrder: Math.ceil(
-          new Date(props.year, props.month, props.date).getDate() / 7
-        ),
-        singleEvents: [],
-        multiDayEvents: []
-      }));
-      this.sortEventsIntoCells(events);
-    }
-  }
-
   render() {
-    const { date } = this.props;
-    const { today, cellDate, singleEvents } = this.state;
+    const { date, events, today, cellDate } = this.props;
 
     let cellData;
 
-    if (!isEmpty(singleEvents)) {
+    const eventsInCell = this.sortEventsIntoCells(events);
+
+    if (!isEmpty(eventsInCell.notMultiDayEvents)) {
       cellData = (
         <small className="calendar-cell-number">
           {date} <p>Event</p>
@@ -123,6 +117,10 @@ CalendarDayCell.propTypes = {
   date: PropTypes.number,
   month: PropTypes.number,
   year: PropTypes.number,
+  day: PropTypes.number,
+  weekOrder: PropTypes.number,
+  today: PropTypes.instanceOf(Date),
+  cellDate: PropTypes.instanceOf(Date),
   events: PropTypes.array.isRequired
 };
 

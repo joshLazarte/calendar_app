@@ -140,6 +140,16 @@ class Calendar extends Component {
                         date={cell.date}
                         month={cell.monthValue}
                         year={cell.year}
+                        today={new Date()}
+                        cellDate={
+                          new Date(cell.year, cell.monthValue, cell.date)
+                        }
+                        day={new Date(
+                          cell.year,
+                          cell.monthValue,
+                          cell.date
+                        ).getDay()}
+                        weekOrder={Math.ceil(cell.date / 7)}
                       />
                     );
                   })}

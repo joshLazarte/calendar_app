@@ -12,8 +12,7 @@ class Dashboard extends Component {
     this.state = {
       monthValue: new Date().getMonth(),
       month: this.getMonthNameFromMonthValue(new Date().getMonth()),
-      year: new Date().getFullYear(),
-      events: []
+      year: new Date().getFullYear()
     };
   }
 
