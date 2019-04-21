@@ -91,13 +91,34 @@ class CalendarDayCell extends Component {
     }
   };
 
+  handleMultiDayEvent = event => {
+    let startDateTimeValue = new Date(event.startDate).getTime();
+    const cellDate = this.format(this.props.cellDate);
+    const eventDays = [startDateTimeValue];
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const startDate = moment(event.startDate, "YYYYMMDD");
+    const endDate = moment(event.endDate, "YYYYMMDD");
+    const numberOfDays = endDate.diff(startDate, "days") + 1;
+
+    for (let i = 1; i < numberOfDays; i++) {
+      startDateTimeValue += msPerDay;
+      eventDays[i] = startDateTimeValue;
+    }
+
+    eventDays.forEach((day, index) => {
+      eventDays[index] = this.format(new Date(day));
+    });
+
+    return eventDays.indexOf(cellDate) !== -1;
+  };
+
   sortEventsIntoCells = events => {
     const multiDayEvents = [];
     const notMultiDayEvents = [];
 
     events.forEach(event => {
       if (event.frequency === "multi-day") {
-        //TODO handleMultiDay(event)
+        this.handleMultiDayEvent(event) && multiDayEvents.push(event);
       } else {
         this.handleEventFrequency(event) && notMultiDayEvents.push(event);
       }
@@ -125,6 +146,7 @@ class CalendarDayCell extends Component {
           <EventsInCalendarCell
             multiDayEvents={multiDayEvents}
             notMultiDayEvents={notMultiDayEvents}
+            cellDate={this.props.cellDate}
           />
         </small>
       );
