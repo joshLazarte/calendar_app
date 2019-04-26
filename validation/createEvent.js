@@ -46,6 +46,10 @@ module.exports = function validateCreateEventInput(data) {
       errors.startDate = "Event start date field is required";
     } else if (Validator.isEmpty(data.endDate)) {
       errors.endDate = "Event end date field is required";
+    } else if (
+      new Date(data.startDate).getTime() > new Date(data.endDate).getTime()
+    ) {
+      errors.startDate = "Start date must be before end date";
     }
   }
 

@@ -2,10 +2,23 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import isEmpty from "../../validation/is-empty";
 import moment from "moment";
+import Modal from "../modal/Modal";
 
 class EventInCalendarCell extends Component {
-  onClick = e => {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showModal: false
+    };
+  }
+
+  handleShowModal = e => {
     e.preventDefault();
+    this.setState({ showModal: true });
+  };
+
+  handleHideModal = () => {
+    this.setState({ showModal: false });
   };
 
   format = date => {
@@ -18,7 +31,6 @@ class EventInCalendarCell extends Component {
 
   render() {
     const { multiDayEvents, notMultiDayEvents } = this.props;
-
     let renderedMultiDayEvents;
     let renderedNotMultiDayEvents;
 
@@ -27,23 +39,31 @@ class EventInCalendarCell extends Component {
         <span>
           {multiDayEvents.map((event, index) => {
             return (
-              <a
-                key={event._id}
-                href="!#"
-                className="calendar-event bg-success text-white d-block p-1 mb-1 mx-auto"
-                data-toggle="tooltip"
-                data-placement="bottom"
-                data-html="true"
-                title="Don't have this working yet"
-                onClick={this.onClick}
-              >
-                {this.match(
-                  this.format(event.startDate),
-                  this.format(this.props.cellDate)
-                )
-                  ? event.name
-                  : "\u00A0"}
-              </a>
+              <div>
+                <a
+                  key={event._id}
+                  href="!#"
+                  className="calendar-event bg-success text-white d-block p-1 mb-1 mx-auto"
+                  data-toggle="tooltip"
+                  data-placement="bottom"
+                  data-html="true"
+                  title="Don't have this working yet"
+                  onClick={this.handleShowModal}
+                >
+                  {this.match(
+                    this.format(event.startDate),
+                    this.format(this.props.cellDate)
+                  )
+                    ? event.name
+                    : "\u00A0"}
+                </a>
+                {this.state.showModal ? (
+                  <Modal
+                    event={event}
+                    handleHideModal={this.handleHideModal.bind(this)}
+                  />
+                ) : null}
+              </div>
             );
           })}
         </span>
@@ -66,10 +86,13 @@ class EventInCalendarCell extends Component {
                   data-placement="bottom"
                   data-html="true"
                   title="Don't have this working yet"
-                  onClick={this.onClick}
+                  onClick={this.handleShowModal}
                 >
                   {event.startTime ? event.startTime : null} {event.name}
                 </a>
+                {this.state.showModal ? (
+                  <Modal event={event} handleHideModal={this.handleHideModal} />
+                ) : null}
               </div>
             );
           })}
@@ -85,6 +108,7 @@ class EventInCalendarCell extends Component {
         {renderedNotMultiDayEvents}
       </span>
     );
+
     return <div>{eventContent}</div>;
   }
 }
