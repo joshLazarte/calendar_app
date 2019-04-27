@@ -13,7 +13,6 @@ import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 
 import DashBoard from "./components/dashboard/Dashboard";
-import AddEvent from "./components/events/AddEvent";
 
 import Landing from "./components/layout/Landing";
 import Navbar from "./components/layout/Navbar";
@@ -38,7 +37,6 @@ class App extends Component {
               <Route exact path="/login" component={Login} />
               <Switch>
                 <PrivateRoute exact path="/dashboard" component={DashBoard} />
-                <PrivateRoute exact path="/event/add" component={AddEvent} />
               </Switch>
             </div>
             <div style={{ height: "5rem" }} />

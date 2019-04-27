@@ -18,7 +18,8 @@ class EventInCalendarCell extends Component {
     this.setState({ showModal: true, eventInModal });
   };
 
-  hideModal = () => {
+  hideModal = e => {
+    if (e) e.preventDefault();
     this.setState({ showModal: false, eventInModal: {} });
   };
 
@@ -58,9 +59,11 @@ class EventInCalendarCell extends Component {
                     ? event.name
                     : "\u00A0"}
                 </a>
-                {this.state.showModal ? (
+                {this.state.showModal &&
+                this.state.eventInModal._id === event._id ? (
                   <Modal
                     key={event._id + index}
+                    readOnly={true}
                     event={this.state.eventInModal}
                     hideModal={this.hideModal}
                   />
@@ -92,10 +95,12 @@ class EventInCalendarCell extends Component {
                 >
                   {event.startTime ? event.startTime : null} {event.name}
                 </a>
-                {this.state.showModal ? (
+                {this.state.showModal &&
+                this.state.eventInModal._id === event._id ? (
                   <Modal
                     key={event._id + index}
                     event={this.state.eventInModal}
+                    readOnly={true}
                     hideModal={this.hideModal}
                   />
                 ) : null}

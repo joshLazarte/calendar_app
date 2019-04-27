@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import AddEvent from "../events/AddEvent";
+import EventForm from "../events/EventForm";
+import PropTypes from "prop-types";
 const modalContainer = document.getElementById("modal");
 
 class Modal extends Component {
@@ -18,14 +19,21 @@ class Modal extends Component {
   }
   render() {
     return ReactDOM.createPortal(
-      <div className="modal">
-        {/* {this.props.event.name}
-        <button onClick={this.props.hideModal}>Hide Me</button> */}
-        <AddEvent />
+      <div className="modal d-flex align-items-center">
+        <EventForm
+          readOnly={this.props.readOnly}
+          hideModal={this.props.hideModal}
+        />
       </div>,
       this.el
     );
   }
 }
+
+Modal.propTypes = {
+  hideModal: PropTypes.func.isRequired,
+  event: PropTypes.object,
+  readOnly: PropTypes.bool.isRequired
+};
 
 export default Modal;

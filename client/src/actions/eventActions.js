@@ -33,7 +33,7 @@ export const getEvents = () => dispatch => {
 export const addEvent = (event, history) => dispatch => {
   axios
     .post(`/api/event/new`, event)
-    .then(res => history.push("/dashboard"))
+    .then(res => history.push("/"))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

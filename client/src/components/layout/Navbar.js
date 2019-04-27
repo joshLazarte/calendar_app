@@ -2,12 +2,31 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import Modal from "../modal/Modal";
 import { logoutUser } from "../../actions/authActions";
 
 class Navbar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showModal: false
+    };
+  }
   onLogoutClick = e => {
     e.preventDefault();
     this.props.logoutUser();
+  };
+
+  showModal = e => {
+    e.preventDefault();
+    this.setState({
+      showModal: true
+    });
+  };
+
+  hideModal = e => {
+    if (e) e.preventDefault();
+    this.setState({ showModal: false });
   };
 
   render() {
@@ -16,9 +35,13 @@ class Navbar extends Component {
     const authLinks = (
       <ul className="navbar-nav ml-auto">
         <li className="nav-item mr-4">
-          <Link className="align-middle text-white" to="/event/add">
+          <a
+            href="!#"
+            className="align-middle text-white"
+            onClick={this.showModal}
+          >
             Add Event
-          </Link>
+          </a>
         </li>
         <li className="nav-item">
           <a
@@ -55,7 +78,10 @@ class Navbar extends Component {
               id="navbarSupportedContent"
             >
               {" "}
-              {authLinks}{" "}
+              {authLinks}
+              {this.state.showModal ? (
+                <Modal readOnly={false} hideModal={this.hideModal} />
+              ) : null}
             </div>
           ) : null}
         </div>
