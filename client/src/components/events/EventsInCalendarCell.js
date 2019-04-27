@@ -8,17 +8,18 @@ class EventInCalendarCell extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showModal: false
+      showModal: false,
+      eventInModal: {}
     };
   }
 
-  handleShowModal = e => {
+  showModal = eventInModal => e => {
     e.preventDefault();
-    this.setState({ showModal: true });
+    this.setState({ showModal: true, eventInModal });
   };
 
-  handleHideModal = () => {
-    this.setState({ showModal: false });
+  hideModal = () => {
+    this.setState({ showModal: false, eventInModal: {} });
   };
 
   format = date => {
@@ -39,7 +40,7 @@ class EventInCalendarCell extends Component {
         <span>
           {multiDayEvents.map((event, index) => {
             return (
-              <div>
+              <div key={index}>
                 <a
                   key={event._id}
                   href="!#"
@@ -48,7 +49,7 @@ class EventInCalendarCell extends Component {
                   data-placement="bottom"
                   data-html="true"
                   title="Don't have this working yet"
-                  onClick={this.handleShowModal}
+                  onClick={this.showModal(event)}
                 >
                   {this.match(
                     this.format(event.startDate),
@@ -59,8 +60,9 @@ class EventInCalendarCell extends Component {
                 </a>
                 {this.state.showModal ? (
                   <Modal
-                    event={event}
-                    handleHideModal={this.handleHideModal.bind(this)}
+                    key={event._id + index}
+                    event={this.state.eventInModal}
+                    hideModal={this.hideModal}
                   />
                 ) : null}
               </div>
@@ -86,12 +88,16 @@ class EventInCalendarCell extends Component {
                   data-placement="bottom"
                   data-html="true"
                   title="Don't have this working yet"
-                  onClick={this.handleShowModal}
+                  onClick={this.showModal(event)}
                 >
                   {event.startTime ? event.startTime : null} {event.name}
                 </a>
                 {this.state.showModal ? (
-                  <Modal event={event} handleHideModal={this.handleHideModal} />
+                  <Modal
+                    key={event._id + index}
+                    event={this.state.eventInModal}
+                    hideModal={this.hideModal}
+                  />
                 ) : null}
               </div>
             );
@@ -102,14 +108,12 @@ class EventInCalendarCell extends Component {
       renderedNotMultiDayEvents = null;
     }
 
-    const eventContent = (
-      <span>
+    return (
+      <div>
         {renderedMultiDayEvents}
         {renderedNotMultiDayEvents}
-      </span>
+      </div>
     );
-
-    return <div>{eventContent}</div>;
   }
 }
 

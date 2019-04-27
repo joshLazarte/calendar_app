@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import ModalContent from "./ModalContent";
+import AddEvent from "../events/AddEvent";
 const modalContainer = document.getElementById("modal");
 
 class Modal extends Component {
@@ -19,10 +19,9 @@ class Modal extends Component {
   render() {
     return ReactDOM.createPortal(
       <div className="modal">
-        <ModalContent
-          event={this.props.event}
-          handleHideModal={this.props.handleHideModal}
-        />
+        {/* {this.props.event.name}
+        <button onClick={this.props.hideModal}>Hide Me</button> */}
+        <AddEvent />
       </div>,
       this.el
     );

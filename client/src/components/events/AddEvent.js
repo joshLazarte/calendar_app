@@ -115,7 +115,6 @@ class AddEvent extends Component {
     const { addEvent, history, auth, event } = this.props;
 
     const attendees = event.stagedAttendees.join(",");
-    console.log(attendees);
 
     const newEvent = {
       name: this.state.name,
