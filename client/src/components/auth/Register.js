@@ -57,6 +57,7 @@ class Register extends Component {
                     value={this.state.userName}
                     onChange={this.onChange}
                     error={errors.userName}
+                    disabled={false}
                   />
                 </div>
 
@@ -67,6 +68,7 @@ class Register extends Component {
                     value={this.state.email}
                     onChange={this.onChange}
                     error={errors.email}
+                    disabled={false}
                   />
                 </div>
 
@@ -77,6 +79,7 @@ class Register extends Component {
                     value={this.state.password}
                     onChange={this.onChange}
                     error={errors.password}
+                    disabled={false}
                   />
                 </div>
 
@@ -87,6 +90,7 @@ class Register extends Component {
                     value={this.state.password2}
                     onChange={this.onChange}
                     error={errors.password2}
+                    disabled={false}
                   />
                 </div>
 

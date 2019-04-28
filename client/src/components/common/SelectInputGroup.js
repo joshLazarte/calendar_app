@@ -6,7 +6,8 @@ const SelectInputGroup = ({
   name,
   onChange,
   options: [...options],
-  readOnly,
+  disabled,
+  value,
   error
 }) => {
   return (
@@ -17,7 +18,8 @@ const SelectInputGroup = ({
         })}
         name={name}
         onChange={onChange}
-        readOnly={readOnly}
+        disabled={disabled}
+        value={value}
       >
         {options.map(option => (
           <option

@@ -57,6 +57,7 @@ class Login extends Component {
                     value={userName}
                     onChange={this.onChange}
                     error={errors.userName}
+                    disabled={false}
                   />
                 </div>
 
@@ -67,6 +68,7 @@ class Login extends Component {
                     value={password}
                     onChange={this.onChange}
                     error={errors.password}
+                    disabled={false}
                   />
                 </div>
 

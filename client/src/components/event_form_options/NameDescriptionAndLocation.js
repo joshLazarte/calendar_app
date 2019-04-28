@@ -16,7 +16,7 @@ const NameDescriptionAndLocation = props => {
             value={props.values[0]}
             onChange={props.onChange}
             error={props.errors[0]}
-            readOnly={props.readOnly}
+            disabled={props.disabled}
           />
         </div>
       </div>
@@ -32,7 +32,7 @@ const NameDescriptionAndLocation = props => {
             value={props.values[1]}
             onChange={props.onChange}
             error={props.errors[1]}
-            readOnly={props.readOnly}
+            disabled={props.disabled}
           />
         </div>
       </div>
@@ -47,7 +47,7 @@ const NameDescriptionAndLocation = props => {
             value={props.values[2]}
             onChange={props.onChange}
             error={props.errors[2]}
-            readOnly={props.readOnly}
+            disabled={props.disabled}
           />
         </div>
       </div>

@@ -23,7 +23,7 @@ const Weekly = props => {
           ]}
           value={props.value}
           onChange={props.onChange}
-          readOnly={props.readOnly}
+          disabled={props.disabled}
           error={props.error}
         />
       </div>
@@ -34,7 +34,8 @@ const Weekly = props => {
 Weekly.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  error: PropTypes.string
+  error: PropTypes.string,
+  disabled: PropTypes.bool.isRequired
 };
 
 export default Weekly;

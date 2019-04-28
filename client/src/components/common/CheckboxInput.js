@@ -1,7 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const CheckboxInput = ({ name, value, onChange, type, checked, label }) => {
+const CheckboxInput = ({
+  name,
+  value,
+  onChange,
+  type,
+  checked,
+  disabled,
+  label
+}) => {
   return (
     <div className="form-check my-4">
       <input
@@ -11,6 +19,7 @@ const CheckboxInput = ({ name, value, onChange, type, checked, label }) => {
         onChange={onChange}
         type={type}
         checked={checked}
+        disabled={disabled}
       />
       <label className="form-check-label" htmlFor={name}>
         {label}
@@ -23,7 +32,8 @@ CheckboxInput.propTypes = {
   name: PropTypes.string.isRequired,
   value: PropTypes.bool.isRequired,
   type: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool.isRequired
 };
 
 CheckboxInput.defaultProps = {

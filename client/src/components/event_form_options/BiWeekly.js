@@ -24,7 +24,7 @@ const BiWeekly = props => {
           value={props.values[1]}
           onChange={props.onChange}
           error={props.errors[1]}
-          readOnly={props.readOnly}
+          disabled={props.disabled}
         />
       </div>
     );
@@ -42,7 +42,7 @@ const BiWeekly = props => {
           value={props.values[0]}
           onChange={props.onChange}
           error={props.errors[0]}
-          readOnly={props.readOnly}
+          disabled={props.disabled}
         />
       </div>
       {biWeeklyDay}
@@ -53,7 +53,8 @@ const BiWeekly = props => {
 BiWeekly.propTypes = {
   values: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
-  errors: PropTypes.array
+  errors: PropTypes.array,
+  disabled: PropTypes.bool.isRequired
 };
 
 export default BiWeekly;

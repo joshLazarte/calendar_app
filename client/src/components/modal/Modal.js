@@ -21,8 +21,9 @@ class Modal extends Component {
     return ReactDOM.createPortal(
       <div className="modal d-flex align-items-center">
         <EventForm
-          readOnly={this.props.readOnly}
+          disabled={this.props.disabled}
           hideModal={this.props.hideModal}
+          eventToDisplay={this.props.eventToDisplay}
         />
       </div>,
       this.el
@@ -33,7 +34,8 @@ class Modal extends Component {
 Modal.propTypes = {
   hideModal: PropTypes.func.isRequired,
   event: PropTypes.object,
-  readOnly: PropTypes.bool.isRequired
+  disabled: PropTypes.bool.isRequired,
+  eventToDisplay: PropTypes.object
 };
 
 export default Modal;

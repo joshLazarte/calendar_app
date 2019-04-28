@@ -13,6 +13,7 @@ const StartAndEndTime = props => {
           value={props.values[0]}
           onChange={props.onChange}
           error={props.error}
+          disabled={props.disabled}
         />
       </div>
       <div className="col-sm-6">
@@ -22,6 +23,7 @@ const StartAndEndTime = props => {
           name="endTime"
           value={props.values[1]}
           onChange={props.onChange}
+          disabled={props.disabled}
         />
       </div>
     </div>
@@ -30,7 +32,8 @@ const StartAndEndTime = props => {
 
 StartAndEndTime.propTypes = {
   values: PropTypes.array.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool.isRequired
 };
 
 export default StartAndEndTime;

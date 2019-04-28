@@ -27,7 +27,7 @@ const Monthly = props => {
           options={["Choose One", ...monthlyDates]}
           value={props.values[1]}
           onChange={props.onChange}
-          readOnly={props.readOnly}
+          disabled={props.disabled}
           error={props.errors[1]}
         />
       </div>
@@ -41,7 +41,7 @@ const Monthly = props => {
           options={["Choose One", "1st", "2nd", "3rd", "4th"]}
           value={props.values[2]}
           onChange={props.onChange}
-          readOnly={props.readOnly}
+          disabled={props.disabled}
           error={props.errors[2]}
         />
       </div>
@@ -63,7 +63,7 @@ const Monthly = props => {
           ]}
           value={props.values[3]}
           onChange={props.onChange}
-          readOnly={props.readOnly}
+          disabled={props.disabled}
           error={props.errors[3]}
         />
       </div>
@@ -79,7 +79,7 @@ const Monthly = props => {
           options={["Choose One", "By Date", "By Day"]}
           value={props.values[0]}
           onChange={props.onChange}
-          readOnly={props.readOnly}
+          disabled={props.disabled}
           error={props.errors[0]}
         />
       </div>

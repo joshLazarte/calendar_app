@@ -21,31 +21,32 @@ import {
 } from "../../actions/eventActions";
 import { withRouter } from "react-router-dom";
 import autoLogOutIfNeeded from "../../validation/autoLogOut";
+import isEmpty from "../../validation/is-empty";
 
 class EventForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "",
-      createdBy: "",
-      startDate: "",
-      endDate: "",
-      allDay: true,
-      startTime: "",
-      endTime: "",
-      description: "",
-      frequency: "",
-      location: "",
-      shared: false,
+      name: props.eventToDisplay.name || "",
+      createdBy: props.eventToDisplay.createdBy || "",
+      startDate: props.eventToDisplay.startDate || "",
+      endDate: props.eventToDisplay.endDate || "",
+      allDay: props.eventToDisplay.startTime ? false : true,
+      startTime: props.eventToDisplay.startTime || "",
+      endTime: props.eventToDisplay.endTime || "",
+      description: props.eventToDisplay.description || "",
+      frequency: props.eventToDisplay.frequency || "",
+      location: props.eventToDisplay.location || "",
+      shared: props.eventToDisplay.shared || false,
       attendeeSearchField: "",
       errors: {},
-      weeklyDay: "",
-      biWeeklySchedule: "",
-      biWeeklyDay: "",
-      monthlyType: "",
-      monthlyDate: "",
-      monthlySchedule: "",
-      monthlyDay: ""
+      weeklyDay: props.eventToDisplay.weeklyDay || "",
+      biWeeklySchedule: props.eventToDisplay.biWeeklySchedule || "",
+      biWeeklyDay: props.eventToDisplay.biWeeklyDay || "",
+      monthlyType: props.eventToDisplay.monthlyType || "",
+      monthlyDate: props.eventToDisplay.monthlyDate || "",
+      monthlySchedule: props.eventToDisplay.monthlySchedule || "",
+      monthlyDay: props.eventToDisplay.monthlyDay || ""
     };
   }
 
@@ -199,7 +200,7 @@ class EventForm extends Component {
                       this.state.description,
                       this.state.location
                     ]}
-                    readOnly={this.props.readOnly}
+                    disabled={this.props.disabled}
                     errors={[errors.name, errors.description, errors.location]}
                     onChange={this.onChange}
                   />
@@ -222,7 +223,7 @@ class EventForm extends Component {
                           "Bi-Weekly",
                           "Monthly"
                         ]}
-                        readOnly={this.props.readOnly}
+                        disabled={this.props.disabled}
                         value={this.state.frequency}
                         onChange={this.onChange}
                         error={errors.frequency}
@@ -235,6 +236,7 @@ class EventForm extends Component {
                       value={this.state.startDate}
                       onChange={this.onChange}
                       error={errors.startDate}
+                      disabled={this.props.disabled}
                     />
                   )}
                   {frequency === "multi-day" && (
@@ -242,6 +244,7 @@ class EventForm extends Component {
                       values={[this.state.startDate, this.state.endDate]}
                       onChange={this.onChange}
                       errors={[errors.startDate, errors.endDate]}
+                      disabled={this.props.disabled}
                     />
                   )}
                   {frequency === "weekly" && (
@@ -249,6 +252,7 @@ class EventForm extends Component {
                       value={this.state.weeklyDay}
                       onChange={this.onChange}
                       error={errors.weeklyDay}
+                      disabled={this.props.disabled}
                     />
                   )}
                   {frequency === "bi-weekly" && (
@@ -259,6 +263,7 @@ class EventForm extends Component {
                       ]}
                       onChange={this.onChange}
                       errors={[errors.biWeeklySchedule, errors.biWeeklyDay]}
+                      disabled={this.props.disabled}
                     />
                   )}
                   {frequency === "monthly" && (
@@ -276,6 +281,7 @@ class EventForm extends Component {
                         errors.monthlyDay,
                         errors.monthlySchedule
                       ]}
+                      disabled={this.props.disabled}
                     />
                   )}
 
@@ -284,6 +290,7 @@ class EventForm extends Component {
                     value={this.state.allDay}
                     onChange={this.toggleAllDay}
                     checked={this.state.allDay}
+                    disabled={this.props.disabled}
                     label="All Day Event"
                   />
 
@@ -292,6 +299,7 @@ class EventForm extends Component {
                       values={[this.state.startTime, this.state.endTime]}
                       error={errors.startTime}
                       onChange={this.onChange}
+                      disabled={this.props.disabled}
                     />
                   )}
 
@@ -300,10 +308,11 @@ class EventForm extends Component {
                     value={this.state.shared}
                     onChange={this.toggleShared}
                     checked={this.state.shared}
+                    disabled={this.props.disabled}
                     label="Share This Event"
                   />
 
-                  {this.state.shared && (
+                  {this.state.shared && isEmpty(this.props.eventToDisplay) && (
                     <div className="row">
                       {stagedAttendees.map(attendee => (
                         <div
@@ -312,7 +321,7 @@ class EventForm extends Component {
                         >
                           <InputGroup
                             value={attendee}
-                            readOnly={true}
+                            disabled={true}
                             name={attendee}
                           />
                           <a
@@ -335,11 +344,25 @@ class EventForm extends Component {
                           value={this.state.attendeeSearchField}
                           onChange={this.onChange}
                           error={errors.attendees}
+                          disabled={this.props.disabled}
                         />
                         {addAttendeeButton}
                       </div>
                     </div>
                   )}
+
+                  {!isEmpty(this.props.eventToDisplay) &&
+                    this.props.eventToDisplay.attendees.length > 1 && (
+                      <div className="row">
+                        {this.props.eventToDisplay.attendees.map(attendee => (
+                          <InputGroup
+                            value={attendee.userName}
+                            disabled={true}
+                            name={attendee}
+                          />
+                        ))}
+                      </div>
+                    )}
 
                   <div className="form-group my-5">
                     <button type="submit" className="btn btn-primary btn-block">

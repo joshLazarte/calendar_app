@@ -80,7 +80,11 @@ class Navbar extends Component {
               {" "}
               {authLinks}
               {this.state.showModal ? (
-                <Modal readOnly={false} hideModal={this.hideModal} />
+                <Modal
+                  disabled={false}
+                  hideModal={this.hideModal}
+                  eventToDisplay={{}}
+                />
               ) : null}
             </div>
           ) : null}

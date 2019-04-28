@@ -63,8 +63,8 @@ class EventInCalendarCell extends Component {
                 this.state.eventInModal._id === event._id ? (
                   <Modal
                     key={event._id + index}
-                    readOnly={true}
-                    event={this.state.eventInModal}
+                    disabled={true}
+                    eventToDisplay={this.state.eventInModal}
                     hideModal={this.hideModal}
                   />
                 ) : null}
@@ -99,8 +99,8 @@ class EventInCalendarCell extends Component {
                 this.state.eventInModal._id === event._id ? (
                   <Modal
                     key={event._id + index}
-                    event={this.state.eventInModal}
-                    readOnly={true}
+                    eventToDisplay={this.state.eventInModal}
+                    disabled={true}
                     hideModal={this.hideModal}
                   />
                 ) : null}
