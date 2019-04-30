@@ -66,6 +66,7 @@ class EventInCalendarCell extends Component {
                     disabled={true}
                     eventToDisplay={this.state.eventInModal}
                     hideModal={this.hideModal}
+                    formType={"READONLY"}
                   />
                 ) : null}
               </div>
@@ -102,6 +103,7 @@ class EventInCalendarCell extends Component {
                     eventToDisplay={this.state.eventInModal}
                     disabled={true}
                     hideModal={this.hideModal}
+                    formType={"READONLY"}
                   />
                 ) : null}
               </div>

@@ -84,6 +84,7 @@ class Navbar extends Component {
                   disabled={false}
                   hideModal={this.hideModal}
                   eventToDisplay={{}}
+                  formType={"ADD"}
                 />
               ) : null}
             </div>

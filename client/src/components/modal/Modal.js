@@ -24,6 +24,7 @@ class Modal extends Component {
           disabled={this.props.disabled}
           hideModal={this.props.hideModal}
           eventToDisplay={this.props.eventToDisplay}
+          formType={this.props.formType}
         />
       </div>,
       this.el
@@ -35,7 +36,8 @@ Modal.propTypes = {
   hideModal: PropTypes.func.isRequired,
   event: PropTypes.object,
   disabled: PropTypes.bool.isRequired,
-  eventToDisplay: PropTypes.object
+  eventToDisplay: PropTypes.object,
+  formType: PropTypes.string.isRequired
 };
 
 export default Modal;

@@ -10,6 +10,7 @@ import Weekly from "../event_form_options/Weekly";
 import BiWeekly from "../event_form_options/BiWeekly";
 import Monthly from "../event_form_options/Monthly";
 import StartAndEndTime from "../event_form_options/StartAndEndTime";
+import moment from "moment";
 
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -27,6 +28,8 @@ class EventForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      formType: props.formType,
+      disabled: props.disabled,
       name: props.eventToDisplay.name || "",
       createdBy: props.eventToDisplay.createdBy || "",
       startDate: props.eventToDisplay.startDate || "",
@@ -148,6 +151,20 @@ class EventForm extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
+  setFormToEditState = e => {
+    e.preventDefault();
+    this.setState({
+      disabled: false,
+      formType: "EDIT"
+    });
+  };
+
+  format = date => {
+    return moment(date)
+      .utc()
+      .format("YYYY-MM-DD");
+  };
+
   render() {
     const { stagedAttendees, attendeeLoading } = this.props.event;
     let addAttendeeButton;
@@ -175,14 +192,44 @@ class EventForm extends Component {
     }
 
     const { errors, frequency } = this.state;
+
+    let formActionButton, formHeader;
+
+    if (this.state.formType === "ADD") {
+      formActionButton = (
+        <button type="submit" className="btn btn-primary btn-block">
+          Add Event
+        </button>
+      );
+      formHeader = "Add Event";
+    } else if (this.state.formType === "READONLY") {
+      formActionButton = (
+        <button
+          onClick={this.setFormToEditState}
+          type="button"
+          className="btn btn-warning btn-block"
+        >
+          Edit Event
+        </button>
+      );
+      formHeader = "View Event";
+    } else if (this.state.formType === "EDIT") {
+      formActionButton = (
+        <button type="submit" className="btn btn-primary btn-block">
+          Update Event
+        </button>
+      );
+      formHeader = "Edit Event";
+    }
+
     return (
       <div className="container">
         <div className="row">
           <div className="col-md-10 col-lg-8 mx-auto">
             <div className="card control-overflow">
-              <div className="card-header text-center">
-                <h1>
-                  Add Event{" "}
+              <div className="card-header">
+                <h1 className="text-center">
+                  {formHeader}
                   <a
                     href="!#"
                     onClick={this.props.hideModal}
@@ -200,7 +247,7 @@ class EventForm extends Component {
                       this.state.description,
                       this.state.location
                     ]}
-                    disabled={this.props.disabled}
+                    disabled={this.state.disabled}
                     errors={[errors.name, errors.description, errors.location]}
                     onChange={this.onChange}
                   />
@@ -223,7 +270,7 @@ class EventForm extends Component {
                           "Bi-Weekly",
                           "Monthly"
                         ]}
-                        disabled={this.props.disabled}
+                        disabled={this.state.disabled}
                         value={this.state.frequency}
                         onChange={this.onChange}
                         error={errors.frequency}
@@ -233,18 +280,21 @@ class EventForm extends Component {
 
                   {frequency === "single" && (
                     <Single
-                      value={this.state.startDate}
+                      value={this.format(this.state.startDate)}
                       onChange={this.onChange}
                       error={errors.startDate}
-                      disabled={this.props.disabled}
+                      disabled={this.state.disabled}
                     />
                   )}
                   {frequency === "multi-day" && (
                     <MultiDay
-                      values={[this.state.startDate, this.state.endDate]}
+                      values={[
+                        this.format(this.state.startDate),
+                        this.format(this.state.endDate)
+                      ]}
                       onChange={this.onChange}
                       errors={[errors.startDate, errors.endDate]}
-                      disabled={this.props.disabled}
+                      disabled={this.state.disabled}
                     />
                   )}
                   {frequency === "weekly" && (
@@ -252,7 +302,7 @@ class EventForm extends Component {
                       value={this.state.weeklyDay}
                       onChange={this.onChange}
                       error={errors.weeklyDay}
-                      disabled={this.props.disabled}
+                      disabled={this.state.disabled}
                     />
                   )}
                   {frequency === "bi-weekly" && (
@@ -263,7 +313,7 @@ class EventForm extends Component {
                       ]}
                       onChange={this.onChange}
                       errors={[errors.biWeeklySchedule, errors.biWeeklyDay]}
-                      disabled={this.props.disabled}
+                      disabled={this.state.disabled}
                     />
                   )}
                   {frequency === "monthly" && (
@@ -281,7 +331,7 @@ class EventForm extends Component {
                         errors.monthlyDay,
                         errors.monthlySchedule
                       ]}
-                      disabled={this.props.disabled}
+                      disabled={this.state.disabled}
                     />
                   )}
 
@@ -290,7 +340,7 @@ class EventForm extends Component {
                     value={this.state.allDay}
                     onChange={this.toggleAllDay}
                     checked={this.state.allDay}
-                    disabled={this.props.disabled}
+                    disabled={this.state.disabled}
                     label="All Day Event"
                   />
 
@@ -299,7 +349,7 @@ class EventForm extends Component {
                       values={[this.state.startTime, this.state.endTime]}
                       error={errors.startTime}
                       onChange={this.onChange}
-                      disabled={this.props.disabled}
+                      disabled={this.state.disabled}
                     />
                   )}
 
@@ -308,7 +358,7 @@ class EventForm extends Component {
                     value={this.state.shared}
                     onChange={this.toggleShared}
                     checked={this.state.shared}
-                    disabled={this.props.disabled}
+                    disabled={this.state.disabled}
                     label="Share This Event"
                   />
 
@@ -344,7 +394,7 @@ class EventForm extends Component {
                           value={this.state.attendeeSearchField}
                           onChange={this.onChange}
                           error={errors.attendees}
-                          disabled={this.props.disabled}
+                          disabled={this.state.disabled}
                         />
                         {addAttendeeButton}
                       </div>
@@ -364,11 +414,7 @@ class EventForm extends Component {
                       </div>
                     )}
 
-                  <div className="form-group my-5">
-                    <button type="submit" className="btn btn-primary btn-block">
-                      Add Event
-                    </button>
-                  </div>
+                  <div className="form-group my-5">{formActionButton}</div>
                 </form>
               </div>
             </div>
