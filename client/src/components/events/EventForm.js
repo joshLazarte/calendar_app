@@ -30,6 +30,7 @@ class EventForm extends Component {
     this.state = {
       formType: props.formType,
       disabled: props.disabled,
+      eventID: props.eventToDisplay._id || null,
       name: props.eventToDisplay.name || "",
       createdBy: props.eventToDisplay.createdBy || "",
       startDate: props.eventToDisplay.startDate || "",
@@ -122,6 +123,8 @@ class EventForm extends Component {
 
     const newEvent = {
       name: this.state.name,
+      eventID: this.state.eventID,
+      actionType: this.state.formType,
       createdBy: auth.user.userName,
       startDate: this.state.startDate,
       endDate: this.state.endDate,

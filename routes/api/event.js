@@ -10,7 +10,7 @@ const validateCreateEventInput = require("../../validation/createEvent"),
 // @route    POST /api/event/new
 // @desc     create a new event
 // @access   Private
-router.post("/new", async (req, res) => {
+router.post("/", async (req, res) => {
   const { errors, isValid } = validateCreateEventInput(req.body);
 
   if (!isValid) {
@@ -23,41 +23,49 @@ router.post("/new", async (req, res) => {
   }
 
   try {
-    const eventOwner = await utils.eventUtilities.getEventCreatorByUsername(
-      req.body.createdBy
-    );
+    const eventData = {};
 
-    const attendeesToAdd = await utils.eventUtilities.getEventAttendees(
-      eventOwner,
-      utils.parseStringToBool(req.body.shared),
-      req.body.attendees
-    );
-
-    const newEventData = {};
-    newEventData.name = req.body.name;
-    newEventData.createdBy = eventOwner;
-    if (req.body.startDate) newEventData.startDate = req.body.startDate;
-    newEventData.attendees = attendeesToAdd;
-    newEventData.shared = req.body.shared;
-    newEventData.frequency = req.body.frequency;
-    if (req.body.endDate) newEventData.endDate = req.body.endDate;
-    if (req.body.startTime) newEventData.startTime = req.body.startTime;
-    if (req.body.endTime) newEventData.endTime = req.body.endTime;
-    if (req.body.description) newEventData.description = req.body.description;
+    eventData.name = req.body.name;
+    eventData.shared = req.body.shared;
+    eventData.frequency = req.body.frequency;
+    if (req.body.startDate) eventData.startDate = req.body.startDate;
+    if (req.body.endDate) eventData.endDate = req.body.endDate;
+    if (req.body.startTime) eventData.startTime = req.body.startTime;
+    if (req.body.endTime) eventData.endTime = req.body.endTime;
+    if (req.body.description) eventData.description = req.body.description;
     if (req.body.biWeeklySchedule)
-      newEventData.biWeeklySchedule = req.body.biWeeklySchedule;
-    if (req.body.biWeeklyDay) newEventData.biWeeklyDay = req.body.biWeeklyDay;
-    if (req.body.weeklyDay) newEventData.weeklyDay = req.body.weeklyDay;
-    if (req.body.monthlyType) newEventData.monthlyType = req.body.monthlyType;
-    if (req.body.monthlyDate) newEventData.monthlyDate = req.body.monthlyDate;
+      eventData.biWeeklySchedule = req.body.biWeeklySchedule;
+    if (req.body.biWeeklyDay) eventData.biWeeklyDay = req.body.biWeeklyDay;
+    if (req.body.weeklyDay) eventData.weeklyDay = req.body.weeklyDay;
+    if (req.body.monthlyType) eventData.monthlyType = req.body.monthlyType;
+    if (req.body.monthlyDate) eventData.monthlyDate = req.body.monthlyDate;
     if (req.body.monthlySchedule)
-      newEventData.monthlySchedule = req.body.monthlySchedule;
-    if (req.body.monthlyDay) newEventData.monthlyDay = req.body.monthlyDay;
-    if (req.body.location) newEventData.location = req.body.location;
+      eventData.monthlySchedule = req.body.monthlySchedule;
+    if (req.body.monthlyDay) eventData.monthlyDay = req.body.monthlyDay;
+    if (req.body.location) eventData.location = req.body.location;
 
-    const newEvent = await Event.create(newEventData);
+    if (req.body.actionType === "EDIT") {
+      const updatedEvent = await Event.findByIdAndUpdate(
+        req.body.eventID,
+        eventData,
+        { new: true }
+      );
+      res.json({ msg: "SUCCESS" });
+    } else {
+      eventData.createdBy = await utils.eventUtilities.getEventCreatorByUsername(
+        req.body.createdBy
+      );
 
-    res.json({ newEvent });
+      eventData.attendees = await utils.eventUtilities.getEventAttendees(
+        eventData.createdBy,
+        utils.parseStringToBool(req.body.shared),
+        req.body.attendees
+      );
+
+      const newEvent = await Event.create(eventData);
+
+      res.json({ newEvent });
+    }
   } catch (err) {
     errors.error = err.message;
     res.status(400).json(errors);

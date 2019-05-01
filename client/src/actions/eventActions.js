@@ -32,7 +32,7 @@ export const getEvents = () => dispatch => {
 //Add Event
 export const addEvent = (event, history) => dispatch => {
   axios
-    .post(`/api/event/new`, event)
+    .post(`/api/event`, event)
     .then(res => history.push("/"))
     .catch(err =>
       dispatch({
