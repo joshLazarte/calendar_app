@@ -73,6 +73,19 @@ export const unstageAttendee = attendee => dispatch => {
   });
 };
 
+//Unstage attendee
+export const removeAttendee = (id, attendee, history) => dispatch => {
+  axios
+    .delete(`/api/event/${id}/attendee/${attendee}/delete`)
+    .then(res => history.push("/"))
+    .catch(err => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });
+    });
+};
+
 //set loading to true, display spinner
 export const setEventLoading = () => {
   return {

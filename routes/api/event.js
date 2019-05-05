@@ -10,67 +10,71 @@ const validateCreateEventInput = require("../../validation/createEvent"),
 // @route    POST /api/event/new
 // @desc     create a new event
 // @access   Private
-router.post("/", async (req, res) => {
-  const { errors, isValid } = validateCreateEventInput(req.body);
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    const { errors, isValid } = validateCreateEventInput(req.body);
 
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
-
-  if (req.body.unsavedAttendee) {
-    errors.attendees = "Please save this attendee";
-    return res.status(400).json(errors);
-  }
-
-  try {
-    const eventData = {};
-
-    eventData.name = req.body.name;
-    eventData.shared = req.body.shared;
-    eventData.frequency = req.body.frequency;
-    if (req.body.startDate) eventData.startDate = req.body.startDate;
-    if (req.body.endDate) eventData.endDate = req.body.endDate;
-    if (req.body.startTime) eventData.startTime = req.body.startTime;
-    if (req.body.endTime) eventData.endTime = req.body.endTime;
-    if (req.body.description) eventData.description = req.body.description;
-    if (req.body.biWeeklySchedule)
-      eventData.biWeeklySchedule = req.body.biWeeklySchedule;
-    if (req.body.biWeeklyDay) eventData.biWeeklyDay = req.body.biWeeklyDay;
-    if (req.body.weeklyDay) eventData.weeklyDay = req.body.weeklyDay;
-    if (req.body.monthlyType) eventData.monthlyType = req.body.monthlyType;
-    if (req.body.monthlyDate) eventData.monthlyDate = req.body.monthlyDate;
-    if (req.body.monthlySchedule)
-      eventData.monthlySchedule = req.body.monthlySchedule;
-    if (req.body.monthlyDay) eventData.monthlyDay = req.body.monthlyDay;
-    if (req.body.location) eventData.location = req.body.location;
-
-    if (req.body.actionType === "EDIT") {
-      const updatedEvent = await Event.findByIdAndUpdate(
-        req.body.eventID,
-        eventData,
-        { new: true }
-      );
-      res.json({ msg: "SUCCESS" });
-    } else {
-      eventData.createdBy = await utils.eventUtilities.getEventCreatorByUsername(
-        req.body.createdBy
-      );
-
-      eventData.attendees = await utils.eventUtilities.getEventAttendees(
-        eventData.createdBy,
-        utils.parseStringToBool(req.body.shared),
-        req.body.attendees
-      );
-
-      const newEvent = await Event.create(eventData);
-
-      res.json({ newEvent });
+    if (!isValid) {
+      return res.status(400).json(errors);
     }
-  } catch (err) {
-    errors.error = err.message;
-    res.status(400).json(errors);
+
+    if (req.body.unsavedAttendee) {
+      errors.attendees = "Please save this attendee";
+      return res.status(400).json(errors);
+    }
+
+    try {
+      const eventData = {};
+
+      eventData.name = req.body.name;
+      eventData.shared = req.body.shared;
+      eventData.frequency = req.body.frequency;
+      if (req.body.startDate) eventData.startDate = req.body.startDate;
+      if (req.body.endDate) eventData.endDate = req.body.endDate;
+      if (req.body.startTime) eventData.startTime = req.body.startTime;
+      if (req.body.endTime) eventData.endTime = req.body.endTime;
+      if (req.body.description) eventData.description = req.body.description;
+      if (req.body.biWeeklySchedule)
+        eventData.biWeeklySchedule = req.body.biWeeklySchedule;
+      if (req.body.biWeeklyDay) eventData.biWeeklyDay = req.body.biWeeklyDay;
+      if (req.body.weeklyDay) eventData.weeklyDay = req.body.weeklyDay;
+      if (req.body.monthlyType) eventData.monthlyType = req.body.monthlyType;
+      if (req.body.monthlyDate) eventData.monthlyDate = req.body.monthlyDate;
+      if (req.body.monthlySchedule)
+        eventData.monthlySchedule = req.body.monthlySchedule;
+      if (req.body.monthlyDay) eventData.monthlyDay = req.body.monthlyDay;
+      if (req.body.location) eventData.location = req.body.location;
+
+      if (req.body.actionType === "EDIT") {
+        const updatedEvent = await Event.findByIdAndUpdate(
+          req.body.eventID,
+          eventData,
+          { new: true }
+        );
+        res.json({ msg: "SUCCESS" });
+      } else {
+        eventData.createdBy = await utils.eventUtilities.getEventCreatorByUsername(
+          req.body.createdBy
+        );
+
+        eventData.attendees = await utils.eventUtilities.getEventAttendees(
+          eventData.createdBy,
+          utils.parseStringToBool(req.body.shared),
+          req.body.attendees
+        );
+
+        const newEvent = await Event.create(eventData);
+
+        res.json({ newEvent });
+      }
+    } catch (err) {
+      errors.error = err.message;
+      res.status(400).json(errors);
+    }
   }
-});
+);
 
 // @route    GET /api/event/all
 // @desc     Get all events associated with current logged in user (both owned and attended)
@@ -120,68 +124,6 @@ router.get(
       res.json(foundEvent);
     } catch (err) {
       errors.error = "Event Not Found";
-      res.status(404).json(errors);
-    }
-  }
-);
-
-// @route    PUT /api/event/:id/edit
-// @desc     update an event
-// @access   Private
-router.put(
-  "/:id/edit",
-  passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    const { errors, isValid } = validateCreateEventInput(req.body);
-
-    if (!isValid) {
-      return res.status(400).json(errors);
-    }
-
-    try {
-      const currentUser = await utils.eventUtilities.getEventCreatorByUsername(
-        req.user.userName
-      );
-
-      const foundEvent = await Event.find({
-        createdBy: currentUser,
-        _id: req.params.id
-      });
-
-      if (isEmpty(foundEvent)) {
-        throw new Error();
-      }
-
-      const attendeesToAdd = await utils.eventUtilities.getEventAttendees(
-        currentUser,
-        utils.parseStringToBool(req.body.shared),
-        req.body.attendees
-      );
-
-      console.log(foundEvent);
-
-      const updatedEventData = {
-        name: req.body.name,
-        startDate: req.body.startDate,
-        endDate: req.body.endDate,
-        createdBy: currentUser,
-        startTime: req.body.startTime,
-        endTime: req.body.endTime,
-        description: req.body.description,
-        type: req.body.type,
-        location: req.body.location,
-        attendees: attendeesToAdd,
-        shared: req.body.shared
-      };
-
-      const updatedEvent = await Event.findByIdAndUpdate(
-        req.params.id,
-        updatedEventData
-      );
-
-      res.json(updatedEvent);
-    } catch (err) {
-      errors.error = "Unable to edit specified event";
       res.status(404).json(errors);
     }
   }

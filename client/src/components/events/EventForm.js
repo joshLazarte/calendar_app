@@ -18,12 +18,12 @@ import {
   addEvent,
   stageAttendee,
   unstageAttendee,
+  removeAttendee,
   clearErrors
 } from "../../actions/eventActions";
 import { withRouter } from "react-router-dom";
 import autoLogOutIfNeeded from "../../validation/autoLogOut";
 import isEmpty from "../../validation/is-empty";
-import { spawn } from "child_process";
 
 class EventForm extends Component {
   constructor(props) {
@@ -122,7 +122,7 @@ class EventForm extends Component {
 
     const attendees = event.stagedAttendees.join(",");
 
-    const newEvent = {
+    const eventData = {
       name: this.state.name,
       eventID: this.state.eventID,
       actionType: this.state.formType,
@@ -146,7 +146,7 @@ class EventForm extends Component {
       unsavedAttendee: this.state.attendeeSearchField
     };
 
-    addEvent(newEvent, history);
+    addEvent(eventData, history);
 
     this.props.hideModal();
   };
@@ -173,6 +173,14 @@ class EventForm extends Component {
     return (
       this.props.eventToDisplay.createdBy.userName ===
       this.props.auth.user.userName
+    );
+  };
+
+  removeUserFromEvent = () => {
+    this.props.removeAttendee(
+      this.state.eventID,
+      this.props.auth.user.userName,
+      this.props.history
     );
   };
 
@@ -213,7 +221,7 @@ class EventForm extends Component {
         </button>
       );
       formHeader = "Add Event";
-    } else if (this.state.formType === "READONLY") {
+    } else if (this.state.formType === "READONLY" && this.userOwnsForm()) {
       formActionButton = (
         <button
           onClick={this.setFormToEditState}
@@ -221,6 +229,17 @@ class EventForm extends Component {
           className="btn btn-warning btn-block"
         >
           Edit Event
+        </button>
+      );
+      formHeader = "View Event";
+    } else if (this.state.formType === "READONLY" && !this.userOwnsForm()) {
+      formActionButton = (
+        <button
+          onClick={this.removeUserFromEvent}
+          type="button"
+          className="btn btn-danger btn-block"
+        >
+          Remove Me From Event
         </button>
       );
       formHeader = "View Event";
@@ -442,6 +461,7 @@ EventForm.propTypes = {
   addEvent: PropTypes.func.isRequired,
   stageAttendee: PropTypes.func.isRequired,
   unstageAttendee: PropTypes.func.isRequired,
+  removeAttendee: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired
 };
 
@@ -453,5 +473,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { addEvent, stageAttendee, unstageAttendee, clearErrors }
+  { addEvent, stageAttendee, unstageAttendee, removeAttendee, clearErrors }
 )(withRouter(EventForm));
