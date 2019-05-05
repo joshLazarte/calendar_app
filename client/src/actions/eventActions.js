@@ -30,9 +30,23 @@ export const getEvents = () => dispatch => {
 };
 
 //Add Event
-export const addEvent = (event, history) => dispatch => {
+export const addEvent = (event, history, cb) => dispatch => {
   axios
     .post(`/api/event`, event)
+    .then(res => cb())
+    .then(res => history.push("/"))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+//Delete Event
+export const deleteEvent = (id, history) => dispatch => {
+  axios
+    .delete(`/api/event/${id}/delete`)
     .then(res => history.push("/"))
     .catch(err =>
       dispatch({

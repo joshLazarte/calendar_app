@@ -3,19 +3,23 @@ import InputGroup from "../common/InputGroup";
 import SelectInputGroup from "../common/SelectInputGroup";
 import CheckboxInput from "../common/CheckboxInput";
 
-import NameDescriptionAndLocation from "../event_form_options/NameDescriptionAndLocation";
-import Single from "../event_form_options/Single";
-import MultiDay from "../event_form_options/MultiDay";
-import Weekly from "../event_form_options/Weekly";
-import BiWeekly from "../event_form_options/BiWeekly";
-import Monthly from "../event_form_options/Monthly";
-import StartAndEndTime from "../event_form_options/StartAndEndTime";
+import FormHeader from "../event_form_components/FormHeader";
+import NameDescriptionAndLocation from "../event_form_components/NameDescriptionAndLocation";
+import Single from "../event_form_components/Single";
+import MultiDay from "../event_form_components/MultiDay";
+import Weekly from "../event_form_components/Weekly";
+import BiWeekly from "../event_form_components/BiWeekly";
+import Monthly from "../event_form_components/Monthly";
+import StartAndEndTime from "../event_form_components/StartAndEndTime";
+import FormActionButton from "../event_form_components/FormActionButton";
+import DeleteEventButton from "../event_form_components/DeleteEventButton";
 import moment from "moment";
 
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
   addEvent,
+  deleteEvent,
   stageAttendee,
   unstageAttendee,
   removeAttendee,
@@ -146,9 +150,7 @@ class EventForm extends Component {
       unsavedAttendee: this.state.attendeeSearchField
     };
 
-    addEvent(eventData, history);
-
-    this.props.hideModal();
+    addEvent(eventData, history, this.props.hideModal);
   };
 
   onChange = e => {
@@ -169,11 +171,13 @@ class EventForm extends Component {
       .format("YYYY-MM-DD");
   };
 
-  userOwnsForm = () => {
-    return (
-      this.props.eventToDisplay.createdBy.userName ===
-      this.props.auth.user.userName
-    );
+  userOwnsEvent = () => {
+    if (this.state.eventID) {
+      return (
+        this.props.eventToDisplay.createdBy.userName ===
+        this.props.auth.user.userName
+      );
+    }
   };
 
   removeUserFromEvent = () => {
@@ -184,8 +188,14 @@ class EventForm extends Component {
     );
   };
 
+  deleteEvent = () => {
+    this.props.deleteEvent(this.state.eventID, this.props.history);
+  };
+
   render() {
     const { stagedAttendees, attendeeLoading } = this.props.event;
+    const { errors, frequency } = this.state;
+
     let addAttendeeButton;
 
     if (attendeeLoading) {
@@ -210,64 +220,26 @@ class EventForm extends Component {
       );
     }
 
-    const { errors, frequency } = this.state;
-
-    let formActionButton, formHeader;
-
-    if (this.state.formType === "ADD") {
-      formActionButton = (
-        <button type="submit" className="btn btn-primary btn-block">
-          Add Event
-        </button>
-      );
-      formHeader = "Add Event";
-    } else if (this.state.formType === "READONLY" && this.userOwnsForm()) {
-      formActionButton = (
-        <button
-          onClick={this.setFormToEditState}
-          type="button"
-          className="btn btn-warning btn-block"
-        >
-          Edit Event
-        </button>
-      );
-      formHeader = "View Event";
-    } else if (this.state.formType === "READONLY" && !this.userOwnsForm()) {
-      formActionButton = (
-        <button
-          onClick={this.removeUserFromEvent}
-          type="button"
-          className="btn btn-danger btn-block"
-        >
-          Remove Me From Event
-        </button>
-      );
-      formHeader = "View Event";
-    } else if (this.state.formType === "EDIT") {
-      formActionButton = (
-        <button type="submit" className="btn btn-primary btn-block">
-          Update Event
-        </button>
-      );
-      formHeader = "Edit Event";
-    }
-
     return (
       <div className="container">
         <div className="row">
           <div className="col-md-10 col-lg-8 mx-auto">
             <div className="card control-overflow">
               <div className="card-header">
-                <h1 className="text-center">
-                  {formHeader}
-                  <a
-                    href="!#"
-                    onClick={this.props.hideModal}
-                    className="float-right nav-link"
-                  >
-                    &times;
-                  </a>
-                </h1>
+                <a
+                  href="!#"
+                  onClick={this.props.hideModal}
+                  className="float-right nav-link"
+                  style={{ fontSize: "25px" }}
+                >
+                  &times;
+                </a>
+                <FormHeader formType={this.state.formType} />
+                {errors.error && (
+                  <small className="text-danger text-center">
+                    {errors.error}
+                  </small>
+                )}
               </div>
               <div className="card-body">
                 <form onSubmit={this.onSubmit}>
@@ -435,16 +407,33 @@ class EventForm extends Component {
                     this.props.eventToDisplay.attendees.length > 1 && (
                       <div className="row">
                         {this.props.eventToDisplay.attendees.map(attendee => (
-                          <InputGroup
-                            value={attendee.userName}
-                            disabled={true}
-                            name={attendee}
-                          />
+                          <div
+                            key={attendee.id}
+                            className="col-sm-6 d-flex align-items-start pt-3"
+                          >
+                            <InputGroup
+                              value={attendee.userName}
+                              disabled={true}
+                              name={attendee.userName}
+                            />
+                          </div>
                         ))}
                       </div>
                     )}
 
-                  <div className="form-group my-5">{formActionButton}</div>
+                  <div className="form-group my-5">
+                    <FormActionButton
+                      formType={this.state.formType}
+                      userOwnsEvent={this.userOwnsEvent()}
+                      setEditState={this.setFormToEditState}
+                      removeUser={this.removeUserFromEvent}
+                    />
+                    <DeleteEventButton
+                      formType={this.state.formType}
+                      userOwnsEvent={this.userOwnsEvent()}
+                      onClick={this.deleteEvent}
+                    />
+                  </div>
                 </form>
               </div>
             </div>
@@ -459,6 +448,7 @@ EventForm.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   addEvent: PropTypes.func.isRequired,
+  deleteEvent: PropTypes.func.isRequired,
   stageAttendee: PropTypes.func.isRequired,
   unstageAttendee: PropTypes.func.isRequired,
   removeAttendee: PropTypes.func.isRequired,
@@ -473,5 +463,12 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { addEvent, stageAttendee, unstageAttendee, removeAttendee, clearErrors }
+  {
+    addEvent,
+    deleteEvent,
+    stageAttendee,
+    unstageAttendee,
+    removeAttendee,
+    clearErrors
+  }
 )(withRouter(EventForm));
