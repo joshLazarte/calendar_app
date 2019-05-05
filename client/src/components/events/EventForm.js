@@ -23,6 +23,7 @@ import {
 import { withRouter } from "react-router-dom";
 import autoLogOutIfNeeded from "../../validation/autoLogOut";
 import isEmpty from "../../validation/is-empty";
+import { spawn } from "child_process";
 
 class EventForm extends Component {
   constructor(props) {
@@ -166,6 +167,13 @@ class EventForm extends Component {
     return moment(date)
       .utc()
       .format("YYYY-MM-DD");
+  };
+
+  userOwnsForm = () => {
+    return (
+      this.props.eventToDisplay.createdBy.userName ===
+      this.props.auth.user.userName
+    );
   };
 
   render() {
