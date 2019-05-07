@@ -1,19 +1,14 @@
 import React, { Component } from "react";
 import InputGroup from "../common/InputGroup";
-import SelectInputGroup from "../common/SelectInputGroup";
 import CheckboxInput from "../common/CheckboxInput";
 
 import FormHeader from "../event_form_components/FormHeader";
 import NameDescriptionAndLocation from "../event_form_components/NameDescriptionAndLocation";
-import Single from "../event_form_components/Single";
-import MultiDay from "../event_form_components/MultiDay";
-import Weekly from "../event_form_components/Weekly";
-import BiWeekly from "../event_form_components/BiWeekly";
-import Monthly from "../event_form_components/Monthly";
+import FrequencyOptionsField from "../event_form_components/FrequencyOptionsField";
+import FrequencyValueFields from "../event_form_components/FrequencyValueFields";
 import StartAndEndTime from "../event_form_components/StartAndEndTime";
 import FormActionButton from "../event_form_components/FormActionButton";
 import DeleteEventButton from "../event_form_components/DeleteEventButton";
-import moment from "moment";
 
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -65,8 +60,7 @@ class EventForm extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { frequency } = this.state;
-    if (prevState.frequency !== frequency) {
+    if (prevState.frequency !== this.state.frequency) {
       return this.setState({
         startDate: "",
         endDate: "",
@@ -165,12 +159,6 @@ class EventForm extends Component {
     });
   };
 
-  format = date => {
-    return moment(date)
-      .utc()
-      .format("YYYY-MM-DD");
-  };
-
   userOwnsEvent = () => {
     if (this.state.eventID) {
       return (
@@ -194,7 +182,7 @@ class EventForm extends Component {
 
   render() {
     const { stagedAttendees, attendeeLoading } = this.props.event;
-    const { errors, frequency } = this.state;
+    const { errors } = this.state;
 
     let addAttendeeButton;
 
@@ -225,22 +213,11 @@ class EventForm extends Component {
         <div className="row">
           <div className="col-md-10 col-lg-8 mx-auto">
             <div className="card control-overflow">
-              <div className="card-header">
-                <a
-                  href="!#"
-                  onClick={this.props.hideModal}
-                  className="float-right nav-link"
-                  style={{ fontSize: "25px" }}
-                >
-                  &times;
-                </a>
-                <FormHeader formType={this.state.formType} />
-                {errors.error && (
-                  <small className="text-danger text-center">
-                    {errors.error}
-                  </small>
-                )}
-              </div>
+              <FormHeader
+                errors={errors}
+                hideModal={this.props.hideModal}
+                formType={this.state.formType}
+              />
               <div className="card-body">
                 <form onSubmit={this.onSubmit}>
                   <NameDescriptionAndLocation
@@ -254,88 +231,17 @@ class EventForm extends Component {
                     onChange={this.onChange}
                   />
 
-                  <div className="form-group row">
-                    <label
-                      className="col-form-label col-sm-3"
-                      htmlFor="frequency"
-                    >
-                      Frequency
-                    </label>
-                    <div className="col-sm-8">
-                      <SelectInputGroup
-                        name="frequency"
-                        options={[
-                          "Choose One",
-                          "Single",
-                          "Multi-Day",
-                          "Weekly",
-                          "Bi-Weekly",
-                          "Monthly"
-                        ]}
-                        disabled={this.state.disabled}
-                        value={this.state.frequency}
-                        onChange={this.onChange}
-                        error={errors.frequency}
-                      />
-                    </div>
-                  </div>
+                  <FrequencyOptionsField
+                    onChange={this.onChange}
+                    disabled={this.state.disabled}
+                    errors={errors}
+                    frequency={this.state.frequency}
+                  />
 
-                  {frequency === "single" && (
-                    <Single
-                      value={this.format(this.state.startDate)}
-                      onChange={this.onChange}
-                      error={errors.startDate}
-                      disabled={this.state.disabled}
-                    />
-                  )}
-                  {frequency === "multi-day" && (
-                    <MultiDay
-                      values={[
-                        this.format(this.state.startDate),
-                        this.format(this.state.endDate)
-                      ]}
-                      onChange={this.onChange}
-                      errors={[errors.startDate, errors.endDate]}
-                      disabled={this.state.disabled}
-                    />
-                  )}
-                  {frequency === "weekly" && (
-                    <Weekly
-                      value={this.state.weeklyDay}
-                      onChange={this.onChange}
-                      error={errors.weeklyDay}
-                      disabled={this.state.disabled}
-                    />
-                  )}
-                  {frequency === "bi-weekly" && (
-                    <BiWeekly
-                      values={[
-                        this.state.biWeeklySchedule,
-                        this.state.biWeeklyDay
-                      ]}
-                      onChange={this.onChange}
-                      errors={[errors.biWeeklySchedule, errors.biWeeklyDay]}
-                      disabled={this.state.disabled}
-                    />
-                  )}
-                  {frequency === "monthly" && (
-                    <Monthly
-                      values={[
-                        this.state.monthlyType,
-                        this.state.monthlyDate,
-                        this.state.monthlyDay,
-                        this.state.monthlySchedule
-                      ]}
-                      onChange={this.onChange}
-                      errors={[
-                        errors.monthlyType,
-                        errors.monthlyDate,
-                        errors.monthlyDay,
-                        errors.monthlySchedule
-                      ]}
-                      disabled={this.state.disabled}
-                    />
-                  )}
+                  <FrequencyValueFields
+                    props={this.state}
+                    onChange={this.onChange}
+                  />
 
                   <CheckboxInput
                     name="allDay"

@@ -13,7 +13,20 @@ const getFormHeaderContent = formType => {
 
 const FormHeader = props => {
   return (
-    <h1 className="text-center">{getFormHeaderContent(props.formType)}</h1>
+    <div className="card-header">
+      <a
+        href="!#"
+        onClick={props.hideModal}
+        className="float-right nav-link"
+        style={{ fontSize: "25px" }}
+      >
+        &times;
+      </a>
+      <h1 className="text-center">{getFormHeaderContent(props.formType)}</h1>
+      {props.errors.error && (
+        <small className="text-danger text-center">{props.errors.error}</small>
+      )}
+    </div>
   );
 };
 
