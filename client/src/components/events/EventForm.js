@@ -9,6 +9,7 @@ import FrequencyValueFields from "../event_form_components/FrequencyValueFields"
 import StartAndEndTime from "../event_form_components/StartAndEndTime";
 import FormActionButton from "../event_form_components/FormActionButton";
 import DeleteEventButton from "../event_form_components/DeleteEventButton";
+import AttendeeButton from "../event_form_components/AttendeeButton";
 
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -107,7 +108,7 @@ class EventForm extends Component {
     this.setState({ attendeeSearchField: "" });
   };
 
-  onDeleteAttendeeClick(attendee, e) {
+  onUnstageAttendeeClick(attendee, e) {
     e.target.blur();
     e.preventDefault();
     this.props.unstageAttendee(attendee);
@@ -168,45 +169,23 @@ class EventForm extends Component {
     }
   };
 
-  removeUserFromEvent = () => {
+  removeUserFromEvent(userToRemove, refresh) {
     this.props.removeAttendee(
       this.state.eventID,
-      this.props.auth.user.userName,
-      this.props.history
+      userToRemove,
+      this.props.history,
+      (refresh = false)
     );
-  };
+  }
 
   deleteEvent = () => {
     this.props.deleteEvent(this.state.eventID, this.props.history);
   };
 
   render() {
+    const currentUser = this.props.auth.user.userName;
     const { stagedAttendees, attendeeLoading } = this.props.event;
     const { errors } = this.state;
-
-    let addAttendeeButton;
-
-    if (attendeeLoading) {
-      addAttendeeButton = (
-        <a
-          href="!#"
-          onClick={e => e.preventDefault()}
-          className="btn btn-primary ml-1"
-        >
-          <i className="fas fa-circle-notch fa-spin" />
-        </a>
-      );
-    } else {
-      addAttendeeButton = (
-        <a
-          href="!#"
-          onClick={this.onAddAttendeeClick}
-          className="btn btn-primary ml-1"
-        >
-          <i className="fas fa-plus" />
-        </a>
-      );
-    }
 
     return (
       <div className="container">
@@ -282,17 +261,13 @@ class EventForm extends Component {
                             disabled={true}
                             name={attendee}
                           />
-                          <a
-                            href="!#"
-                            onClick={this.onDeleteAttendeeClick.bind(
+                          <AttendeeButton
+                            attendee={attendee}
+                            onDeleteClick={this.onUnstageAttendeeClick.bind(
                               this,
                               attendee
                             )}
-                            value={attendee}
-                            className="btn btn-danger ml-1"
-                          >
-                            <i className="fas fa-ban" />
-                          </a>
+                          />
                         </div>
                       ))}
                       <div className="col-sm-6 d-flex align-items-start pt-3">
@@ -304,7 +279,10 @@ class EventForm extends Component {
                           error={errors.attendees}
                           disabled={this.state.disabled}
                         />
-                        {addAttendeeButton}
+                        <AttendeeButton
+                          attendeeLoading={attendeeLoading}
+                          onAddAttendeeClick={this.onAddAttendeeClick}
+                        />
                       </div>
                     </div>
                   )}
@@ -322,6 +300,14 @@ class EventForm extends Component {
                               disabled={true}
                               name={attendee.userName}
                             />
+                            <AttendeeButton
+                              attendee={attendee.userName}
+                              onDeleteClick={this.removeUserFromEvent.bind(
+                                this,
+                                attendee.userName
+                              )}
+                              disabled={this.state.disabled}
+                            />
                           </div>
                         ))}
                       </div>
@@ -332,7 +318,10 @@ class EventForm extends Component {
                       formType={this.state.formType}
                       userOwnsEvent={this.userOwnsEvent()}
                       setEditState={this.setFormToEditState}
-                      removeUser={this.removeUserFromEvent}
+                      removeUser={this.removeUserFromEvent.bind(
+                        this,
+                        currentUser
+                      )}
                     />
                     <DeleteEventButton
                       formType={this.state.formType}

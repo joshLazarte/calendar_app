@@ -199,7 +199,7 @@ router.delete(
     const errors = {};
     try {
       const event = await Event.findOne({ _id: req.params.id });
-
+      console.log(req.params.userName);
       if (event.createdBy.userName === req.params.userName) {
         errors.invalid = "You cannot remove yourself from an event you created";
         res.status(400).json(errors);

@@ -87,17 +87,22 @@ export const unstageAttendee = attendee => dispatch => {
   });
 };
 
-//Unstage attendee
-export const removeAttendee = (id, attendee, history) => dispatch => {
-  axios
-    .delete(`/api/event/${id}/attendee/${attendee}/delete`)
-    .then(res => history.push("/"))
-    .catch(err => {
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
-      });
+export const removeAttendee = (
+  id,
+  attendeeToRemove,
+  history,
+  refresh
+) => async dispatch => {
+  try {
+    await axios.delete(`/api/event/${id}/attendee/${attendeeToRemove}/delete`);
+    console.log(refresh);
+    history.push("/");
+  } catch (err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
     });
+  }
 };
 
 //set loading to true, display spinner
