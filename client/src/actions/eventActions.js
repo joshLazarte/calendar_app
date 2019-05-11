@@ -87,15 +87,9 @@ export const unstageAttendee = attendee => dispatch => {
   });
 };
 
-export const removeAttendee = (
-  id,
-  attendeeToRemove,
-  history,
-  refresh
-) => async dispatch => {
+export const removeAttendee = (id, attendee, history) => async dispatch => {
   try {
-    await axios.delete(`/api/event/${id}/attendee/${attendeeToRemove}/delete`);
-    console.log(refresh);
+    await axios.delete(`/api/event/${id}/attendee/${attendee}/delete`);
     history.push("/");
   } catch (err) {
     dispatch({

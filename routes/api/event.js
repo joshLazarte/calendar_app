@@ -47,6 +47,16 @@ router.post(
       if (req.body.monthlyDay) eventData.monthlyDay = req.body.monthlyDay;
       if (req.body.location) eventData.location = req.body.location;
 
+      eventData.createdBy = await utils.eventUtilities.getEventCreatorByUsername(
+        req.body.createdBy
+      );
+
+      eventData.attendees = await utils.eventUtilities.getEventAttendees(
+        eventData.createdBy,
+        utils.parseStringToBool(req.body.shared),
+        req.body.attendees
+      );
+
       if (req.body.actionType === "EDIT") {
         const updatedEvent = await Event.findByIdAndUpdate(
           req.body.eventID,
@@ -55,16 +65,6 @@ router.post(
         );
         res.json({ msg: "SUCCESS" });
       } else {
-        eventData.createdBy = await utils.eventUtilities.getEventCreatorByUsername(
-          req.body.createdBy
-        );
-
-        eventData.attendees = await utils.eventUtilities.getEventAttendees(
-          eventData.createdBy,
-          utils.parseStringToBool(req.body.shared),
-          req.body.attendees
-        );
-
         const newEvent = await Event.create(eventData);
 
         res.json({ newEvent });
@@ -199,7 +199,7 @@ router.delete(
     const errors = {};
     try {
       const event = await Event.findOne({ _id: req.params.id });
-      console.log(req.params.userName);
+
       if (event.createdBy.userName === req.params.userName) {
         errors.invalid = "You cannot remove yourself from an event you created";
         res.status(400).json(errors);

@@ -23,7 +23,6 @@ import {
 } from "../../actions/eventActions";
 import { withRouter } from "react-router-dom";
 import autoLogOutIfNeeded from "../../validation/autoLogOut";
-import isEmpty from "../../validation/is-empty";
 
 class EventForm extends Component {
   constructor(props) {
@@ -55,9 +54,25 @@ class EventForm extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     autoLogOutIfNeeded();
     this.props.clearErrors();
+
+    if (this.state.eventID && this.props.eventToDisplay.attendees.length > 1) {
+      const { attendees } = this.props.eventToDisplay;
+      const { userName } = this.props.auth.user;
+      for (let attendee of attendees) {
+        if (attendee.userName !== userName) {
+          await this.props.stageAttendee(attendee.userName);
+        }
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.event.stagedAttendees.forEach(attendee => {
+      this.props.unstageAttendee(attendee);
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -169,13 +184,9 @@ class EventForm extends Component {
     }
   };
 
-  removeUserFromEvent(userToRemove, refresh) {
-    this.props.removeAttendee(
-      this.state.eventID,
-      userToRemove,
-      this.props.history,
-      (refresh = false)
-    );
+  removeUserFromEvent(user, e) {
+    e.preventDefault();
+    this.props.removeAttendee(this.state.eventID, user, this.props.history);
   }
 
   deleteEvent = () => {
@@ -249,7 +260,7 @@ class EventForm extends Component {
                     label="Share This Event"
                   />
 
-                  {this.state.shared && isEmpty(this.props.eventToDisplay) && (
+                  {this.state.shared && (
                     <div className="row">
                       {stagedAttendees.map(attendee => (
                         <div
@@ -267,6 +278,7 @@ class EventForm extends Component {
                               this,
                               attendee
                             )}
+                            disabled={this.state.disabled}
                           />
                         </div>
                       ))}
@@ -282,36 +294,11 @@ class EventForm extends Component {
                         <AttendeeButton
                           attendeeLoading={attendeeLoading}
                           onAddAttendeeClick={this.onAddAttendeeClick}
+                          disabled={this.state.disabled}
                         />
                       </div>
                     </div>
                   )}
-
-                  {!isEmpty(this.props.eventToDisplay) &&
-                    this.props.eventToDisplay.attendees.length > 1 && (
-                      <div className="row">
-                        {this.props.eventToDisplay.attendees.map(attendee => (
-                          <div
-                            key={attendee.id}
-                            className="col-sm-6 d-flex align-items-start pt-3"
-                          >
-                            <InputGroup
-                              value={attendee.userName}
-                              disabled={true}
-                              name={attendee.userName}
-                            />
-                            <AttendeeButton
-                              attendee={attendee.userName}
-                              onDeleteClick={this.removeUserFromEvent.bind(
-                                this,
-                                attendee.userName
-                              )}
-                              disabled={this.state.disabled}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )}
 
                   <div className="form-group my-5">
                     <FormActionButton
