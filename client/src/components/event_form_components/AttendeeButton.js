@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 
 const AttendeeButton = props => {
   let attendeeButton;
-
   if (props.disabled) {
     attendeeButton = null;
   } else if (props.attendeeLoading) {
@@ -20,7 +19,7 @@ const AttendeeButton = props => {
     attendeeButton = (
       <a
         href="!#"
-        onClick={props.onDeleteClick}
+        onClick={e => props.onDeleteClick(e, props.attendee)}
         value={props.attendee}
         className="btn btn-danger ml-1"
       >

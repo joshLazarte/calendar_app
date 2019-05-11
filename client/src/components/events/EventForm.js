@@ -1,18 +1,17 @@
 import React, { Component } from "react";
-import InputGroup from "../common/InputGroup";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import autoLogOutIfNeeded from "../../validation/autoLogOut";
 import CheckboxInput from "../common/CheckboxInput";
-
+import Spinner from "../common/Spinner";
 import FormHeader from "../event_form_components/FormHeader";
 import NameDescriptionAndLocation from "../event_form_components/NameDescriptionAndLocation";
 import FrequencyOptionsField from "../event_form_components/FrequencyOptionsField";
 import FrequencyValueFields from "../event_form_components/FrequencyValueFields";
 import StartAndEndTime from "../event_form_components/StartAndEndTime";
-import FormActionButton from "../event_form_components/FormActionButton";
-import DeleteEventButton from "../event_form_components/DeleteEventButton";
-import AttendeeButton from "../event_form_components/AttendeeButton";
-
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import FormActionButtons from "../event_form_components/FormActionButtons";
+import AttendeeFields from "../event_form_components/AttendeeFields";
 import {
   addEvent,
   deleteEvent,
@@ -21,8 +20,6 @@ import {
   removeAttendee,
   clearErrors
 } from "../../actions/eventActions";
-import { withRouter } from "react-router-dom";
-import autoLogOutIfNeeded from "../../validation/autoLogOut";
 
 class EventForm extends Component {
   constructor(props) {
@@ -52,6 +49,8 @@ class EventForm extends Component {
       monthlySchedule: props.eventToDisplay.monthlySchedule || "",
       monthlyDay: props.eventToDisplay.monthlyDay || ""
     };
+
+    this.onUnstageAttendeeClick = this.onUnstageAttendeeClick.bind(this);
   }
 
   async componentDidMount() {
@@ -123,45 +122,11 @@ class EventForm extends Component {
     this.setState({ attendeeSearchField: "" });
   };
 
-  onUnstageAttendeeClick(attendee, e) {
+  onUnstageAttendeeClick(e, attendee) {
     e.target.blur();
     e.preventDefault();
     this.props.unstageAttendee(attendee);
   }
-
-  onSubmit = e => {
-    e.preventDefault();
-
-    const { addEvent, history, auth, event } = this.props;
-
-    const attendees = event.stagedAttendees.join(",");
-
-    const eventData = {
-      name: this.state.name,
-      eventID: this.state.eventID,
-      actionType: this.state.formType,
-      createdBy: auth.user.userName,
-      startDate: this.state.startDate,
-      endDate: this.state.endDate,
-      startTime: this.state.startTime,
-      endTime: this.state.endTime,
-      description: this.state.description,
-      frequency: this.state.frequency,
-      location: this.state.location,
-      attendees,
-      shared: this.state.shared.toString(),
-      weeklyDay: this.state.weeklyDay,
-      biWeeklySchedule: this.state.biWeeklySchedule,
-      biWeeklyDay: this.state.biWeeklyDay,
-      monthlyType: this.state.monthlyType,
-      monthlyDate: this.state.monthlyDate,
-      monthlySchedule: this.state.monthlySchedule,
-      monthlyDay: this.state.monthlyDay,
-      unsavedAttendee: this.state.attendeeSearchField
-    };
-
-    addEvent(eventData, history, this.props.hideModal);
-  };
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -193,6 +158,36 @@ class EventForm extends Component {
     this.props.deleteEvent(this.state.eventID, this.props.history);
   };
 
+  onSubmit = e => {
+    e.preventDefault();
+    const { addEvent, history, auth, event } = this.props;
+    const attendees = event.stagedAttendees.join(",");
+    const eventData = {
+      name: this.state.name,
+      eventID: this.state.eventID,
+      actionType: this.state.formType,
+      createdBy: auth.user.userName,
+      startDate: this.state.startDate,
+      endDate: this.state.endDate,
+      startTime: this.state.startTime,
+      endTime: this.state.endTime,
+      description: this.state.description,
+      frequency: this.state.frequency,
+      location: this.state.location,
+      attendees,
+      shared: this.state.shared.toString(),
+      weeklyDay: this.state.weeklyDay,
+      biWeeklySchedule: this.state.biWeeklySchedule,
+      biWeeklyDay: this.state.biWeeklyDay,
+      monthlyType: this.state.monthlyType,
+      monthlyDate: this.state.monthlyDate,
+      monthlySchedule: this.state.monthlySchedule,
+      monthlyDay: this.state.monthlyDay,
+      unsavedAttendee: this.state.attendeeSearchField
+    };
+    addEvent(eventData, history, this.props.hideModal);
+  };
+
   render() {
     const currentUser = this.props.auth.user.userName;
     const { stagedAttendees, attendeeLoading } = this.props.event;
@@ -209,99 +204,72 @@ class EventForm extends Component {
                 formType={this.state.formType}
               />
               <div className="card-body">
-                <form onSubmit={this.onSubmit}>
-                  <NameDescriptionAndLocation
-                    values={[
-                      this.state.name,
-                      this.state.description,
-                      this.state.location
-                    ]}
-                    disabled={this.state.disabled}
-                    errors={[errors.name, errors.description, errors.location]}
-                    onChange={this.onChange}
-                  />
-
-                  <FrequencyOptionsField
-                    onChange={this.onChange}
-                    disabled={this.state.disabled}
-                    errors={errors}
-                    frequency={this.state.frequency}
-                  />
-
-                  <FrequencyValueFields
-                    props={this.state}
-                    onChange={this.onChange}
-                  />
-
-                  <CheckboxInput
-                    name="allDay"
-                    value={this.state.allDay}
-                    onChange={this.toggleAllDay}
-                    checked={this.state.allDay}
-                    disabled={this.state.disabled}
-                    label="All Day Event"
-                  />
-
-                  {!this.state.allDay && (
-                    <StartAndEndTime
-                      values={[this.state.startTime, this.state.endTime]}
-                      error={errors.startTime}
+                {attendeeLoading && this.state.formType === "READONLY" ? (
+                  <Spinner />
+                ) : (
+                  <form onSubmit={this.onSubmit}>
+                    <NameDescriptionAndLocation
+                      values={[
+                        this.state.name,
+                        this.state.description,
+                        this.state.location
+                      ]}
+                      disabled={this.state.disabled}
+                      errors={[
+                        errors.name,
+                        errors.description,
+                        errors.location
+                      ]}
+                      onChange={this.onChange}
+                    />
+                    <FrequencyOptionsField
                       onChange={this.onChange}
                       disabled={this.state.disabled}
+                      errors={errors}
+                      frequency={this.state.frequency}
                     />
-                  )}
-
-                  <CheckboxInput
-                    name="shared"
-                    value={this.state.shared}
-                    onChange={this.toggleShared}
-                    checked={this.state.shared}
-                    disabled={this.state.disabled}
-                    label="Share This Event"
-                  />
-
-                  {this.state.shared && (
-                    <div className="row">
-                      {stagedAttendees.map(attendee => (
-                        <div
-                          key={attendee}
-                          className="col-sm-6 d-flex align-items-start pt-3"
-                        >
-                          <InputGroup
-                            value={attendee}
-                            disabled={true}
-                            name={attendee}
-                          />
-                          <AttendeeButton
-                            attendee={attendee}
-                            onDeleteClick={this.onUnstageAttendeeClick.bind(
-                              this,
-                              attendee
-                            )}
-                            disabled={this.state.disabled}
-                          />
-                        </div>
-                      ))}
-                      <div className="col-sm-6 d-flex align-items-start pt-3">
-                        <InputGroup
-                          placeholder="Attendee"
-                          name="attendeeSearchField"
-                          value={this.state.attendeeSearchField}
-                          onChange={this.onChange}
-                          error={errors.attendees}
-                          disabled={this.state.disabled}
-                        />
-                        <AttendeeButton
-                          attendeeLoading={attendeeLoading}
-                          onAddAttendeeClick={this.onAddAttendeeClick}
-                          disabled={this.state.disabled}
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="form-group my-5">
-                    <FormActionButton
+                    <FrequencyValueFields
+                      props={this.state}
+                      onChange={this.onChange}
+                    />
+                    <CheckboxInput
+                      name="allDay"
+                      value={this.state.allDay}
+                      onChange={this.toggleAllDay}
+                      checked={this.state.allDay}
+                      disabled={this.state.disabled}
+                      label="All Day Event"
+                    />
+                    {!this.state.allDay && (
+                      <StartAndEndTime
+                        values={[this.state.startTime, this.state.endTime]}
+                        error={errors.startTime}
+                        onChange={this.onChange}
+                        disabled={this.state.disabled}
+                      />
+                    )}
+                    <CheckboxInput
+                      name="shared"
+                      value={this.state.shared}
+                      onChange={this.toggleShared}
+                      checked={this.state.shared}
+                      disabled={this.state.disabled}
+                      label="Share This Event"
+                    />
+                    {this.state.shared && (
+                      <AttendeeFields
+                        stagedAttendees={stagedAttendees}
+                        onAddAttendeeClick={this.onAddAttendeeClick}
+                        disabled={this.state.disabled}
+                        errors={errors}
+                        onChange={this.onChange}
+                        attendeeSearchField={this.state.attendeeSearchField}
+                        attendeeLoading={attendeeLoading}
+                        onDeleteClick={this.onUnstageAttendeeClick}
+                        shared={this.state.shared}
+                      />
+                    )}
+                    <FormActionButtons
                       formType={this.state.formType}
                       userOwnsEvent={this.userOwnsEvent()}
                       setEditState={this.setFormToEditState}
@@ -309,14 +277,10 @@ class EventForm extends Component {
                         this,
                         currentUser
                       )}
+                      deleteEvent={this.deleteEvent}
                     />
-                    <DeleteEventButton
-                      formType={this.state.formType}
-                      userOwnsEvent={this.userOwnsEvent()}
-                      onClick={this.deleteEvent}
-                    />
-                  </div>
-                </form>
+                  </form>
+                )}
               </div>
             </div>
           </div>

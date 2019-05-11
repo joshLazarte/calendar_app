@@ -1,6 +1,7 @@
 import React from "react";
+import DeleteEventButton from "./DeleteEventButton";
 
-const FormActionButton = props => {
+const FormActionButtons = props => {
   let onClick, type, className, text;
 
   if (props.formType === "ADD") {
@@ -26,10 +27,17 @@ const FormActionButton = props => {
   }
 
   return (
-    <button onClick={onClick} type={type} className={className}>
-      {text}
-    </button>
+    <div className="form-group my-5">
+      <button onClick={onClick} type={type} className={className}>
+        {text}
+      </button>
+      <DeleteEventButton
+        formType={props.formType}
+        userOwnsEvent={props.userOwnsEvent}
+        onClick={props.deleteEvent}
+      />
+    </div>
   );
 };
 
-export default FormActionButton;
+export default FormActionButtons;
