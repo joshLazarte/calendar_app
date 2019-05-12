@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Modal from "../modal/Modal";
+import FormModal from "../modal/FormModal";
 import { logoutUser } from "../../actions/authActions";
 
 class Navbar extends Component {
@@ -80,7 +80,7 @@ class Navbar extends Component {
               {" "}
               {authLinks}
               {this.state.showModal ? (
-                <Modal
+                <FormModal
                   disabled={false}
                   hideModal={this.hideModal}
                   eventToDisplay={{}}

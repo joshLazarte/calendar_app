@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import EventForm from "../events/EventForm";
 import PropTypes from "prop-types";
-const modalContainer = document.getElementById("modal");
+const modalContainer = document.getElementById("form-modal");
 
-class Modal extends Component {
+class FormModal extends Component {
   constructor(props) {
     super(props);
     this.el = document.createElement("div");
@@ -32,7 +32,7 @@ class Modal extends Component {
   }
 }
 
-Modal.propTypes = {
+FormModal.propTypes = {
   hideModal: PropTypes.func.isRequired,
   event: PropTypes.object,
   disabled: PropTypes.bool.isRequired,
@@ -40,4 +40,4 @@ Modal.propTypes = {
   formType: PropTypes.string.isRequired
 };
 
-export default Modal;
+export default FormModal;

@@ -5,8 +5,26 @@ import isEmpty from "../../validation/is-empty";
 import EventsInCalendarCell from "../events/EventsInCalendarCell";
 import classnames from "classnames";
 import moment from "moment";
+import FormModal from "../modal/FormModal";
 
 class CalendarDayCell extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showModal: false
+    };
+  }
+
+  showModal = e => {
+    e.preventDefault();
+    this.setState({ showModal: true });
+  };
+
+  hideModal = e => {
+    if (e) e.preventDefault();
+    this.setState({ showModal: false });
+  };
+
   format = date => {
     return moment(date)
       .utc()
@@ -141,14 +159,14 @@ class CalendarDayCell extends Component {
 
     if (!isEmpty(multiDayEvents) || !isEmpty(notMultiDayEvents)) {
       cellData = (
-        <small className="calendar-cell-number">
-          {date}{" "}
+        <span>
+          <small className="calendar-cell-number">{date} </small>
           <EventsInCalendarCell
             multiDayEvents={multiDayEvents}
             notMultiDayEvents={notMultiDayEvents}
             cellDate={this.props.cellDate}
           />
-        </small>
+        </span>
       );
     } else {
       cellData = <small className="calendar-cell-number">{date}</small>;
@@ -156,11 +174,20 @@ class CalendarDayCell extends Component {
 
     return (
       <td
+        // @TODO: NOT WORKING!!! deal with propogation onClick={this.showModal}
         className={classnames({
           "today-cell": cellDate.toDateString() === today.toDateString()
         })}
       >
         {cellData}
+        {this.state.showModal ? (
+          <FormModal
+            disabled={false}
+            hideModal={this.hideModal}
+            eventToDisplay={{}}
+            formType={"ADD"}
+          />
+        ) : null}
       </td>
     );
   }

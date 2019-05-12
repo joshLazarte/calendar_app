@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import isEmpty from "../../validation/is-empty";
 import moment from "moment";
-import Modal from "../modal/Modal";
+import FormModal from "../modal/FormModal";
 
 class EventInCalendarCell extends Component {
   constructor(props) {
@@ -61,7 +61,7 @@ class EventInCalendarCell extends Component {
                 </a>
                 {this.state.showModal &&
                 this.state.eventInModal._id === event._id ? (
-                  <Modal
+                  <FormModal
                     key={event._id + index}
                     disabled={true}
                     eventToDisplay={this.state.eventInModal}
@@ -98,7 +98,7 @@ class EventInCalendarCell extends Component {
                 </a>
                 {this.state.showModal &&
                 this.state.eventInModal._id === event._id ? (
-                  <Modal
+                  <FormModal
                     key={event._id + index}
                     eventToDisplay={this.state.eventInModal}
                     disabled={true}

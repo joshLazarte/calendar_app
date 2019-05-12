@@ -22,6 +22,7 @@ import {
   removeAttendee,
   clearErrors
 } from "../../actions/eventActions";
+import ConfirmModal from "../modal/ConfirmModal";
 
 class EventForm extends Component {
   constructor(props) {
@@ -49,7 +50,8 @@ class EventForm extends Component {
       monthlyType: props.eventToDisplay.monthlyType || "",
       monthlyDate: props.eventToDisplay.monthlyDate || "",
       monthlySchedule: props.eventToDisplay.monthlySchedule || "",
-      monthlyDay: props.eventToDisplay.monthlyDay || ""
+      monthlyDay: props.eventToDisplay.monthlyDay || "",
+      showConfirm: false
     };
 
     this.onUnstageAttendeeClick = this.onUnstageAttendeeClick.bind(this);
@@ -116,12 +118,6 @@ class EventForm extends Component {
     this.setState({ attendeeSearchField: "" });
   };
 
-  onUnstageAttendeeClick(e, attendee) {
-    e.target.blur();
-    e.preventDefault();
-    this.props.unstageAttendee(attendee);
-  }
-
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -144,13 +140,34 @@ class EventForm extends Component {
     return null;
   };
 
+  onUnstageAttendeeClick(e, attendee) {
+    e.target.blur();
+    e.preventDefault();
+    if (window.confirm("You Sure?")) {
+      this.props.unstageAttendee(attendee);
+    }
+  }
+
   removeUserFromEvent(user, e) {
     e.preventDefault();
-    this.props.removeAttendee(this.state.eventID, user, this.props.history);
+    if (window.confirm("You Sure?")) {
+      this.props.removeAttendee(this.state.eventID, user, this.props.history);
+    }
   }
 
   deleteEvent = () => {
-    this.props.deleteEvent(this.state.eventID, this.props.history);
+    this.setState({ showConfirm: true });
+    // if (window.confirm("You Sure?")) {
+    //   this.props.deleteEvent(this.state.eventID, this.props.history);
+    // }
+  };
+
+  handleConfirm = () => {
+    console.log("Confirmed");
+  };
+
+  handleDecline = () => {
+    this.setState({ showConfirm: false });
   };
 
   onSubmit = e => {
@@ -278,6 +295,13 @@ class EventForm extends Component {
             </div>
           </div>
         </div>
+        {this.state.showConfirm && (
+          <ConfirmModal
+            message="Are You Sure"
+            handleConfirm={this.handleConfirm}
+            handleDecline={this.handleDecline}
+          />
+        )}
       </div>
     );
   }
