@@ -9,7 +9,6 @@ module.exports = function validateCreateEventInput(data) {
   data.startDate = !isEmpty(data.startDate) ? data.startDate : "";
   data.endDate = !isEmpty(data.endDate) ? data.endDate : "";
   data.frequency = !isEmpty(data.frequency) ? data.frequency : "";
-  data.createdBy = !isEmpty(data.createdBy) ? data.createdBy : "";
   data.weeklyDay = !isEmpty(data.weeklyDay) ? data.weeklyDay : "";
   data.biWeeklySchedule = !isEmpty(data.biWeeklySchedule)
     ? data.biWeeklySchedule
@@ -29,10 +28,6 @@ module.exports = function validateCreateEventInput(data) {
 
   if (Validator.isEmpty(data.frequency)) {
     errors.frequency = "Frequency field is required";
-  }
-
-  if (Validator.isEmpty(data.createdBy)) {
-    errors.createdBy = "Created by field is required";
   }
 
   if (data.frequency === "single") {

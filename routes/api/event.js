@@ -5,6 +5,7 @@ const validateCreateEventInput = require("../../validation/createEvent"),
   User = require("../../models/Users"),
   passport = require("passport"),
   utils = require("../../utils"),
+  { getEventAttendees, removeAttendeeFromEvent } = utils.eventUtilities,
   isEmpty = require("../../validation/is-empty");
 
 // @route    POST /api/event/new
@@ -27,7 +28,6 @@ router.post(
 
     try {
       const eventData = {};
-
       eventData.name = req.body.name;
       eventData.shared = req.body.shared;
       eventData.frequency = req.body.frequency;
@@ -47,26 +47,22 @@ router.post(
       if (req.body.monthlyDay) eventData.monthlyDay = req.body.monthlyDay;
       if (req.body.location) eventData.location = req.body.location;
 
-      eventData.createdBy = await utils.eventUtilities.getEventCreatorByUsername(
-        req.body.createdBy
-      );
+      eventData.createdBy = {
+        userName: req.user.userName,
+        id: req.user._id
+      };
 
-      eventData.attendees = await utils.eventUtilities.getEventAttendees(
+      eventData.attendees = await getEventAttendees(
         eventData.createdBy,
         utils.parseStringToBool(req.body.shared),
         req.body.attendees
       );
 
       if (req.body.actionType === "EDIT") {
-        const updatedEvent = await Event.findByIdAndUpdate(
-          req.body.eventID,
-          eventData,
-          { new: true }
-        );
+        await Event.findByIdAndUpdate(req.body.eventID, eventData);
         res.json({ msg: "SUCCESS" });
       } else {
         const newEvent = await Event.create(eventData);
-
         res.json({ newEvent });
       }
     } catch (err) {
@@ -85,45 +81,16 @@ router.get(
   async (req, res) => {
     const errors = {};
     try {
-      const currentUser = await utils.eventUtilities.getEventCreatorByUsername(
-        req.user.userName
-      );
+      const currentUser = {
+        userName: req.user.userName,
+        id: req.user._id
+      };
 
       const usersEvents = await Event.find({ attendees: currentUser });
 
       res.json(usersEvents);
     } catch (err) {
       errors.error = err.message;
-      res.status(404).json(errors);
-    }
-  }
-);
-
-// @route    GET /api/event/:id
-// @desc     Get a single event if current user is an attendee
-// @access   Private
-router.get(
-  "/:id",
-  passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    const errors = {};
-    try {
-      const currentUser = await utils.eventUtilities.getEventCreatorByUsername(
-        req.user.userName
-      );
-
-      const foundEvent = await Event.find({
-        attendees: currentUser,
-        _id: req.params.id
-      });
-
-      if (isEmpty(foundEvent)) {
-        throw new Error();
-      }
-
-      res.json(foundEvent);
-    } catch (err) {
-      errors.error = "Event Not Found";
       res.status(404).json(errors);
     }
   }
@@ -138,9 +105,10 @@ router.delete(
   async (req, res) => {
     const errors = {};
     try {
-      const currentUser = await utils.eventUtilities.getEventCreatorByUsername(
-        req.user.userName
-      );
+      const currentUser = {
+        userName: req.user.userName,
+        id: req.user._id
+      };
 
       const foundEvent = await Event.find({
         createdBy: currentUser,
@@ -149,9 +117,7 @@ router.delete(
 
       if (isEmpty(foundEvent)) throw new Error();
 
-      const deletedEvent = await Event.findOneAndRemove({
-        _id: req.params.id
-      });
+      await Event.findOneAndRemove({ _id: req.params.id });
 
       res.status(200).json({ status: "success" });
     } catch (err) {
@@ -162,7 +128,7 @@ router.delete(
 );
 
 // @route    GET /api/event/attendee/:userName
-// @desc
+// @desc     Verify an attendee exists
 // @access   Private
 router.get(
   "/attendee/:userName",
@@ -207,15 +173,12 @@ router.delete(
         event.createdBy.userName === req.user.userName ||
         req.user.userName === req.params.userName
       ) {
-        const updatedEventData = utils.eventUtilities.removeAttendeeFromEvent(
+        const updatedEventData = removeAttendeeFromEvent(
           req.params.userName,
           event
         );
 
-        const updatedEvent = await Event.findByIdAndUpdate(
-          req.params.id,
-          updatedEventData
-        );
+        await Event.findByIdAndUpdate(req.params.id, updatedEventData);
 
         res.json({ status: "success" });
       } else {

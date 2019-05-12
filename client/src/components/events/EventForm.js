@@ -16,7 +16,9 @@ import {
   addEvent,
   deleteEvent,
   stageAttendee,
+  stageAttendees,
   unstageAttendee,
+  unstageAttendees,
   removeAttendee,
   clearErrors
 } from "../../actions/eventActions";
@@ -53,25 +55,17 @@ class EventForm extends Component {
     this.onUnstageAttendeeClick = this.onUnstageAttendeeClick.bind(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     autoLogOutIfNeeded();
     this.props.clearErrors();
-
     if (this.state.eventID && this.props.eventToDisplay.attendees.length > 1) {
       const { attendees } = this.props.eventToDisplay;
-      const { userName } = this.props.auth.user;
-      for (let attendee of attendees) {
-        if (attendee.userName !== userName) {
-          await this.props.stageAttendee(attendee.userName);
-        }
-      }
+      this.props.stageAttendees(attendees.slice(1));
     }
   }
 
   componentWillUnmount() {
-    this.props.event.stagedAttendees.forEach(attendee => {
-      this.props.unstageAttendee(attendee);
-    });
+    this.props.unstageAttendees();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -147,6 +141,7 @@ class EventForm extends Component {
         this.props.auth.user.userName
       );
     }
+    return null;
   };
 
   removeUserFromEvent(user, e) {
@@ -160,13 +155,12 @@ class EventForm extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-    const { addEvent, history, auth, event } = this.props;
+    const { addEvent, history, event } = this.props;
     const attendees = event.stagedAttendees.join(",");
     const eventData = {
       name: this.state.name,
       eventID: this.state.eventID,
       actionType: this.state.formType,
-      createdBy: auth.user.userName,
       startDate: this.state.startDate,
       endDate: this.state.endDate,
       startTime: this.state.startTime,
@@ -189,7 +183,6 @@ class EventForm extends Component {
   };
 
   render() {
-    const currentUser = this.props.auth.user.userName;
     const { stagedAttendees, attendeeLoading } = this.props.event;
     const { errors } = this.state;
 
@@ -275,7 +268,7 @@ class EventForm extends Component {
                       setEditState={this.setFormToEditState}
                       removeUser={this.removeUserFromEvent.bind(
                         this,
-                        currentUser
+                        this.props.auth.user.userName
                       )}
                       deleteEvent={this.deleteEvent}
                     />
@@ -291,12 +284,15 @@ class EventForm extends Component {
 }
 
 EventForm.propTypes = {
+  eventToDisplay: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   addEvent: PropTypes.func.isRequired,
   deleteEvent: PropTypes.func.isRequired,
   stageAttendee: PropTypes.func.isRequired,
+  stageAttendees: PropTypes.func.isRequired,
   unstageAttendee: PropTypes.func.isRequired,
+  unstageAttendees: PropTypes.func.isRequired,
   removeAttendee: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired
 };
@@ -313,7 +309,9 @@ export default connect(
     addEvent,
     deleteEvent,
     stageAttendee,
+    stageAttendees,
     unstageAttendee,
+    unstageAttendees,
     removeAttendee,
     clearErrors
   }

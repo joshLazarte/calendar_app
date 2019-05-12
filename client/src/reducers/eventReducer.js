@@ -4,7 +4,9 @@ import {
   ATTENDEE_LOADING,
   ATTENDEE_NOT_FOUND,
   STAGE_ATTENDEE,
-  UNSTAGE_ATTENDEE
+  STAGE_ATTENDEES,
+  UNSTAGE_ATTENDEE,
+  UNSTAGE_ATTENDEES
 } from "../actions/types";
 
 const initialState = {
@@ -53,12 +55,23 @@ export default function(state = initialState, action) {
             ? state.stagedAttendees
             : [...state.stagedAttendees, action.payload]
       };
+    case STAGE_ATTENDEES:
+      return {
+        ...state,
+        attendeeLoading: false,
+        stagedAttendees: action.payload.map(attendee => attendee.userName)
+      };
     case UNSTAGE_ATTENDEE:
       return {
         ...state,
         stagedAttendees: state.stagedAttendees.filter(
           attendee => attendee !== action.payload
         )
+      };
+    case UNSTAGE_ATTENDEES:
+      return {
+        ...state,
+        stagedAttendees: []
       };
   }
 }

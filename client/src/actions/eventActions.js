@@ -5,7 +5,9 @@ import {
   EVENTS_LOADING,
   ATTENDEE_LOADING,
   STAGE_ATTENDEE,
+  STAGE_ATTENDEES,
   UNSTAGE_ATTENDEE,
+  UNSTAGE_ATTENDEES,
   ATTENDEE_NOT_FOUND,
   CLEAR_ERRORS
 } from "./types";
@@ -79,11 +81,27 @@ export const stageAttendee = attendee => dispatch => {
     });
 };
 
+//Stage multiple attendees
+export const stageAttendees = attendees => dispatch => {
+  dispatch(setAttendeeLoading());
+  dispatch({
+    type: STAGE_ATTENDEES,
+    payload: attendees
+  });
+};
+
 //Unstage attendee
 export const unstageAttendee = attendee => dispatch => {
   dispatch({
     type: UNSTAGE_ATTENDEE,
     payload: attendee
+  });
+};
+
+//Unstage multiple attendees
+export const unstageAttendees = () => dispatch => {
+  dispatch({
+    type: UNSTAGE_ATTENDEES
   });
 };
 
