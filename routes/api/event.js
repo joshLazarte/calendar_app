@@ -8,7 +8,7 @@ const validateCreateEventInput = require("../../validation/createEvent"),
   { getEventAttendees, removeAttendeeFromEvent } = utils.eventUtilities,
   isEmpty = require("../../validation/is-empty");
 
-// @route    POST /api/event/new
+// @route    POST /api/event
 // @desc     create a new event
 // @access   Private
 router.post(
@@ -59,14 +59,24 @@ router.post(
       );
 
       if (req.body.actionType === "EDIT") {
-        await Event.findByIdAndUpdate(req.body.eventID, eventData);
-        res.json({ msg: "SUCCESS" });
+        const confirmedEvent = await Event.find({
+          _id: req.body.eventID,
+          createdBy: eventData.createdBy
+        });
+
+        if (!isEmpty(confirmedEvent)) {
+          await Event.findByIdAndUpdate(req.body.eventID, eventData);
+          res.json({ msg: "SUCCESS" });
+        } else {
+          errors.error = "You are not authorized to edit that event";
+          res.status(400).json(errors);
+        }
       } else {
         const newEvent = await Event.create(eventData);
         res.json({ newEvent });
       }
     } catch (err) {
-      errors.error = err.message;
+      errors.error = "Something Went Wrong...";
       res.status(400).json(errors);
     }
   }

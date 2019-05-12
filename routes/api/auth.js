@@ -120,16 +120,8 @@ router.get(
   }
 );
 
-// @route    GET /api/user/get-cookie
-// @desc     return current token from cookie (will be deleted in production)
-// @access   Private
-router.get("/get-cookie", (req, res) => {
-  passport.authenticate("jwt", { session: false }), console.log(req.cookies);
-  res.json(req.cookies);
-});
-
 // @route    DELETE /api/user/logout
-// @desc     makeshift logout, destroys cookie
+// @desc     logout, destroys cookie
 // @access   Private
 router.delete("/logout", (req, res) => {
   passport.authenticate("jwt", { session: false }), res.clearCookie("jwt");
