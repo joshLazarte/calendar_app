@@ -54,6 +54,16 @@ class EventForm extends Component {
       showConfirm: false
     };
 
+    this.confirmProps = {
+      confirmMessage: `This will delete "${
+        this.state.name
+      }" and cannot be undone`,
+      handleConfirm: this.deleteEvent,
+      handleDecline: () => {
+        this.setState({ showConfirm: false });
+      }
+    };
+
     this.onUnstageAttendeeClick = this.onUnstageAttendeeClick.bind(this);
   }
 
@@ -143,31 +153,30 @@ class EventForm extends Component {
   onUnstageAttendeeClick(e, attendee) {
     e.target.blur();
     e.preventDefault();
-    if (window.confirm("You Sure?")) {
-      this.props.unstageAttendee(attendee);
-    }
+    this.props.unstageAttendee(attendee);
   }
 
-  removeUserFromEvent(user, e) {
+  removeUserFromEvent = e => {
     e.preventDefault();
-    if (window.confirm("You Sure?")) {
-      this.props.removeAttendee(this.state.eventID, user, this.props.history);
-    }
-  }
+    this.props.removeAttendee(
+      this.state.eventID,
+      this.props.auth.user.userName,
+      this.props.history
+    );
+  };
 
   deleteEvent = () => {
+    this.props.deleteEvent(this.state.eventID, this.props.history);
+  };
+
+  askConfirm = type => {
     this.setState({ showConfirm: true });
-    // if (window.confirm("You Sure?")) {
-    //   this.props.deleteEvent(this.state.eventID, this.props.history);
-    // }
-  };
-
-  handleConfirm = () => {
-    console.log("Confirmed");
-  };
-
-  handleDecline = () => {
-    this.setState({ showConfirm: false });
+    if (type === "REMOVE_USER") {
+      this.confirmProps.confirmMessage = `This will remove you from "${
+        this.state.name
+      }" and cannot be undone`;
+      this.confirmProps.handleConfirm = this.removeUserFromEvent;
+    }
   };
 
   onSubmit = e => {
@@ -283,11 +292,7 @@ class EventForm extends Component {
                       formType={this.state.formType}
                       userOwnsEvent={this.userOwnsEvent()}
                       setEditState={this.setFormToEditState}
-                      removeUser={this.removeUserFromEvent.bind(
-                        this,
-                        this.props.auth.user.userName
-                      )}
-                      deleteEvent={this.deleteEvent}
+                      askConfirm={this.askConfirm}
                     />
                   </form>
                 )}
@@ -297,9 +302,9 @@ class EventForm extends Component {
         </div>
         {this.state.showConfirm && (
           <ConfirmModal
-            message="Are You Sure"
-            handleConfirm={this.handleConfirm}
-            handleDecline={this.handleDecline}
+            message={this.confirmProps.confirmMessage}
+            handleConfirm={this.confirmProps.handleConfirm}
+            handleDecline={this.confirmProps.handleDecline}
           />
         )}
       </div>

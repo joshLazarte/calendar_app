@@ -13,7 +13,7 @@ const DeleteEventButton = props => {
     <span>
       {showButton ? (
         <button
-          onClick={props.onClick}
+          onClick={() => props.onClick("DELETE_EVENT")}
           type="button"
           className="btn btn-danger btn-block mt-3"
         >
