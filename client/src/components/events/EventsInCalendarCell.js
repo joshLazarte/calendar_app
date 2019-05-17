@@ -3,12 +3,14 @@ import PropTypes from "prop-types";
 import isEmpty from "../../validation/is-empty";
 import moment from "moment";
 import FormModal from "../modal/FormModal";
+import Tooltip from "../modal/Tooltip";
 
 class EventInCalendarCell extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showModal: false,
+      showTooltip: false,
       eventInModal: {}
     };
   }
@@ -29,6 +31,14 @@ class EventInCalendarCell extends Component {
       .format("YYYY-MM-DD");
   };
 
+  showTooltip = () => {
+    this.setState({ showTooltip: true });
+  };
+
+  hideTooltip = () => {
+    this.setState({ showTooltip: false });
+  };
+
   match = (a, b) => a === b;
 
   render() {
@@ -46,11 +56,9 @@ class EventInCalendarCell extends Component {
                   key={event._id}
                   href="!#"
                   className="calendar-event bg-success text-white d-block p-1 mb-1 mx-auto"
-                  data-toggle="tooltip"
-                  data-placement="bottom"
-                  data-html="true"
-                  title="Don't have this working yet"
                   onClick={this.showModal(event)}
+                  onMouseEnter={this.showTooltip}
+                  onMouseLeave={this.hideTooltip}
                 >
                   {this.match(
                     this.format(event.startDate),
@@ -88,11 +96,9 @@ class EventInCalendarCell extends Component {
                   key={event._id}
                   href="!#"
                   className="calendar-event bg-primary text-white d-block p-1 mb-1 mx-auto"
-                  data-toggle="tooltip"
-                  data-placement="bottom"
-                  data-html="true"
-                  title="Don't have this working yet"
                   onClick={this.showModal(event)}
+                  onMouseEnter={this.showTooltip}
+                  onMouseLeave={this.hideTooltip}
                 >
                   {event.startTime ? event.startTime : null} {event.name}
                 </a>
@@ -119,6 +125,7 @@ class EventInCalendarCell extends Component {
       <div>
         {renderedMultiDayEvents}
         {renderedNotMultiDayEvents}
+        {this.state.showTooltip && <Tooltip />}
       </div>
     );
   }
