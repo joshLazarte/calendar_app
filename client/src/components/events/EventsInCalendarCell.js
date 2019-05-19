@@ -14,9 +14,10 @@ class EventInCalendarCell extends Component {
       showTooltip: false,
       renderedMultiDayEvents: [],
       renderedNotMultiDayEvents: [],
-      showAllSingleEvents: true,
+      showAllEvents: false,
       eventInModal: {}
     };
+    this.arrow = "&#9660";
   }
 
   componentDidMount() {
@@ -60,6 +61,10 @@ class EventInCalendarCell extends Component {
 
   match = (a, b) => a === b;
 
+  toggleShowAll = () => {
+    this.setState({ showAllEvents: !this.state.showAllEvents });
+  };
+
   getHideStart = (multi, single) => {
     let hideStart = false;
 
@@ -94,8 +99,8 @@ class EventInCalendarCell extends Component {
               { "bg-success": isMulti }
             )}
             onClick={this.showModal(event)}
-            onMouseEnter={this.showTooltip}
-            onMouseLeave={this.hideTooltip}
+            // onMouseEnter={this.showTooltip}
+            // onMouseLeave={this.hideTooltip}
           >
             {this.match(
               this.format(event.startDate),
@@ -121,25 +126,47 @@ class EventInCalendarCell extends Component {
 
   render() {
     const { renderedMultiDayEvents, renderedNotMultiDayEvents } = this.state;
+    const hideStart = this.getHideStart(
+      renderedMultiDayEvents,
+      renderedNotMultiDayEvents
+    );
+    const totalEventsLength =
+      renderedMultiDayEvents.length + renderedNotMultiDayEvents.length;
 
-    let multiTest = new Array(1);
-    let singleTest = new Array(3);
-    console.log(this.getHideStart(multiTest, singleTest));
+    console.log(hideStart);
 
-    // console.log(
-    //   this.getHideStart(renderedMultiDayEvents, renderedNotMultiDayEvents)
-    // );
+    let singleEventsToDisplay, arrow;
+
+    if (!this.state.showAllEvents && hideStart) {
+      singleEventsToDisplay = renderedNotMultiDayEvents.filter(
+        (event, index) => index < hideStart
+      );
+    } else {
+      singleEventsToDisplay = renderedNotMultiDayEvents.map(event => event);
+    }
+
+    if (!this.state.showAllEvents && hideStart) {
+      arrow = (
+        <span className="float-right" onClick={this.toggleShowAll}>
+          &#9660;
+        </span>
+      );
+    } else if (totalEventsLength <= 3) {
+      arrow = null;
+    } else {
+      arrow = (
+        <span className="float-right" onClick={this.toggleShowAll}>
+          &#9650;
+        </span>
+      );
+    }
 
     return (
       <div>
-        {renderedMultiDayEvents.map((event, index) => (
-          <span key={index}>{event}</span>
-        ))}
-        {renderedNotMultiDayEvents.map((event, index) => (
-          <span key={index}>{event}</span>
-        ))}
-
-        {this.state.showTooltip && <Tooltip />}
+        {renderedMultiDayEvents.map(event => event)}
+        {singleEventsToDisplay}
+        {/* {this.state.showTooltip && <Tooltip />} */}
+        {arrow}
       </div>
     );
   }
