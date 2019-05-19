@@ -15,7 +15,6 @@ class EventsInCalendarCell extends Component {
       showAllEvents: false,
       eventInModal: {}
     };
-    this.arrow = "&#9660";
   }
 
   componentDidMount() {

@@ -15,9 +15,6 @@ mongoose.connect(databaseConfig.database, databaseConfig.options);
 app.use(passport.initialize());
 require("./config/passport")(passport);
 
-//temporary file for theme
-app.use(express.static(__dirname + "/public"));
-
 const authRoutes = require("./routes/api/auth.js");
 const eventRoutes = require("./routes/api/event.js");
 app.use("/api/user", authRoutes);
