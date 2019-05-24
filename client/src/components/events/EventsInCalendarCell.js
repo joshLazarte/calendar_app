@@ -10,26 +10,9 @@ class EventsInCalendarCell extends Component {
     super(props);
     this.state = {
       showModal: false,
-      renderedMultiDayEvents: [],
-      renderedNotMultiDayEvents: [],
       showAllEvents: false,
       eventInModal: {}
     };
-  }
-
-  componentDidMount() {
-    const { multiDayEvents, notMultiDayEvents } = this.props;
-    !isEmpty(multiDayEvents) &&
-      this.setState({
-        renderedMultiDayEvents: this.getRenderedEvents(multiDayEvents, true)
-      });
-    !isEmpty(notMultiDayEvents) &&
-      this.setState({
-        renderedNotMultiDayEvents: this.getRenderedEvents(
-          notMultiDayEvents,
-          false
-        )
-      });
   }
 
   showModal = eventInModal => e => {
@@ -73,7 +56,7 @@ class EventsInCalendarCell extends Component {
   };
 
   getRenderedEvents = (events, isMulti) => {
-    const returnedEvents = events.map((event, index) => {
+    return events.map((event, index) => {
       return (
         <div
           key={index}
@@ -99,15 +82,19 @@ class EventsInCalendarCell extends Component {
         </div>
       );
     });
-    return returnedEvents;
   };
 
   render() {
-    const { renderedMultiDayEvents, renderedNotMultiDayEvents } = this.state;
-    const hideStart = this.getHideStart(
-      renderedMultiDayEvents,
-      renderedNotMultiDayEvents
-    );
+    const { multiDayEvents, notMultiDayEvents } = this.props;
+
+    const hideStart = this.getHideStart(multiDayEvents, notMultiDayEvents);
+    let renderedNotMultiDayEvents;
+
+    if (!isEmpty(notMultiDayEvents))
+      renderedNotMultiDayEvents = this.getRenderedEvents(
+        notMultiDayEvents,
+        false
+      );
 
     let singleEventsToDisplay, arrow;
 
@@ -116,7 +103,7 @@ class EventsInCalendarCell extends Component {
         (event, index) => index < hideStart
       );
     } else {
-      singleEventsToDisplay = renderedNotMultiDayEvents.map(event => event);
+      singleEventsToDisplay = renderedNotMultiDayEvents;
     }
 
     if (!this.state.showAllEvents && hideStart) {
@@ -137,8 +124,11 @@ class EventsInCalendarCell extends Component {
 
     return (
       <div>
-        {renderedMultiDayEvents.map(event => event)}
+        {!isEmpty(multiDayEvents) &&
+          this.getRenderedEvents(multiDayEvents, true)}
+
         {singleEventsToDisplay}
+
         {arrow}
         {this.state.showModal ? (
           <FormModal
