@@ -16,7 +16,7 @@ import {
 export const getEvents = () => dispatch => {
   dispatch(setEventLoading());
   axios
-    .get(`/api/event/all`)
+    .get("/api/event/all")
     .then(res =>
       dispatch({
         type: GET_EVENTS,
@@ -34,7 +34,7 @@ export const getEvents = () => dispatch => {
 //Add Event
 export const addEvent = (event, history, cb) => dispatch => {
   axios
-    .post(`/api/event`, event)
+    .post("/api/event", event)
     .then(res => cb())
     .then(res => history.push("/"))
     .catch(err =>

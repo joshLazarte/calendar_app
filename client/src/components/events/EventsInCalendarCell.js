@@ -108,8 +108,6 @@ class EventsInCalendarCell extends Component {
       renderedMultiDayEvents,
       renderedNotMultiDayEvents
     );
-    const totalEventsLength =
-      renderedMultiDayEvents.length + renderedNotMultiDayEvents.length;
 
     let singleEventsToDisplay, arrow;
 
@@ -127,15 +125,14 @@ class EventsInCalendarCell extends Component {
           &#9660;
         </span>
       );
-    } else if (totalEventsLength <= 3) {
-      //@TODO this does not work, shows for multi day events as well
-      arrow = null;
-    } else {
+    } else if (this.state.showAllEvents && hideStart) {
       arrow = (
         <span className="float-right" onClick={this.toggleShowAll}>
           &#9650;
         </span>
       );
+    } else {
+      arrow = null;
     }
 
     return (
