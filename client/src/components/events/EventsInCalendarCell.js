@@ -4,6 +4,7 @@ import isEmpty from "../../validation/is-empty";
 import moment from "moment";
 import FormModal from "../modal/FormModal";
 import classNames from "classnames";
+import Arrow from "../calendar/Arrow";
 
 class EventsInCalendarCell extends Component {
   constructor(props) {
@@ -96,30 +97,17 @@ class EventsInCalendarCell extends Component {
         false
       );
 
-    let singleEventsToDisplay, arrow;
+    let singleEventsToDisplay;
 
-    if (!this.state.showAllEvents && hideStart) {
+    if (
+      (!this.state.showAllEvents && hideStart) ||
+      (!this.state.showAllEvents && hideStart === 0)
+    ) {
       singleEventsToDisplay = renderedNotMultiDayEvents.filter(
         (event, index) => index < hideStart
       );
     } else {
       singleEventsToDisplay = renderedNotMultiDayEvents;
-    }
-
-    if (!this.state.showAllEvents && hideStart) {
-      arrow = (
-        <span className="float-right" onClick={this.toggleShowAll}>
-          &#9660;
-        </span>
-      );
-    } else if (this.state.showAllEvents && hideStart) {
-      arrow = (
-        <span className="float-right" onClick={this.toggleShowAll}>
-          &#9650;
-        </span>
-      );
-    } else {
-      arrow = null;
     }
 
     return (
@@ -129,7 +117,12 @@ class EventsInCalendarCell extends Component {
 
         {singleEventsToDisplay}
 
-        {arrow}
+        <Arrow
+          showAll={this.state.showAllEvents}
+          hideStart={hideStart}
+          toggleShowAll={this.toggleShowAll}
+        />
+
         {this.state.showModal ? (
           <FormModal
             disabled={true}
