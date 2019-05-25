@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import isEmpty from "../../validation/is-empty";
-import moment from "moment";
 import FormModal from "../modal/FormModal";
-import classNames from "classnames";
+import MultiDayEvents from "./MultiDayEvents";
+import SingleDayEvents from "./SingleDayEvents";
 import Arrow from "../calendar/Arrow";
 
 class EventsInCalendarCell extends Component {
@@ -26,14 +26,6 @@ class EventsInCalendarCell extends Component {
     this.setState({ showModal: false, eventInModal: {} });
   };
 
-  format = date => {
-    return moment(date)
-      .utc()
-      .format("YYYY-MM-DD");
-  };
-
-  match = (a, b) => a === b;
-
   toggleShowAll = () => {
     this.setState({ showAllEvents: !this.state.showAllEvents });
   };
@@ -45,8 +37,9 @@ class EventsInCalendarCell extends Component {
     if (isEmpty(multi) && single.length > 3) return (hideStart = 3);
     if (multi.length > 3) return (hideStart = 0);
 
-    let j = 0;
-    for (let i = 3; i > 0; i--) {
+    let i,
+      j = 0;
+    for (i = 3; i > 0; i--) {
       if (multi.length === i && single.length > j) {
         hideStart = j;
         break;
@@ -56,66 +49,24 @@ class EventsInCalendarCell extends Component {
     return hideStart;
   };
 
-  getRenderedEvents = (events, isMulti) => {
-    return events.map((event, index) => {
-      return (
-        <div
-          key={index}
-          className={classNames({ "calendar-event-container": !isMulti })}
-        >
-          <a
-            key={event._id}
-            href="!#"
-            className={classNames(
-              "calendar-event text-white d-block p-1 mb-1 mx-auto",
-              { "bg-primary": !isMulti },
-              { "bg-success": isMulti }
-            )}
-            onClick={this.showModal(event)}
-          >
-            {this.match(
-              this.format(event.startDate),
-              this.format(this.props.cellDate)
-            )
-              ? event.name
-              : "\u00A0"}
-          </a>
-        </div>
-      );
-    });
-  };
-
   render() {
     const { multiDayEvents, notMultiDayEvents } = this.props;
-
     const hideStart = this.getHideStart(multiDayEvents, notMultiDayEvents);
-    let renderedNotMultiDayEvents;
-
-    if (!isEmpty(notMultiDayEvents))
-      renderedNotMultiDayEvents = this.getRenderedEvents(
-        notMultiDayEvents,
-        false
-      );
-
-    let singleEventsToDisplay;
-
-    if (
-      (!this.state.showAllEvents && hideStart) ||
-      (!this.state.showAllEvents && hideStart === 0)
-    ) {
-      singleEventsToDisplay = renderedNotMultiDayEvents.filter(
-        (event, index) => index < hideStart
-      );
-    } else {
-      singleEventsToDisplay = renderedNotMultiDayEvents;
-    }
 
     return (
       <div>
-        {!isEmpty(multiDayEvents) &&
-          this.getRenderedEvents(multiDayEvents, true)}
+        <MultiDayEvents
+          events={multiDayEvents}
+          date={this.props.cellDate}
+          onClick={this.showModal}
+        />
 
-        {singleEventsToDisplay}
+        <SingleDayEvents
+          events={notMultiDayEvents}
+          showAll={this.state.showAllEvents}
+          hideStart={hideStart}
+          onClick={this.showModal}
+        />
 
         <Arrow
           showAll={this.state.showAllEvents}
