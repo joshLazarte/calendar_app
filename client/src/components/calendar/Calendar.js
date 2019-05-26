@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import CalendarDayCell from "./CalendarDayCell";
 
@@ -29,7 +30,16 @@ class Calendar extends Component {
         firstDay: this.getFirstDay(this.props.year, this.props.monthValue),
         daysInMonth: this.getDaysInMonth(this.props.year, this.props.monthValue)
       });
+      this.handleMultiDayEvents(this.props.event.events);
     }
+  }
+
+  handleMultiDayEvents = events => {
+    console.log(events);
+  };
+
+  componentDidMount() {
+    this.handleMultiDayEvents(this.props.event.events);
   }
 
   getNumberOfBeginningBlankCells = () => {
@@ -169,4 +179,11 @@ Calendar.propTypes = {
   year: PropTypes.number.isRequired
 };
 
-export default Calendar;
+const mapStateToProps = state => ({
+  event: state.event
+});
+
+export default connect(
+  mapStateToProps,
+  {}
+)(Calendar);

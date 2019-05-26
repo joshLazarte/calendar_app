@@ -17,12 +17,12 @@ export const getEvents = () => dispatch => {
   dispatch(setEventLoading());
   axios
     .get("/api/event/all")
-    .then(res =>
+    .then(res => {
       dispatch({
         type: GET_EVENTS,
         payload: res.data
-      })
-    )
+      });
+    })
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
