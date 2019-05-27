@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import CalendarDayCell from "./CalendarDayCell";
+import isEmpty from "../../validation/is-empty";
+import moment from "moment";
 
 class Calendar extends Component {
   constructor(props) {
@@ -12,6 +14,14 @@ class Calendar extends Component {
         32 - new Date(this.props.year, this.props.monthValue, 32).getDate()
     };
   }
+
+  format = date => {
+    return moment(date)
+      .utc()
+      .format("YYYY-MM-DD");
+  };
+
+  match = (a, b) => a === b;
 
   getFirstDay = (year, monthValue) => {
     return new Date(year, monthValue).getDay();
@@ -34,8 +44,29 @@ class Calendar extends Component {
     }
   }
 
+  eventIsInThisMonth = date => {
+    return (
+      this.match(
+        this.props.monthValue,
+        new Date(this.format(date)).getMonth()
+      ) &&
+      this.match(this.props.year, new Date(this.format(date)).getFullYear())
+    );
+  };
+
+  matchMonth = events => {
+    return events.filter(event => this.eventIsInThisMonth(event.startDate));
+  };
+
+  logAll = events => {
+    events.forEach(event => console.log(event.name));
+  };
+
   handleMultiDayEvents = events => {
-    console.log(events);
+    if (!isEmpty(events)) {
+      events = this.matchMonth(events);
+      this.logAll(events);
+    }
   };
 
   componentDidMount() {
