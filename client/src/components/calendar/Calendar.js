@@ -18,7 +18,7 @@ class Calendar extends Component {
   format = date => {
     return moment(date)
       .utc()
-      .format("YYYY-MM-DD");
+      .format("YYYY/MM/DD");
   };
 
   match = (a, b) => a === b;
@@ -62,10 +62,75 @@ class Calendar extends Component {
     events.forEach(event => console.log(event.name));
   };
 
+  separateEvents = (oldArray, newArray) => {
+    for (let i = oldArray.length - 1; i >= 0; i--) {
+      if (oldArray[i].frequency === "multi-day") {
+        newArray.push(oldArray[i]);
+        oldArray.splice(i, 1);
+      }
+    }
+  };
+
+  sortEventsByDate = events => {
+    events = events.sort((a, b) => {
+      return (
+        new Date(this.format(a.startDate)) - new Date(this.format(b.startDate))
+      );
+    });
+    return events[0];
+  };
+
+  getEventDaysArray = event => {
+    let startDateTimeValue = new Date(event.startDate).getTime();
+    const eventDays = [startDateTimeValue];
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const startDate = moment(event.startDate, "YYYYMMDD");
+    const endDate = moment(event.endDate, "YYYYMMDD");
+    const numberOfDays = endDate.diff(startDate, "days") + 1;
+
+    for (let i = 1; i < numberOfDays; i++) {
+      startDateTimeValue += msPerDay;
+      eventDays[i] = startDateTimeValue;
+    }
+    return eventDays;
+  };
+
+  separateByOverlap = (events, overlapingEvents) => {
+    const eventToCompare = events.shift();
+    const arrayOfDays = this.getEventDaysArray(eventToCompare);
+    const childArray = [];
+    for (let i = events.length - 1; i >= 0; i--) {
+      let startDate = new Date(events[i].startDate).getTime();
+      if (arrayOfDays.indexOf(startDate) !== -1) {
+        childArray.push(events[i]);
+        //@TODO: push any days after end date of eventToCompare
+        // into the arrayOfDays
+        //might need to move array of days out of this scope
+        events.splice(i, 1);
+      }
+    }
+    childArray.unshift(eventToCompare);
+    overlapingEvents.push(childArray);
+  };
+
+  getArrayOfOverlaps = events => {
+    const overlapingEvents = [];
+    while (events.length > 0) {
+      this.separateByOverlap(events, overlapingEvents);
+    }
+    return overlapingEvents;
+  };
+
   handleMultiDayEvents = events => {
     if (!isEmpty(events)) {
+      const multiEvents = [];
       events = this.matchMonth(events);
-      this.logAll(events);
+      this.separateEvents(events, multiEvents);
+      this.sortEventsByDate(multiEvents);
+      const overlapingEvents = this.getArrayOfOverlaps(multiEvents);
+      console.log(overlapingEvents);
+
+      //this.logAll(multiEvents);
     }
   };
 
