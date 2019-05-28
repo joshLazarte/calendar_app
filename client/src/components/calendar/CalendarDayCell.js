@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import isEmpty from "../../validation/is-empty";
 import EventsInCalendarCell from "../events/EventsInCalendarCell";
 import classnames from "classnames";
@@ -133,14 +132,15 @@ class CalendarDayCell extends Component {
   sortEventsIntoCells = events => {
     const multiDayEvents = [];
     const notMultiDayEvents = [];
-
-    events.forEach(event => {
-      if (event.frequency === "multi-day") {
-        this.handleMultiDayEvent(event) && multiDayEvents.push(event);
-      } else {
-        this.handleEventFrequency(event) && notMultiDayEvents.push(event);
-      }
-    });
+    if (!isEmpty(events)) {
+      events.forEach(event => {
+        if (event.frequency === "multi-day") {
+          this.handleMultiDayEvent(event) && multiDayEvents.push(event);
+        } else {
+          this.handleEventFrequency(event) && notMultiDayEvents.push(event);
+        }
+      });
+    }
 
     return {
       multiDayEvents,
@@ -201,11 +201,7 @@ CalendarDayCell.propTypes = {
   weekOrder: PropTypes.number,
   today: PropTypes.instanceOf(Date),
   cellDate: PropTypes.instanceOf(Date),
-  events: PropTypes.array.isRequired
+  events: PropTypes.array
 };
 
-const mapStateToProps = state => ({
-  events: state.event.events
-});
-
-export default connect(mapStateToProps)(CalendarDayCell);
+export default CalendarDayCell;

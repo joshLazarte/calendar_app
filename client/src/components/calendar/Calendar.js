@@ -95,7 +95,7 @@ class Calendar extends Component {
     return eventDays;
   };
 
-  separateByOverlap = (events, overlapingEvents) => {
+  separateByOverlap = (events, separatedByOverlap) => {
     const eventToCompare = events.shift();
     const arrayOfDays = this.getEventDaysArray(eventToCompare);
     const childArray = [];
@@ -110,27 +110,38 @@ class Calendar extends Component {
       }
     }
     childArray.unshift(eventToCompare);
-    overlapingEvents.push(childArray);
+    separatedByOverlap.push(childArray);
   };
 
   getArrayOfOverlaps = events => {
-    const overlapingEvents = [];
+    const separatedByOverlap = [];
     while (events.length > 0) {
-      this.separateByOverlap(events, overlapingEvents);
+      this.separateByOverlap(events, separatedByOverlap);
     }
-    return overlapingEvents;
+    return separatedByOverlap;
+  };
+
+  addOverlapingIndices = arrOfArrs => {
+    arrOfArrs.forEach(arr => {
+      arr.forEach((event, index) => {
+        event.multiDayPosition = index;
+      });
+    });
   };
 
   handleMultiDayEvents = events => {
     if (!isEmpty(events)) {
-      const multiEvents = [];
+      let multiEvents = [];
       events = this.matchMonth(events);
       this.separateEvents(events, multiEvents);
       this.sortEventsByDate(multiEvents);
-      const overlapingEvents = this.getArrayOfOverlaps(multiEvents);
-      console.log(overlapingEvents);
+      //EVENTS GET OUT OF ORDER AT getArrayOfOverlaps
+      multiEvents = this.getArrayOfOverlaps(multiEvents);
+      //console.log(multiEvents);
+      this.addOverlapingIndices(multiEvents);
+      multiEvents = multiEvents.flat();
 
-      //this.logAll(multiEvents);
+      return [...events, ...multiEvents];
     }
   };
 
@@ -242,6 +253,9 @@ class Calendar extends Component {
                       </td>
                     ) : (
                       <CalendarDayCell
+                        events={this.handleMultiDayEvents(
+                          this.props.event.events
+                        )}
                         key={index}
                         date={cell.date}
                         month={cell.monthValue}
