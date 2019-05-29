@@ -103,9 +103,6 @@ class Calendar extends Component {
       let startDate = new Date(events[i].startDate).getTime();
       if (arrayOfDays.indexOf(startDate) !== -1) {
         childArray.unshift(events[i]);
-        //@TODO: push any days after end date of eventToCompare
-        // into the arrayOfDays
-        //might need to move array of days out of this scope
         events.splice(i, 1);
       }
     }

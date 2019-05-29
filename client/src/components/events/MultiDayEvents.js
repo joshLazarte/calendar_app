@@ -9,17 +9,6 @@ const format = date => {
     .format("YYYY-MM-DD");
 };
 
-const insertBlankSpaces = (num, target) => {
-  for (let i = 0; i < num; i++) {
-    const blankSpace = (
-      <div key={shortid.generate()} className="mb-1">
-        &nbsp;
-      </div>
-    );
-    target.push(blankSpace);
-  }
-};
-
 const match = (a, b) => a === b;
 
 const getEventDisplay = (event, onClick, date) => {
@@ -35,6 +24,32 @@ const getEventDisplay = (event, onClick, date) => {
       {match(format(event.startDate), format(date)) ? event.name : "\u00A0"}
     </a>
   );
+};
+
+const sortByPosition = events => {
+  events.sort((a, b) => a.multiDayPosition - b.multiDayPosition);
+};
+
+const insertBlankSpaces = (positions, target) => {
+  let i = 0;
+  positions.forEach(position => {
+    if (position !== i) {
+      const diff = position - i;
+      const insertBlank = num => {
+        for (let j = 0; j < num; j++) {
+          const blankSpace = (
+            <div key={shortid.generate()} className="mb-1">
+              &nbsp;
+            </div>
+          );
+          target.splice(i, 0, blankSpace);
+        }
+      };
+      insertBlank(diff);
+      i += diff;
+    }
+    i++;
+  });
 };
 
 const getDuplicates = arr => {
@@ -55,20 +70,52 @@ const getDuplicates = arr => {
   return result;
 };
 
+const handleDuplicates = () => {};
+
 const MultiDayEvents = props => {
   if (isEmpty(props.events)) {
     return <span />;
   } else {
-    const { events } = props;
+    const events = props.events;
     const displayed = [];
-    const positions = events.map(event => event.multiDayPosition);
-    const firstPosition = events[0].multiDayPosition;
-    firstPosition > 0 && insertBlankSpaces(firstPosition, displayed);
+    sortByPosition(events);
+    let positions = events.map(event => event.multiDayPosition);
+
+    let last = events[events.length - 1].multiDayPosition;
+
+    const duplicates = getDuplicates(positions);
+
+    if (!isEmpty(duplicates)) {
+      duplicates.forEach(dup => {
+        const dupEvents = events
+          .filter(event => event.multiDayPosition === Number(dup))
+          .sort((a, b) => {
+            return (
+              new Date(format(a.startDate)) - new Date(format(b.startDate))
+            );
+          });
+
+        dupEvents.forEach((dupEvent, index) => {
+          if (index > 0) {
+            events.forEach(Event => {
+              if (Event._id === dupEvent._id) {
+                last++;
+                Event.multiDayPosition = last;
+              }
+            });
+          }
+        });
+      });
+    }
+
+    sortByPosition(events);
+    positions = events.map(event => event.multiDayPosition);
+
     props.events.forEach(event => {
       displayed.push(getEventDisplay(event, props.onClick, props.date));
     });
-    //@TODO find more edge cases and insert/remove blank spaces accordingly
-    //const duplicatePositions = getDuplicates(positions);
+
+    insertBlankSpaces(positions, displayed);
 
     return displayed.map(item => item);
   }
