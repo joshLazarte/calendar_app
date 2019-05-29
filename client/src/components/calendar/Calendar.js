@@ -102,7 +102,7 @@ class Calendar extends Component {
     for (let i = events.length - 1; i >= 0; i--) {
       let startDate = new Date(events[i].startDate).getTime();
       if (arrayOfDays.indexOf(startDate) !== -1) {
-        childArray.push(events[i]);
+        childArray.unshift(events[i]);
         //@TODO: push any days after end date of eventToCompare
         // into the arrayOfDays
         //might need to move array of days out of this scope
@@ -135,9 +135,7 @@ class Calendar extends Component {
       events = this.matchMonth(events);
       this.separateEvents(events, multiEvents);
       this.sortEventsByDate(multiEvents);
-      //EVENTS GET OUT OF ORDER AT getArrayOfOverlaps
       multiEvents = this.getArrayOfOverlaps(multiEvents);
-      //console.log(multiEvents);
       this.addOverlapingIndices(multiEvents);
       multiEvents = multiEvents.flat();
 

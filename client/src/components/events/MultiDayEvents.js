@@ -1,6 +1,7 @@
 import React from "react";
 import moment from "moment";
 import isEmpty from "../../validation/is-empty";
+import shortid from "shortid";
 
 const format = date => {
   return moment(date)
@@ -9,12 +10,12 @@ const format = date => {
 };
 
 const insertBlankSpaces = (num, target) => {
-  const blankSpace = (
-    <div key={Date.now()} className="mb-1">
-      &nbsp;
-    </div>
-  );
   for (let i = 0; i < num; i++) {
+    const blankSpace = (
+      <div key={shortid.generate()} className="mb-1">
+        &nbsp;
+      </div>
+    );
     target.push(blankSpace);
   }
 };
@@ -36,20 +37,40 @@ const getEventDisplay = (event, onClick, date) => {
   );
 };
 
+const getDuplicates = arr => {
+  const object = {};
+  const result = [];
+
+  arr.forEach(item => {
+    if (!object[item]) object[item] = 0;
+    object[item] += 1;
+  });
+
+  for (const prop in object) {
+    if (object[prop] >= 2) {
+      result.push(prop);
+    }
+  }
+
+  return result;
+};
+
 const MultiDayEvents = props => {
   if (isEmpty(props.events)) {
     return <span />;
   } else {
-    const positions = [];
-    const firstPosition = props.events[0].multiDayPosition;
-    firstPosition > 0 && insertBlankSpaces(firstPosition, positions);
-    //@TODO find more edge cases and insert/remove blank spaces accordingly
-
+    const { events } = props;
+    const displayed = [];
+    const positions = events.map(event => event.multiDayPosition);
+    const firstPosition = events[0].multiDayPosition;
+    firstPosition > 0 && insertBlankSpaces(firstPosition, displayed);
     props.events.forEach(event => {
-      positions.push(getEventDisplay(event, props.onClick, props.date));
+      displayed.push(getEventDisplay(event, props.onClick, props.date));
     });
+    //@TODO find more edge cases and insert/remove blank spaces accordingly
+    //const duplicatePositions = getDuplicates(positions);
 
-    return positions.map(item => item);
+    return displayed.map(item => item);
   }
 };
 
