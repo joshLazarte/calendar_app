@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import Button from "./Button";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 class Landing extends Component {
   componentDidMount() {
@@ -12,20 +12,15 @@ class Landing extends Component {
 
   render() {
     return (
-      <div>
-        <h1
-          style={{ paddingTop: "20%", textAlign: "center", fontSize: "32px" }}
-        >
-          MERN Calendar App
-        </h1>
-        <div style={{ textAlign: "center", marginTop: "25px" }}>
-          <Button
-            link="/register"
-            margin="0 25px 0 0"
-            backgroundColor="green"
-            text="Sign Up"
-          />
-          <Button link="/login" backgroundColor="blue" text="Login" />
+      <div className="container">
+        <h1 className="text-center mt-5">MERN Calendar App</h1>
+        <div className="text-center mt-5">
+          <Link to="/login" className="btn btn-primary btn-lg">
+            Log In
+          </Link>
+          <Link to="/register" className="btn btn-success btn-lg ml-3">
+            Sign Up
+          </Link>
         </div>
       </div>
     );
