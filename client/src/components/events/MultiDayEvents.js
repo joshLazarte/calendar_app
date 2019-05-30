@@ -2,6 +2,7 @@ import React from "react";
 import moment from "moment";
 import isEmpty from "../../validation/is-empty";
 import shortid from "shortid";
+import classnames from "classnames";
 
 const format = date => {
   return moment(date)
@@ -16,12 +17,26 @@ const getEventDisplay = (event, onClick, date) => {
     <a
       key={event._id}
       href="!#"
-      className={
-        "calendar-event text-white d-block p-1 mb-1 mx-auto bg-success"
-      }
+      className="calendar-event text-white d-block p-1 mb-1 mx-auto bg-success"
       onClick={onClick(event)}
     >
-      {match(format(event.startDate), format(date)) ? event.name : "\u00A0"}
+      {match(format(event.startDate), format(date)) ? (
+        <span>
+          <div
+            style={{
+              display: "inline-block",
+              width: "5px",
+              backgroundColor: "white",
+              marginRight: "5px"
+            }}
+          >
+            &nbsp;
+          </div>
+          {event.name}
+        </span>
+      ) : (
+        "\u00A0"
+      )}
     </a>
   );
 };
