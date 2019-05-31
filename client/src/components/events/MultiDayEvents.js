@@ -3,6 +3,7 @@ import moment from "moment";
 import isEmpty from "../../validation/is-empty";
 import shortid from "shortid";
 import classnames from "classnames";
+import StartBlock from "./StartBlock";
 
 const format = date => {
   return moment(date)
@@ -12,26 +13,21 @@ const format = date => {
 
 const match = (a, b) => a === b;
 
-const getEventDisplay = (event, onClick, date) => {
+const getEventDisplay = (event, onClick, date, isSunday) => {
+  const isFirstDay = match(format(event.startDate), format(date));
   return (
     <a
       key={event._id}
       href="!#"
-      className="calendar-event text-white d-block p-1 mb-1 mx-auto bg-success"
+      className={classnames(
+        "calendar-event text-white d-block mb-1 bg-success",
+        { "p-1": !isSunday && !isFirstDay }
+      )}
       onClick={onClick(event)}
     >
-      {match(format(event.startDate), format(date)) ? (
+      {isFirstDay || isSunday ? (
         <span>
-          <div
-            style={{
-              display: "inline-block",
-              width: "5px",
-              backgroundColor: "white",
-              marginRight: "5px"
-            }}
-          >
-            &nbsp;
-          </div>
+          <StartBlock />
           {event.name}
         </span>
       ) : (
@@ -85,8 +81,6 @@ const getDuplicates = arr => {
   return result;
 };
 
-const handleDuplicates = () => {};
-
 const MultiDayEvents = props => {
   if (isEmpty(props.events)) {
     return <span />;
@@ -127,7 +121,9 @@ const MultiDayEvents = props => {
     positions = events.map(event => event.multiDayPosition);
 
     props.events.forEach(event => {
-      displayed.push(getEventDisplay(event, props.onClick, props.date));
+      displayed.push(
+        getEventDisplay(event, props.onClick, props.date, props.isSunday)
+      );
     });
 
     insertBlankSpaces(positions, displayed);

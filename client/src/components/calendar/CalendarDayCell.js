@@ -165,6 +165,7 @@ class CalendarDayCell extends Component {
             multiDayEvents={multiDayEvents}
             notMultiDayEvents={notMultiDayEvents}
             cellDate={this.props.cellDate}
+            isSunday={this.props.day === 0}
           />
         </span>
       );

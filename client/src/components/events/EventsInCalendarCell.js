@@ -59,6 +59,7 @@ class EventsInCalendarCell extends Component {
           events={multiDayEvents}
           date={this.props.cellDate}
           onClick={this.showModal}
+          isSunday={this.props.isSunday}
         />
 
         <SingleDayEvents

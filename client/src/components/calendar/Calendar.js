@@ -16,9 +16,12 @@ class Calendar extends Component {
   }
 
   format = date => {
-    return moment(date)
-      .utc()
-      .format("YYYY/MM/DD");
+    return (
+      moment(date)
+        .utc()
+        //this format with "/" is necessary
+        .format("YYYY/MM/DD")
+    );
   };
 
   match = (a, b) => a === b;
@@ -44,22 +47,24 @@ class Calendar extends Component {
     }
   }
 
-  eventIsInThisMonth = date => {
+  eventIsInThisMonth = (startDate, endDate) => {
+    const { match, format } = this;
+    const { monthValue, year } = this.props;
+    const providedMonth = date => new Date(format(date)).getMonth();
+    const providedYear = date => new Date(format(date)).getFullYear();
+
     return (
-      this.match(
-        this.props.monthValue,
-        new Date(this.format(date)).getMonth()
-      ) &&
-      this.match(this.props.year, new Date(this.format(date)).getFullYear())
+      (match(monthValue, providedMonth(startDate)) &&
+        match(year, providedYear(startDate))) ||
+      (match(monthValue, providedMonth(endDate)) &&
+        match(year, providedYear(endDate)))
     );
   };
 
   matchMonth = events => {
-    return events.filter(event => this.eventIsInThisMonth(event.startDate));
-  };
-
-  logAll = events => {
-    events.forEach(event => console.log(event.name));
+    return events.filter(event =>
+      this.eventIsInThisMonth(event.startDate, event.endDate)
+    );
   };
 
   separateEvents = (oldArray, newArray) => {

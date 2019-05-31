@@ -1,5 +1,6 @@
 import React from "react";
 import isEmpty from "../../validation/is-empty";
+import StartBlock from "./StartBlock";
 
 const getEvents = (events, showAll, hideStart) => {
   let returnedEvents;
@@ -23,16 +24,19 @@ const SingleDayEvents = props => {
     );
     return eventsToDisplay.map((event, index) => {
       return (
-        <div key={index} className="calendar-event-container">
+        <div key={index}>
           <a
             key={event._id}
             href="!#"
             className={
-              "calendar-event text-white d-block p-1 mb-1 mx-auto bg-primary"
+              "calendar-event text-white d-block mb-1 mx-auto bg-primary"
             }
             onClick={props.onClick(event)}
           >
-            {event.name}
+            <span>
+              <StartBlock />
+              {event.name}
+            </span>
           </a>
         </div>
       );
