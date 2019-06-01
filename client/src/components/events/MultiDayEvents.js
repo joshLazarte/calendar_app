@@ -101,7 +101,7 @@ const getDuplicates = arr => {
   return result;
 };
 
-const handleDuplicates = (duplicates, events, positions) => {
+const handleDuplicates = (duplicates, events) => {
   let last = events[events.length - 1].multiDayPosition;
   duplicates.forEach(dup => {
     const dupEvents = events
@@ -121,7 +121,6 @@ const handleDuplicates = (duplicates, events, positions) => {
       }
     });
   });
-  positions = getPositions(events);
 };
 
 const getPositions = events => {
@@ -133,6 +132,25 @@ const getDisplayed = (events, onClick, date, isSunday) => {
   return events.map(event => getEventDisplay(event, onClick, date, isSunday));
 };
 
+const canBeMoved = (event, date, isSunday) => {
+  return isFirstDay(event.startDate, date) || isFirstOfMonth(date) || isSunday;
+};
+
+const fillBlankSpaceIfPossible = (events, positions, date, isSunday) => {
+  const blanks = [];
+  for (let i = 0; i < positions.length; i++) {
+    if (positions[i] !== i) {
+      blanks.push(i);
+    }
+  }
+
+  !isEmpty(blanks) &&
+    events.forEach(event => {
+      if (canBeMoved(event, date, isSunday))
+        event.multiDayPosition = blanks.shift();
+    });
+};
+
 const MultiDayEvents = props => {
   if (isEmpty(props.events)) {
     return <span />;
@@ -141,34 +159,14 @@ const MultiDayEvents = props => {
     let positions = getPositions(events);
     const duplicates = getDuplicates(positions);
 
-    !isEmpty(duplicates) && handleDuplicates(duplicates, events, positions);
+    if (!isEmpty(duplicates)) {
+      handleDuplicates(duplicates, events);
+      positions = getPositions(events);
+    }
 
-    //@TODO finish this function
-    // const fillBlankSpaceIfPossible = (events, positions) => {
-    //   const canBeMoved = event => {
-    //     return (
-    //       isFirstDay(event.startDate, date) || isFirstOfMonth(date) || isSunday
-    //     );
-    //   };
+    fillBlankSpaceIfPossible(events, positions, date, isSunday);
 
-    //   const blanks = [];
-
-    //   let i = 0;
-    //   positions.forEach(position => {
-    //     if (position !== i) {
-    //       const diff = position - i;
-    //       for (let j = 0; j < diff; j++) {
-    //         target.splice(i, 0, blankSpace(shortid.generate()));
-    //       }
-    //       i += diff;
-    //     }
-    //     i++;
-    //   });
-
-    //   console.log(blanks);
-    // };
-
-    // fillBlankSpaceIfPossible(events, positions);
+    positions = getPositions(events);
 
     const displayed = getDisplayed(events, onClick, date, isSunday);
 
