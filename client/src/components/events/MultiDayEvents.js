@@ -133,7 +133,10 @@ const getDisplayed = (events, onClick, date, isSunday) => {
 };
 
 const canBeMoved = (event, date, isSunday) => {
-  return isFirstDay(event.startDate, date) || isFirstOfMonth(date) || isSunday;
+  return (
+    (isFirstDay(event.startDate, date) || isFirstOfMonth(date) || isSunday) &&
+    event.multiDayPosition !== 0
+  );
 };
 
 const fillBlankSpaceIfPossible = (events, positions, date, isSunday) => {
@@ -167,6 +170,10 @@ const MultiDayEvents = props => {
     fillBlankSpaceIfPossible(events, positions, date, isSunday);
 
     positions = getPositions(events);
+
+    if (format(date) === "2019/06/18") {
+      console.log(positions);
+    }
 
     const displayed = getDisplayed(events, onClick, date, isSunday);
 
