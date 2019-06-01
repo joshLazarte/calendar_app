@@ -171,10 +171,6 @@ const MultiDayEvents = props => {
 
     positions = getPositions(events);
 
-    if (format(date) === "2019/06/18") {
-      console.log(positions);
-    }
-
     const displayed = getDisplayed(events, onClick, date, isSunday);
 
     insertBlankSpaces(positions, displayed);
