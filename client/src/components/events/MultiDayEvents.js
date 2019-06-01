@@ -1,5 +1,5 @@
 import React from "react";
-import moment from "moment";
+import moment, { duration } from "moment";
 import isEmpty from "../../validation/is-empty";
 import shortid from "shortid";
 import classnames from "classnames";
@@ -8,7 +8,15 @@ import StartBlock from "./StartBlock";
 const format = date => {
   return moment(date)
     .utc()
-    .format("YYYY-MM-DD");
+    .format("YYYY/MM/DD");
+};
+
+const isFirstOfMonth = date => {
+  return (
+    moment(date)
+      .utc()
+      .date() === 1
+  );
 };
 
 const match = (a, b) => a === b;
@@ -21,11 +29,11 @@ const getEventDisplay = (event, onClick, date, isSunday) => {
       href="!#"
       className={classnames(
         "calendar-event text-white d-block mb-1 bg-success",
-        { "p-1": !isSunday && !isFirstDay }
+        { "p-1": !isSunday && !isFirstDay && !isFirstOfMonth(date) }
       )}
       onClick={onClick(event)}
     >
-      {isFirstDay || isSunday ? (
+      {isFirstDay || isSunday || isFirstOfMonth(date) ? (
         <span>
           <StartBlock />
           {event.name}
@@ -41,22 +49,26 @@ const sortByPosition = events => {
   events.sort((a, b) => a.multiDayPosition - b.multiDayPosition);
 };
 
+const blankSpace = key => {
+  return (
+    <div key={key} className="mb-1">
+      &nbsp;
+    </div>
+  );
+};
+
+const insertBlank = (diff, target, i) => {
+  for (let j = 0; j < diff; j++) {
+    target.splice(i, 0, blankSpace(shortid.generate()));
+  }
+};
+
 const insertBlankSpaces = (positions, target) => {
   let i = 0;
   positions.forEach(position => {
     if (position !== i) {
       const diff = position - i;
-      const insertBlank = num => {
-        for (let j = 0; j < num; j++) {
-          const blankSpace = (
-            <div key={shortid.generate()} className="mb-1">
-              &nbsp;
-            </div>
-          );
-          target.splice(i, 0, blankSpace);
-        }
-      };
-      insertBlank(diff);
+      insertBlank(diff, target, i);
       i += diff;
     }
     i++;
@@ -81,50 +93,49 @@ const getDuplicates = arr => {
   return result;
 };
 
+const handleDuplicates = (duplicates, events, positions) => {
+  let last = events[events.length - 1].multiDayPosition;
+  duplicates.forEach(dup => {
+    const dupEvents = events
+      .filter(event => event.multiDayPosition === Number(dup))
+      .sort((a, b) => {
+        return new Date(format(a.startDate)) - new Date(format(b.startDate));
+      });
+
+    dupEvents.forEach((dupEvent, index) => {
+      if (index > 0) {
+        events.forEach(Event => {
+          if (Event._id === dupEvent._id) {
+            last++;
+            Event.multiDayPosition = last;
+          }
+        });
+      }
+    });
+  });
+  positions = getPositions(events);
+};
+
+const getPositions = events => {
+  sortByPosition(events);
+  return events.map(event => event.multiDayPosition);
+};
+
+const getDisplayed = (events, onClick, date, isSunday) => {
+  return events.map(event => getEventDisplay(event, onClick, date, isSunday));
+};
+
 const MultiDayEvents = props => {
   if (isEmpty(props.events)) {
     return <span />;
   } else {
-    const events = props.events;
-    const displayed = [];
-    sortByPosition(events);
-    let positions = events.map(event => event.multiDayPosition);
-
-    let last = events[events.length - 1].multiDayPosition;
-
+    const { events, onClick, date, isSunday } = props;
+    let positions = getPositions(events);
     const duplicates = getDuplicates(positions);
 
-    if (!isEmpty(duplicates)) {
-      duplicates.forEach(dup => {
-        const dupEvents = events
-          .filter(event => event.multiDayPosition === Number(dup))
-          .sort((a, b) => {
-            return (
-              new Date(format(a.startDate)) - new Date(format(b.startDate))
-            );
-          });
+    !isEmpty(duplicates) && handleDuplicates(duplicates, events, positions);
 
-        dupEvents.forEach((dupEvent, index) => {
-          if (index > 0) {
-            events.forEach(Event => {
-              if (Event._id === dupEvent._id) {
-                last++;
-                Event.multiDayPosition = last;
-              }
-            });
-          }
-        });
-      });
-    }
-
-    sortByPosition(events);
-    positions = events.map(event => event.multiDayPosition);
-
-    props.events.forEach(event => {
-      displayed.push(
-        getEventDisplay(event, props.onClick, props.date, props.isSunday)
-      );
-    });
+    const displayed = getDisplayed(events, onClick, date, isSunday);
 
     insertBlankSpaces(positions, displayed);
 
