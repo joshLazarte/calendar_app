@@ -1,5 +1,5 @@
 import React from "react";
-import moment, { duration } from "moment";
+import moment from "moment";
 import isEmpty from "../../validation/is-empty";
 import shortid from "shortid";
 import classnames from "classnames";
@@ -19,21 +19,29 @@ const isFirstOfMonth = date => {
   );
 };
 
+const isFirstDay = (eventDate, cellDate) => {
+  return match(format(eventDate), format(cellDate));
+};
+
 const match = (a, b) => a === b;
 
 const getEventDisplay = (event, onClick, date, isSunday) => {
-  const isFirstDay = match(format(event.startDate), format(date));
   return (
     <a
       key={event._id}
       href="!#"
       className={classnames(
         "calendar-event text-white d-block mb-1 bg-success",
-        { "p-1": !isSunday && !isFirstDay && !isFirstOfMonth(date) }
+        {
+          "p-1":
+            !isSunday &&
+            !isFirstDay(event.startDate, date) &&
+            !isFirstOfMonth(date)
+        }
       )}
       onClick={onClick(event)}
     >
-      {isFirstDay || isSunday || isFirstOfMonth(date) ? (
+      {isFirstDay(event.startDate, date) || isSunday || isFirstOfMonth(date) ? (
         <span>
           <StartBlock />
           {event.name}
@@ -134,6 +142,33 @@ const MultiDayEvents = props => {
     const duplicates = getDuplicates(positions);
 
     !isEmpty(duplicates) && handleDuplicates(duplicates, events, positions);
+
+    //@TODO finish this function
+    // const fillBlankSpaceIfPossible = (events, positions) => {
+    //   const canBeMoved = event => {
+    //     return (
+    //       isFirstDay(event.startDate, date) || isFirstOfMonth(date) || isSunday
+    //     );
+    //   };
+
+    //   const blanks = [];
+
+    //   let i = 0;
+    //   positions.forEach(position => {
+    //     if (position !== i) {
+    //       const diff = position - i;
+    //       for (let j = 0; j < diff; j++) {
+    //         target.splice(i, 0, blankSpace(shortid.generate()));
+    //       }
+    //       i += diff;
+    //     }
+    //     i++;
+    //   });
+
+    //   console.log(blanks);
+    // };
+
+    // fillBlankSpaceIfPossible(events, positions);
 
     const displayed = getDisplayed(events, onClick, date, isSunday);
 
