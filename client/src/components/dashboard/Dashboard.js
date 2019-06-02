@@ -113,7 +113,7 @@ class Dashboard extends Component {
       );
     }
 
-    return <div>{dashboardContent}</div>;
+    return dashboardContent;
   }
 }
 

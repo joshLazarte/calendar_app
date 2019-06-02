@@ -13,6 +13,15 @@ td {
   cursor: pointer;
 }
 
+@media only screen and (max-width: 768px) {
+  td {
+    height: 4rem;
+  }
+  th {
+    padding: 5px !important;
+  }
+}
+
 .calendar-cell-number {
   padding: 5px;
 }

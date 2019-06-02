@@ -227,58 +227,76 @@ class Calendar extends Component {
     const calendarRows = this.getFilledOutCalendarRows();
 
     return (
-      <div>
-        <table className="table table-bordered">
-          <thead className="thead-light">
-            <tr className="text-center">
-              <th scope="col">Sun</th>
-              <th scope="col">Mon</th>
-              <th scope="col">Tue</th>
-              <th scope="col">Wed</th>
-              <th scope="col">Thu</th>
-              <th scope="col">Fri</th>
-              <th scope="col">Sat</th>
-            </tr>
-          </thead>
-          <tbody>
-            {calendarRows.map((row, index) => {
-              return (
-                <tr key={index}>
-                  {row.map((cell, index) => {
-                    return cell.emptyCell ? (
-                      <td key={index}>
-                        <small className="calendar-cell-number text-muted">
-                          X
-                        </small>
-                      </td>
-                    ) : (
-                      <CalendarDayCell
-                        events={this.handleMultiDayEvents(
-                          this.props.event.events
-                        )}
-                        key={index}
-                        date={cell.date}
-                        month={cell.monthValue}
-                        year={cell.year}
-                        today={new Date()}
-                        cellDate={
-                          new Date(cell.year, cell.monthValue, cell.date)
-                        }
-                        day={new Date(
-                          cell.year,
-                          cell.monthValue,
-                          cell.date
-                        ).getDay()}
-                        weekOrder={Math.ceil(cell.date / 7)}
-                      />
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+      <table className="table table-bordered">
+        <thead className="thead-light">
+          <tr className="text-center">
+            <th scope="col">
+              <span className="d-none d-md-block">Sun</span>
+              <span className="d-sm-block d-md-none">S</span>
+            </th>
+            <th scope="col">
+              <span className="d-none d-md-block">Mon</span>
+              <span className="d-sm-block d-md-none">M</span>
+            </th>
+            <th scope="col">
+              <span className="d-none d-md-block">Tue</span>
+              <span className="d-sm-block d-md-none">T</span>
+            </th>
+            <th scope="col">
+              <span className="d-none d-md-block">Wed</span>
+              <span className="d-sm-block d-md-none">W</span>
+            </th>
+            <th scope="col">
+              <span className="d-none d-md-block">Thu</span>
+              <span className="d-sm-block d-md-none">T</span>
+            </th>
+            <th scope="col">
+              <span className="d-none d-md-block">Fri</span>
+              <span className="d-sm-block d-md-none">F</span>
+            </th>
+            <th scope="col">
+              <span className="d-none d-md-block">Sat</span>
+              <span className="d-sm-block d-md-none">S</span>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {calendarRows.map((row, index) => {
+            return (
+              <tr key={index}>
+                {row.map((cell, index) => {
+                  return cell.emptyCell ? (
+                    <td key={index}>
+                      <small className="calendar-cell-number text-muted">
+                        X
+                      </small>
+                    </td>
+                  ) : (
+                    <CalendarDayCell
+                      events={this.handleMultiDayEvents(
+                        this.props.event.events
+                      )}
+                      key={index}
+                      date={cell.date}
+                      month={cell.monthValue}
+                      year={cell.year}
+                      today={new Date()}
+                      cellDate={new Date(cell.year, cell.monthValue, cell.date)}
+                      day={new Date(
+                        cell.year,
+                        cell.monthValue,
+                        cell.date
+                      ).getDay()}
+                      weekOrder={Math.ceil(cell.date / 7)}
+                    />
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     );
   }
 }
