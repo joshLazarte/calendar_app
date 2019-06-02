@@ -21,11 +21,6 @@ td {
   background-color: lightblue;
 }
 
-.calendar-event-container {
-  width: 90%;
-  margin: 0 auto;
-}
-
 .calendar-event {
   width: 0;
   min-width: 100%;

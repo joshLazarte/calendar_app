@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
+import { BreakpointProvider } from "react-socks";
 import store from "./store";
 import "./App.css";
 
@@ -29,19 +30,21 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router>
-          <div style={{ minHeight: "100vh" }} className="d-flex flex-column">
-            <Navbar />
-            <div className="container">
-              <Route exact path="/" component={Landing} />
-              <Route exact path="/register" component={Register} />
-              <Route exact path="/login" component={Login} />
-              <Switch>
-                <PrivateRoute exact path="/dashboard" component={DashBoard} />
-              </Switch>
+          <BreakpointProvider>
+            <div style={{ minHeight: "100vh" }} className="d-flex flex-column">
+              <Navbar />
+              <div className="container">
+                <Route exact path="/" component={Landing} />
+                <Route exact path="/register" component={Register} />
+                <Route exact path="/login" component={Login} />
+                <Switch>
+                  <PrivateRoute exact path="/dashboard" component={DashBoard} />
+                </Switch>
+              </div>
+              <div style={{ height: "5rem" }} />
+              <Footer />
             </div>
-            <div style={{ height: "5rem" }} />
-            <Footer />
-          </div>
+          </BreakpointProvider>
         </Router>
       </Provider>
     );

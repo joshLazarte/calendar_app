@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import isEmpty from "../../validation/is-empty";
 import EventsInCalendarCell from "../events/EventsInCalendarCell";
 import classnames from "classnames";
+import Breakpoint from "react-socks";
 import moment from "moment";
 import FormModal from "../modal/FormModal";
 
@@ -161,12 +162,14 @@ class CalendarDayCell extends Component {
       cellData = (
         <span>
           <small className="calendar-cell-number">{date} </small>
-          <EventsInCalendarCell
-            multiDayEvents={multiDayEvents}
-            notMultiDayEvents={notMultiDayEvents}
-            cellDate={this.props.cellDate}
-            isSunday={this.props.day === 0}
-          />
+          <Breakpoint medium up>
+            <EventsInCalendarCell
+              multiDayEvents={multiDayEvents}
+              notMultiDayEvents={notMultiDayEvents}
+              cellDate={this.props.cellDate}
+              isSunday={this.props.day === 0}
+            />
+          </Breakpoint>
         </span>
       );
     } else {
