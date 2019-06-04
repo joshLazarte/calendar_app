@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import isEmpty from "../../validation/is-empty";
 import EventsInCalendarCell from "../events/EventsInCalendarCell";
-import SmallDisplay from "./SmallDisplay";
+import MobileDisplay from "../mobile/MobileDisplay";
 import classnames from "classnames";
 import Breakpoint from "react-socks";
 import moment from "moment";
@@ -172,7 +172,7 @@ class CalendarDayCell extends Component {
             />
           </Breakpoint>
           <Breakpoint small down>
-            <SmallDisplay
+            <MobileDisplay
               multiDayEvents={multiDayEvents}
               notMultiDayEvents={notMultiDayEvents}
             />
