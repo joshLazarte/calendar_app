@@ -15,14 +15,24 @@ const getFormHeaderContent = formType => {
 const FormHeader = props => {
   return (
     <div className="card-header">
-      <a
-        href="!#"
-        onClick={props.hideModal}
-        className="float-right nav-link"
-        style={{ fontSize: "25px" }}
-      >
-        {props.isMobile ? <Link to="/">&larr;</Link> : "\u00D7"}
-      </a>
+      {props.isMobile ? (
+        <Link
+          className="nav-link float-right"
+          style={{ fontSize: "25px" }}
+          to="/"
+        >
+          &larr;
+        </Link>
+      ) : (
+        <a
+          href="!#"
+          onClick={props.hideModal}
+          className="float-right nav-link"
+          style={{ fontSize: "25px" }}
+        >
+          &times;
+        </a>
+      )}
       <h1 className="text-center">{getFormHeaderContent(props.formType)}</h1>
       {props.errors.error && (
         <small className="text-danger text-center">{props.errors.error}</small>

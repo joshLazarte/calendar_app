@@ -36,31 +36,31 @@ class Navbar extends Component {
     const authLinks = (
       <ul className="navbar-nav ml-auto">
         <li className="nav-item mr-4">
-          {/* <Breakpoint medium up> */}
-          <a
-            href="!#"
-            className="align-middle text-white"
-            onClick={this.showModal}
-          >
-            Add Event
-          </a>
-          {/* </Breakpoint>
+          <Breakpoint medium up>
+            <a
+              href="!#"
+              className="align-middle text-white"
+              onClick={this.showModal}
+            >
+              Add Event
+            </a>
+          </Breakpoint>
           <Breakpoint small down>
             <Link
+              className="align-middle text-white"
               to={{
                 pathname: "/event/add",
                 state: {
                   disabled: true,
                   eventToDisplay: {},
                   hideModal: null,
-                  formType: "ADD",
-                  isMobile: true
+                  formType: "ADD"
                 }
               }}
             >
               Add Event
             </Link>
-          </Breakpoint> */}
+          </Breakpoint>
         </li>
         <li className="nav-item">
           <a

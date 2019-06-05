@@ -28,10 +28,19 @@ import ConfirmModal from "../modal/ConfirmModal";
 class EventForm extends Component {
   constructor(props) {
     super(props);
-    this.eventToDisplay =
-      props.eventToDisplay || props.location.state.eventToDisplay;
-    this.formType = props.formType || props.location.state.formType;
-    this.disabled = props.disabled || props.location.state.disabled;
+
+    this.isMobile = props.location.state ? true : false;
+
+    this.eventToDisplay = this.isMobile
+      ? props.location.state.eventToDisplay
+      : props.eventToDisplay;
+    this.formType = this.isMobile
+      ? props.location.state.formType
+      : props.formType;
+    this.disabled = this.isMobile
+      ? props.location.state.disabled
+      : props.disabled;
+
     this.state = {
       formType: this.formType,
       disabled: this.disabled,
@@ -215,7 +224,6 @@ class EventForm extends Component {
   render() {
     const { stagedAttendees, attendeeLoading } = this.props.event;
     const { errors } = this.state;
-    const { isMobile } = this.props.location.state || false;
 
     return (
       <div className="container">
@@ -223,14 +231,14 @@ class EventForm extends Component {
           <div className="col-md-10 col-lg-8 mx-auto">
             <div
               className={classnames("card", {
-                "control-overflow": !isMobile
+                "control-overflow": !this.isMobile
               })}
             >
               <FormHeader
                 errors={errors}
                 hideModal={this.props.hideModal}
                 formType={this.state.formType}
-                isMobile={isMobile}
+                isMobile={this.isMobile}
               />
               <div className="card-body">
                 {attendeeLoading && this.state.formType === "READONLY" ? (

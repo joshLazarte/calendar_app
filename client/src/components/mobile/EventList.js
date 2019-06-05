@@ -24,8 +24,7 @@ class EventList extends Component {
                       disabled: true,
                       eventToDisplay: event,
                       hideModal: null,
-                      formType: "READONLY",
-                      isMobile: true
+                      formType: "READONLY"
                     }
                   }}
                 >
@@ -43,8 +42,7 @@ class EventList extends Component {
                       disabled: true,
                       eventToDisplay: event,
                       hideModal: null,
-                      formType: "READONLY",
-                      isMobile: true
+                      formType: "READONLY"
                     }
                   }}
                 >
