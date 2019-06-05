@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import classnames from "classnames";
 
 const getFormHeaderContent = formType => {
   switch (formType) {
@@ -14,14 +15,15 @@ const getFormHeaderContent = formType => {
 
 const FormHeader = props => {
   return (
-    <div className="card-header">
+    <div
+      className={classnames({
+        "card-header": !props.isMobile,
+        "mb-3": props.isMobile
+      })}
+    >
       {props.isMobile ? (
-        <Link
-          className="nav-link float-right"
-          style={{ fontSize: "25px" }}
-          to="/"
-        >
-          &larr;
+        <Link className="nav-link" to="/">
+          &larr;Back
         </Link>
       ) : (
         <a

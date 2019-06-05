@@ -230,8 +230,8 @@ class EventForm extends Component {
         <div className="row">
           <div className="col-md-10 col-lg-8 mx-auto">
             <div
-              className={classnames("card", {
-                "control-overflow": !this.isMobile
+              className={classnames({
+                "card control-overflow": !this.isMobile
               })}
             >
               <FormHeader
@@ -240,7 +240,11 @@ class EventForm extends Component {
                 formType={this.state.formType}
                 isMobile={this.isMobile}
               />
-              <div className="card-body">
+              <div
+                className={classnames({
+                  "card-body": !this.isMobile
+                })}
+              >
                 {attendeeLoading && this.state.formType === "READONLY" ? (
                   <Spinner />
                 ) : (

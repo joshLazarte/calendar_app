@@ -51,7 +51,7 @@ class Navbar extends Component {
               to={{
                 pathname: "/event/add",
                 state: {
-                  disabled: true,
+                  disabled: false,
                   eventToDisplay: {},
                   hideModal: null,
                   formType: "ADD"
