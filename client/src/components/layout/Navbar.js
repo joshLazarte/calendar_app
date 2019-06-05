@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import FormModal from "../modal/FormModal";
 import { logoutUser } from "../../actions/authActions";
+import Breakpoint from "react-socks";
 
 class Navbar extends Component {
   constructor(props) {
@@ -35,6 +36,7 @@ class Navbar extends Component {
     const authLinks = (
       <ul className="navbar-nav ml-auto">
         <li className="nav-item mr-4">
+          {/* <Breakpoint medium up> */}
           <a
             href="!#"
             className="align-middle text-white"
@@ -42,6 +44,23 @@ class Navbar extends Component {
           >
             Add Event
           </a>
+          {/* </Breakpoint>
+          <Breakpoint small down>
+            <Link
+              to={{
+                pathname: "/event/add",
+                state: {
+                  disabled: true,
+                  eventToDisplay: {},
+                  hideModal: null,
+                  formType: "ADD",
+                  isMobile: true
+                }
+              }}
+            >
+              Add Event
+            </Link>
+          </Breakpoint> */}
         </li>
         <li className="nav-item">
           <a

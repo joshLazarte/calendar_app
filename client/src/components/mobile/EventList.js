@@ -17,13 +17,39 @@ class EventList extends Component {
           {!isEmpty(multiDayEvents) &&
             multiDayEvents.map(event => (
               <li key={event._id} className="list-group-item">
-                {event.name}
+                <Link
+                  to={{
+                    pathname: `/event/${event._id}`,
+                    state: {
+                      disabled: true,
+                      eventToDisplay: event,
+                      hideModal: null,
+                      formType: "READONLY",
+                      isMobile: true
+                    }
+                  }}
+                >
+                  {event.name}
+                </Link>
               </li>
             ))}
           {!isEmpty(notMultiDayEvents) &&
             notMultiDayEvents.map(event => (
               <li key={event._id} className="list-group-item">
-                {event.name}
+                <Link
+                  to={{
+                    pathname: `/event/${event._id}`,
+                    state: {
+                      disabled: true,
+                      eventToDisplay: event,
+                      hideModal: null,
+                      formType: "READONLY",
+                      isMobile: true
+                    }
+                  }}
+                >
+                  {event.name}
+                </Link>
               </li>
             ))}
         </ul>

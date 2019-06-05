@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import classnames from "classnames";
 import autoLogOutIfNeeded from "../../validation/autoLogOut";
 import CheckboxInput from "../common/CheckboxInput";
 import Spinner from "../common/Spinner";
@@ -27,30 +28,34 @@ import ConfirmModal from "../modal/ConfirmModal";
 class EventForm extends Component {
   constructor(props) {
     super(props);
+    this.eventToDisplay =
+      props.eventToDisplay || props.location.state.eventToDisplay;
+    this.formType = props.formType || props.location.state.formType;
+    this.disabled = props.disabled || props.location.state.disabled;
     this.state = {
-      formType: props.formType,
-      disabled: props.disabled,
-      eventID: props.eventToDisplay._id || null,
-      name: props.eventToDisplay.name || "",
-      createdBy: props.eventToDisplay.createdBy || "",
-      startDate: props.eventToDisplay.startDate || "",
-      endDate: props.eventToDisplay.endDate || "",
-      allDay: props.eventToDisplay.startTime ? false : true,
-      startTime: props.eventToDisplay.startTime || "",
-      endTime: props.eventToDisplay.endTime || "",
-      description: props.eventToDisplay.description || "",
-      frequency: props.eventToDisplay.frequency || "",
-      location: props.eventToDisplay.location || "",
-      shared: props.eventToDisplay.shared || false,
+      formType: this.formType,
+      disabled: this.disabled,
+      eventID: this.eventToDisplay._id || null,
+      name: this.eventToDisplay.name || "",
+      createdBy: this.eventToDisplay.createdBy || "",
+      startDate: this.eventToDisplay.startDate || "",
+      endDate: this.eventToDisplay.endDate || "",
+      allDay: this.eventToDisplay.startTime ? false : true,
+      startTime: this.eventToDisplay.startTime || "",
+      endTime: this.eventToDisplay.endTime || "",
+      description: this.eventToDisplay.description || "",
+      frequency: this.eventToDisplay.frequency || "",
+      location: this.eventToDisplay.location || "",
+      shared: this.eventToDisplay.shared || false,
       attendeeSearchField: "",
       errors: {},
-      weeklyDay: props.eventToDisplay.weeklyDay || "",
-      biWeeklySchedule: props.eventToDisplay.biWeeklySchedule || "",
-      biWeeklyDay: props.eventToDisplay.biWeeklyDay || "",
-      monthlyType: props.eventToDisplay.monthlyType || "",
-      monthlyDate: props.eventToDisplay.monthlyDate || "",
-      monthlySchedule: props.eventToDisplay.monthlySchedule || "",
-      monthlyDay: props.eventToDisplay.monthlyDay || "",
+      weeklyDay: this.eventToDisplay.weeklyDay || "",
+      biWeeklySchedule: this.eventToDisplay.biWeeklySchedule || "",
+      biWeeklyDay: this.eventToDisplay.biWeeklyDay || "",
+      monthlyType: this.eventToDisplay.monthlyType || "",
+      monthlyDate: this.eventToDisplay.monthlyDate || "",
+      monthlySchedule: this.eventToDisplay.monthlySchedule || "",
+      monthlyDay: this.eventToDisplay.monthlyDay || "",
       showConfirm: false
     };
 
@@ -70,8 +75,8 @@ class EventForm extends Component {
   componentDidMount() {
     autoLogOutIfNeeded();
     this.props.clearErrors();
-    if (this.state.eventID && this.props.eventToDisplay.attendees.length > 1) {
-      const { attendees } = this.props.eventToDisplay;
+    if (this.state.eventID && this.eventToDisplay.attendees.length > 1) {
+      const { attendees } = this.eventToDisplay;
       this.props.stageAttendees(attendees.slice(1));
     }
   }
@@ -143,8 +148,7 @@ class EventForm extends Component {
   userOwnsEvent = () => {
     if (this.state.eventID) {
       return (
-        this.props.eventToDisplay.createdBy.userName ===
-        this.props.auth.user.userName
+        this.eventToDisplay.createdBy.userName === this.props.auth.user.userName
       );
     }
     return null;
@@ -211,16 +215,22 @@ class EventForm extends Component {
   render() {
     const { stagedAttendees, attendeeLoading } = this.props.event;
     const { errors } = this.state;
+    const { isMobile } = this.props.location.state || false;
 
     return (
       <div className="container">
         <div className="row">
           <div className="col-md-10 col-lg-8 mx-auto">
-            <div className="card control-overflow">
+            <div
+              className={classnames("card", {
+                "control-overflow": !isMobile
+              })}
+            >
               <FormHeader
                 errors={errors}
                 hideModal={this.props.hideModal}
                 formType={this.state.formType}
+                isMobile={isMobile}
               />
               <div className="card-body">
                 {attendeeLoading && this.state.formType === "READONLY" ? (
@@ -313,7 +323,7 @@ class EventForm extends Component {
 }
 
 EventForm.propTypes = {
-  eventToDisplay: PropTypes.object.isRequired,
+  eventToDisplay: PropTypes.object,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   addEvent: PropTypes.func.isRequired,

@@ -35,7 +35,7 @@ export const getEvents = () => dispatch => {
 export const addEvent = (event, history, cb) => dispatch => {
   axios
     .post("/api/event", event)
-    .then(res => cb())
+    .then(res => cb && cb())
     .then(res => history.push("/"))
     .catch(err =>
       dispatch({

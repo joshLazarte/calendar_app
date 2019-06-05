@@ -15,6 +15,7 @@ import Login from "./components/auth/Login";
 
 import DashBoard from "./components/dashboard/Dashboard";
 import EventList from "./components/mobile/EventList";
+import EventForm from "./components/events/EventForm";
 
 import Landing from "./components/layout/Landing";
 import Navbar from "./components/layout/Navbar";
@@ -41,6 +42,8 @@ class App extends Component {
                 <Switch>
                   <PrivateRoute exact path="/dashboard" component={DashBoard} />
                   <PrivateRoute exact path="/events" component={EventList} />
+                  <PrivateRoute exact path="/event/:id" component={EventForm} />
+                  <PrivateRoute exact path="/event/add" component={EventForm} />
                 </Switch>
               </div>
               <div style={{ height: "5rem" }} />

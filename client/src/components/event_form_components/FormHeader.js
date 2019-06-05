@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const getFormHeaderContent = formType => {
   switch (formType) {
@@ -20,7 +21,7 @@ const FormHeader = props => {
         className="float-right nav-link"
         style={{ fontSize: "25px" }}
       >
-        &times;
+        {props.isMobile ? <Link to="/">&larr;</Link> : "\u00D7"}
       </a>
       <h1 className="text-center">{getFormHeaderContent(props.formType)}</h1>
       {props.errors.error && (
