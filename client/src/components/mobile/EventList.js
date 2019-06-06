@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import autoLogOutIfNeeded from "../../validation/autoLogOut";
 import isEmpty from "../../validation/is-empty";
 import { Link } from "react-router-dom";
+import moment from "moment";
 
 class EventList extends Component {
   componentDidMount() {
@@ -9,15 +10,27 @@ class EventList extends Component {
   }
 
   render() {
-    const { multiDayEvents, notMultiDayEvents } = this.props.location.state;
+    const {
+      multiDayEvents,
+      notMultiDayEvents,
+      date
+    } = this.props.location.state;
+
     return (
       <div>
-        <Link to="/">Back</Link>
+        <h2 className="text-center mb-5">
+          {moment(date).format("dddd, MMMM Do YYYY")}
+        </h2>
+
         <ul className="list-group">
           {!isEmpty(multiDayEvents) &&
             multiDayEvents.map(event => (
-              <li key={event._id} className="list-group-item">
+              <li
+                key={event._id}
+                className="list-group-item list-group-item-action"
+              >
                 <Link
+                  className="text-dark"
                   to={{
                     pathname: `/event/${event._id}`,
                     state: {
@@ -28,14 +41,20 @@ class EventList extends Component {
                     }
                   }}
                 >
-                  {event.name}
+                  <strong>{event.name}</strong>: &nbsp;
+                  {moment(event.startDate).format("MM/DD")} -{" "}
+                  {moment(event.endDate).format("MM/DD")}
                 </Link>
               </li>
             ))}
           {!isEmpty(notMultiDayEvents) &&
             notMultiDayEvents.map(event => (
-              <li key={event._id} className="list-group-item">
+              <li
+                key={event._id}
+                className="list-group-item list-group-item-action"
+              >
                 <Link
+                  className="text-dark"
                   to={{
                     pathname: `/event/${event._id}`,
                     state: {
@@ -46,7 +65,12 @@ class EventList extends Component {
                     }
                   }}
                 >
-                  {event.name}
+                  <strong>{event.name}</strong>
+                  {event.startTime && (
+                    <span>
+                      : {event.startTime} - {event.endTime}
+                    </span>
+                  )}
                 </Link>
               </li>
             ))}

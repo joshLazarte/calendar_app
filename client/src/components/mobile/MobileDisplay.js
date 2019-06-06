@@ -2,18 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const MobileDisplay = props => {
+  const { multiDayEvents, notMultiDayEvents } = props;
+  const count = multiDayEvents.length + notMultiDayEvents.length;
   return (
-    <Link
-      to={{ pathname: "/events", state: { ...props } }}
-      style={{
-        width: ".8rem",
-        height: ".8rem",
-        backgroundColor: "rgba(0, 123, 255, .5)",
-        borderRadius: "50%",
-        display: "block"
-      }}
-      className="mx-auto mt-1"
-    />
+    <Link to={{ pathname: "/events", state: { ...props } }}>
+      <span className="badge badge-primary">{count}</span>
+    </Link>
   );
 };
 

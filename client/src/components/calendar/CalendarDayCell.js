@@ -172,10 +172,13 @@ class CalendarDayCell extends Component {
             />
           </Breakpoint>
           <Breakpoint small down>
-            <MobileDisplay
-              multiDayEvents={multiDayEvents}
-              notMultiDayEvents={notMultiDayEvents}
-            />
+            <div className="text-center">
+              <MobileDisplay
+                multiDayEvents={multiDayEvents}
+                notMultiDayEvents={notMultiDayEvents}
+                date={this.props.cellDate}
+              />
+            </div>
           </Breakpoint>
         </span>
       );
