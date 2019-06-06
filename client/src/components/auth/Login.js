@@ -69,6 +69,7 @@ class Login extends Component {
                     onChange={this.onChange}
                     error={errors.password}
                     disabled={false}
+                    type="password"
                   />
                 </div>
 

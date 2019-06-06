@@ -80,6 +80,7 @@ class Register extends Component {
                     onChange={this.onChange}
                     error={errors.password}
                     disabled={false}
+                    type="password"
                   />
                 </div>
 
@@ -91,6 +92,7 @@ class Register extends Component {
                     onChange={this.onChange}
                     error={errors.password2}
                     disabled={false}
+                    type="password"
                   />
                 </div>
 
