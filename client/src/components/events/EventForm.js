@@ -239,6 +239,7 @@ class EventForm extends Component {
                 hideModal={this.props.hideModal}
                 formType={this.state.formType}
                 isMobile={this.isMobile}
+                history={this.props.history}
               />
               <div
                 className={classnames({

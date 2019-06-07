@@ -3,11 +3,17 @@ import autoLogOutIfNeeded from "../../validation/autoLogOut";
 import isEmpty from "../../validation/is-empty";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import CalendarIcon from "./CalendarIcon";
 
 class EventList extends Component {
   componentDidMount() {
     autoLogOutIfNeeded();
   }
+
+  goBack = e => {
+    e.preventDefault();
+    this.props.history.goBack();
+  };
 
   render() {
     const {
@@ -19,6 +25,9 @@ class EventList extends Component {
     return (
       <div>
         <h2 className="text-center mb-5">
+          <a href="!#" className="nav-link d-inline" onClick={this.goBack}>
+            <i className="fas fa-chevron-left" />
+          </a>
           {moment(date).format("dddd, MMMM Do YYYY")}
         </h2>
 
@@ -41,6 +50,7 @@ class EventList extends Component {
                     }
                   }}
                 >
+                  <CalendarIcon />
                   <strong>{event.name}</strong>: &nbsp;
                   {moment(event.startDate).format("MM/DD")} -{" "}
                   {moment(event.endDate).format("MM/DD")}
@@ -65,6 +75,7 @@ class EventList extends Component {
                     }
                   }}
                 >
+                  <CalendarIcon />
                   <strong>{event.name}</strong>
                   {event.startTime && (
                     <span>

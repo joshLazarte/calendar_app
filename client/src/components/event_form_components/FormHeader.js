@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import classnames from "classnames";
 
 const getFormHeaderContent = formType => {
@@ -14,6 +13,11 @@ const getFormHeaderContent = formType => {
 };
 
 const FormHeader = props => {
+  const goBack = e => {
+    e.preventDefault();
+    props.history.goBack();
+  };
+
   return (
     <div
       className={classnames({
@@ -21,11 +25,7 @@ const FormHeader = props => {
         "mb-3": props.isMobile
       })}
     >
-      {props.isMobile ? (
-        <Link className="nav-link" to="/">
-          &larr;Back
-        </Link>
-      ) : (
+      {!props.isMobile && (
         <a
           href="!#"
           onClick={props.hideModal}
@@ -35,7 +35,14 @@ const FormHeader = props => {
           &times;
         </a>
       )}
-      <h1 className="text-center">{getFormHeaderContent(props.formType)}</h1>
+      <h1 className="text-center">
+        {props.isMobile && (
+          <a href="!#" className="nav-link d-inline" onClick={goBack}>
+            <i className="fas fa-chevron-left" />
+          </a>
+        )}
+        {getFormHeaderContent(props.formType)}
+      </h1>
       {props.errors.error && (
         <small className="text-danger text-center">{props.errors.error}</small>
       )}
