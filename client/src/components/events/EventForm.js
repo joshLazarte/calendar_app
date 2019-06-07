@@ -202,6 +202,7 @@ class EventForm extends Component {
       actionType: this.state.formType,
       startDate: this.state.startDate,
       endDate: this.state.endDate,
+      allDay: this.state.allDay,
       startTime: this.state.startTime,
       endTime: this.state.endTime,
       description: this.state.description,

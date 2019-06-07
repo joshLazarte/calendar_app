@@ -33,8 +33,15 @@ router.post(
       eventData.frequency = req.body.frequency;
       if (req.body.startDate) eventData.startDate = req.body.startDate;
       if (req.body.endDate) eventData.endDate = req.body.endDate;
-      if (req.body.startTime) eventData.startTime = req.body.startTime;
-      if (req.body.endTime) eventData.endTime = req.body.endTime;
+
+      if (!req.body.allDay) {
+        if (req.body.startTime) eventData.startTime = req.body.startTime;
+        if (req.body.endTime) eventData.endTime = req.body.endTime;
+      } else {
+        eventData.startTime = null;
+        eventData.endTime = null;
+      }
+
       if (req.body.description) eventData.description = req.body.description;
       if (req.body.biWeeklySchedule)
         eventData.biWeeklySchedule = req.body.biWeeklySchedule;
