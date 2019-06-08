@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import isEmpty from "../../validation/is-empty";
+import CalendarNumber from "./CalendarNumber";
 import EventsInCalendarCell from "../events/EventsInCalendarCell";
 import MobileDisplay from "../mobile/MobileDisplay";
 import classnames from "classnames";
@@ -151,54 +152,17 @@ class CalendarDayCell extends Component {
   };
 
   render() {
-    const { date, events, today, cellDate } = this.props;
-
-    let cellData;
-
+    const {
+      date,
+      day,
+      month,
+      events,
+      today,
+      cellDate,
+      notThisMonth
+    } = this.props;
     const eventsInCell = this.sortEventsIntoCells(events);
-
     const { multiDayEvents, notMultiDayEvents } = eventsInCell;
-
-    if (!isEmpty(multiDayEvents) || !isEmpty(notMultiDayEvents)) {
-      cellData = (
-        <span>
-          <small
-            className={classnames("calendar-cell-number", {
-              "text-muted": this.props.notThisMonth
-            })}
-          >
-            {date}{" "}
-          </small>
-          <Breakpoint medium up>
-            <EventsInCalendarCell
-              multiDayEvents={multiDayEvents}
-              notMultiDayEvents={notMultiDayEvents}
-              cellDate={this.props.cellDate}
-              isSunday={this.props.day === 0}
-            />
-          </Breakpoint>
-          <Breakpoint small down>
-            <div className="text-center">
-              <MobileDisplay
-                multiDayEvents={multiDayEvents}
-                notMultiDayEvents={notMultiDayEvents}
-                date={this.props.cellDate}
-              />
-            </div>
-          </Breakpoint>
-        </span>
-      );
-    } else {
-      cellData = (
-        <small
-          className={classnames("calendar-cell-number", {
-            "text-muted": this.props.notThisMonth
-          })}
-        >
-          {date}{" "}
-        </small>
-      );
-    }
 
     return (
       <td
@@ -207,15 +171,41 @@ class CalendarDayCell extends Component {
           "today-cell": cellDate.toDateString() === today.toDateString()
         })}
       >
-        {cellData}
-        {this.state.showModal ? (
+        <CalendarNumber
+          notThisMonth={notThisMonth}
+          date={date}
+          month={month}
+          day={day}
+        />
+        {(!isEmpty(multiDayEvents) || !isEmpty(notMultiDayEvents)) && (
+          <span>
+            <Breakpoint medium up>
+              <EventsInCalendarCell
+                multiDayEvents={multiDayEvents}
+                notMultiDayEvents={notMultiDayEvents}
+                cellDate={this.props.cellDate}
+                isSunday={this.props.day === 0}
+              />
+            </Breakpoint>
+            <Breakpoint small down>
+              <div className="text-center">
+                <MobileDisplay
+                  multiDayEvents={multiDayEvents}
+                  notMultiDayEvents={notMultiDayEvents}
+                  date={this.props.cellDate}
+                />
+              </div>
+            </Breakpoint>
+          </span>
+        )}
+        {this.state.showModal && (
           <FormModal
             disabled={false}
             hideModal={this.hideModal}
             eventToDisplay={{}}
             formType={"ADD"}
           />
-        ) : null}
+        )}
       </td>
     );
   }
