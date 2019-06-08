@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import CalendarDayCell from "./CalendarDayCell";
+import CalendarHeader from "./CalendarHeader";
 import isEmpty from "../../validation/is-empty";
 import moment from "moment";
 
@@ -149,51 +150,87 @@ class Calendar extends Component {
     this.handleMultiDayEvents(this.props.event.events);
   }
 
-  getNumberOfBeginningBlankCells = () => {
+  getNumberOfLastMonthCells = () => {
     return this.state.firstDay;
   };
 
-  getNumberOfEndingBlankCells = () => {
+  getNumberOfNextMonthsCells = () => {
     const totalNumberOfCells = 42;
     return (
       totalNumberOfCells -
-      (this.getNumberOfBeginningBlankCells() + this.state.daysInMonth)
+      (this.getNumberOfLastMonthCells() + this.state.daysInMonth)
     );
   };
 
-  getBeginningBlankCells = () => {
-    const beginningBlankCells = [];
-    const numberOfBlankCells = this.getNumberOfBeginningBlankCells();
-    if (numberOfBlankCells === 0) {
-      return null;
-    } else {
-      for (let i = 0; i < numberOfBlankCells; i++) {
-        beginningBlankCells.push({
-          emptyCell: true
-        });
-      }
-    }
-    return beginningBlankCells;
+  getLastMonthsValue = currentMonth => {
+    if (currentMonth === 0) return 11;
+    return currentMonth - 1;
   };
 
-  getEndingBlankCells = () => {
-    const endingBlankCells = [];
-    const numberOfBlankCells = this.getNumberOfEndingBlankCells();
-    for (let i = 0; i < numberOfBlankCells; i++) {
-      endingBlankCells.push({
-        emptyCell: true
+  getLastMonthsYear = (currentYear, currentMonth) => {
+    if (currentMonth === 0) return currentYear - 1;
+    return currentYear;
+  };
+
+  getNextMonthsValue = currentMonth => {
+    if (currentMonth === 11) return 0;
+    return currentMonth + 1;
+  };
+
+  getNextMonthsYear = (currentYear, currentMonth) => {
+    if (currentMonth === 11) return currentYear + 1;
+    return currentYear;
+  };
+
+  getLastMonthsCells = () => {
+    const lastMonthsCells = [];
+    const numberOfCells = this.getNumberOfLastMonthCells();
+    if (numberOfCells === 0) return null;
+
+    const lastMonth = this.getLastMonthsValue(this.props.monthValue);
+    const lastMonthsYear = this.getLastMonthsYear(
+      this.props.year,
+      this.props.monthValue
+    );
+    let cellDate = this.getDaysInMonth(lastMonthsYear, lastMonth);
+
+    for (let i = 0; i < numberOfCells; i++, cellDate--) {
+      lastMonthsCells.unshift({
+        date: cellDate,
+        monthValue: lastMonth,
+        year: lastMonthsYear
       });
     }
-    return endingBlankCells;
+
+    return lastMonthsCells;
   };
 
-  getCellsWithData = () => {
+  getNextMonthsCells = () => {
+    const nextMonthsCells = [];
+    const numberOfCells = this.getNumberOfNextMonthsCells();
+    const nextMonth = this.getNextMonthsValue(this.props.monthValue);
+    const nextMonthsYear = this.getNextMonthsYear(
+      this.props.year,
+      this.props.monthValue
+    );
+    let cellDate = 1;
+
+    for (let i = 0; i < numberOfCells; i++, cellDate++) {
+      nextMonthsCells.push({
+        date: cellDate,
+        monthValue: nextMonth,
+        year: nextMonthsYear
+      });
+    }
+    return nextMonthsCells;
+  };
+
+  getThisMonthsCells = () => {
     const { monthValue, year } = this.props;
     const { daysInMonth } = this.state;
     const cellsWithData = [];
     for (let i = 1; i <= daysInMonth; i++) {
       cellsWithData.push({
-        emptyCell: false,
         date: i,
         monthValue: monthValue,
         year: year
@@ -204,9 +241,9 @@ class Calendar extends Component {
 
   getCalendarData = () => {
     const rawCalendarData = [
-      ...(this.getBeginningBlankCells() || []),
-      ...this.getCellsWithData(),
-      ...this.getEndingBlankCells()
+      ...(this.getLastMonthsCells() || []),
+      ...this.getThisMonthsCells(),
+      ...this.getNextMonthsCells()
     ];
     return rawCalendarData;
   };
@@ -216,9 +253,9 @@ class Calendar extends Component {
     const filledRows = [];
     const rowLength = 7;
     for (let i = 0; i < rawData.length; i += rowLength) {
-      let temparray = [];
-      temparray = rawData.slice(i, i + rowLength);
-      filledRows.push(temparray);
+      let rows = [];
+      rows = rawData.slice(i, i + rowLength);
+      filledRows.push(rows);
     }
     return filledRows;
   };
@@ -229,36 +266,7 @@ class Calendar extends Component {
     return (
       <table className="table table-bordered">
         <thead className="thead-light">
-          <tr className="text-center">
-            <th scope="col">
-              <span className="d-none d-md-block">Sun</span>
-              <span className="d-sm-block d-md-none">S</span>
-            </th>
-            <th scope="col">
-              <span className="d-none d-md-block">Mon</span>
-              <span className="d-sm-block d-md-none">M</span>
-            </th>
-            <th scope="col">
-              <span className="d-none d-md-block">Tue</span>
-              <span className="d-sm-block d-md-none">T</span>
-            </th>
-            <th scope="col">
-              <span className="d-none d-md-block">Wed</span>
-              <span className="d-sm-block d-md-none">W</span>
-            </th>
-            <th scope="col">
-              <span className="d-none d-md-block">Thu</span>
-              <span className="d-sm-block d-md-none">T</span>
-            </th>
-            <th scope="col">
-              <span className="d-none d-md-block">Fri</span>
-              <span className="d-sm-block d-md-none">F</span>
-            </th>
-            <th scope="col">
-              <span className="d-none d-md-block">Sat</span>
-              <span className="d-sm-block d-md-none">S</span>
-            </th>
-          </tr>
+          <CalendarHeader />
         </thead>
 
         <tbody>
@@ -266,13 +274,7 @@ class Calendar extends Component {
             return (
               <tr key={index}>
                 {row.map((cell, index) => {
-                  return cell.emptyCell ? (
-                    <td key={index}>
-                      <small className="calendar-cell-number text-muted">
-                        X
-                      </small>
-                    </td>
-                  ) : (
+                  return (
                     <CalendarDayCell
                       events={this.handleMultiDayEvents(
                         this.props.event.events
