@@ -196,6 +196,7 @@ class Calendar extends Component {
 
     for (let i = 0; i < numberOfCells; i++, cellDate--) {
       lastMonthsCells.unshift({
+        notThisMonth: true,
         date: cellDate,
         monthValue: lastMonth,
         year: lastMonthsYear
@@ -217,6 +218,7 @@ class Calendar extends Component {
 
     for (let i = 0; i < numberOfCells; i++, cellDate++) {
       nextMonthsCells.push({
+        notThisMonth: true,
         date: cellDate,
         monthValue: nextMonth,
         year: nextMonthsYear
@@ -231,6 +233,7 @@ class Calendar extends Component {
     const cellsWithData = [];
     for (let i = 1; i <= daysInMonth; i++) {
       cellsWithData.push({
+        notThisMonth: false,
         date: i,
         monthValue: monthValue,
         year: year
@@ -280,6 +283,7 @@ class Calendar extends Component {
                         this.props.event.events
                       )}
                       key={index}
+                      notThisMonth={cell.notThisMonth}
                       date={cell.date}
                       month={cell.monthValue}
                       year={cell.year}

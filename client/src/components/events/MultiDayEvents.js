@@ -11,14 +11,6 @@ const format = date => {
     .format("YYYY/MM/DD");
 };
 
-const isFirstOfMonth = date => {
-  return (
-    moment(date)
-      .utc()
-      .date() === 1
-  );
-};
-
 const isFirstDay = (eventDate, cellDate) => {
   return match(format(eventDate), format(cellDate));
 };
@@ -33,15 +25,12 @@ const getEventDisplay = (event, onClick, date, isSunday) => {
       className={classnames(
         "calendar-event text-white d-block mb-1 bg-success",
         {
-          "p-1":
-            !isSunday &&
-            !isFirstDay(event.startDate, date) &&
-            !isFirstOfMonth(date)
+          "p-1": !isSunday && !isFirstDay(event.startDate, date)
         }
       )}
       onClick={onClick(event)}
     >
-      {isFirstDay(event.startDate, date) || isSunday || isFirstOfMonth(date) ? (
+      {isFirstDay(event.startDate, date) || isSunday ? (
         <span>
           <StartBlock />
           {event.name}
@@ -134,7 +123,7 @@ const getDisplayed = (events, onClick, date, isSunday) => {
 
 const canBeMoved = (event, date, isSunday) => {
   return (
-    (isFirstDay(event.startDate, date) || isFirstOfMonth(date) || isSunday) &&
+    (isFirstDay(event.startDate, date) || isSunday) &&
     event.multiDayPosition !== 0
   );
 };

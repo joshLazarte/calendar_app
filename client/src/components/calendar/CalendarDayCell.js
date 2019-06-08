@@ -162,7 +162,13 @@ class CalendarDayCell extends Component {
     if (!isEmpty(multiDayEvents) || !isEmpty(notMultiDayEvents)) {
       cellData = (
         <span>
-          <small className="calendar-cell-number">{date} </small>
+          <small
+            className={classnames("calendar-cell-number", {
+              "text-muted": this.props.notThisMonth
+            })}
+          >
+            {date}{" "}
+          </small>
           <Breakpoint medium up>
             <EventsInCalendarCell
               multiDayEvents={multiDayEvents}
@@ -183,7 +189,15 @@ class CalendarDayCell extends Component {
         </span>
       );
     } else {
-      cellData = <small className="calendar-cell-number">{date}</small>;
+      cellData = (
+        <small
+          className={classnames("calendar-cell-number", {
+            "text-muted": this.props.notThisMonth
+          })}
+        >
+          {date}{" "}
+        </small>
+      );
     }
 
     return (
