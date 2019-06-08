@@ -264,6 +264,7 @@ class EventForm extends Component {
                         errors.location
                       ]}
                       onChange={this.onChange}
+                      formType={this.state.formType}
                     />
                     <FrequencyOptionsField
                       onChange={this.onChange}
@@ -289,6 +290,7 @@ class EventForm extends Component {
                         error={errors.startTime}
                         onChange={this.onChange}
                         disabled={this.state.disabled}
+                        formType={this.state.formType}
                       />
                     )}
                     <CheckboxInput

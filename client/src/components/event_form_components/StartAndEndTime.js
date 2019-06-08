@@ -1,6 +1,7 @@
 import React from "react";
 import InputGroup from "../common/InputGroup";
 import PropTypes from "prop-types";
+import isEmpty from "../../validation/is-empty";
 
 const StartAndEndTime = props => {
   return (
@@ -16,16 +17,18 @@ const StartAndEndTime = props => {
           disabled={props.disabled}
         />
       </div>
-      <div className="col-sm-6">
-        <label htmlFor="endTime">End Time</label>
-        <InputGroup
-          placeholder="End Time"
-          name="endTime"
-          value={props.values[1]}
-          onChange={props.onChange}
-          disabled={props.disabled}
-        />
-      </div>
+      {!isEmpty(props.values[0]) && props.formType !== "READONLY" && (
+        <div className="col-sm-6">
+          <label htmlFor="endTime">End Time (Optional)</label>
+          <InputGroup
+            placeholder="End Time"
+            name="endTime"
+            value={props.values[1]}
+            onChange={props.onChange}
+            disabled={props.disabled}
+          />
+        </div>
+      )}
     </div>
   );
 };

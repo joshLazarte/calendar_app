@@ -1,6 +1,7 @@
 import React from "react";
 import InputGroup from "../common/InputGroup";
 import PropTypes from "prop-types";
+import isEmpty from "../../validation/is-empty";
 
 const NameDescriptionAndLocation = props => {
   return (
@@ -20,37 +21,41 @@ const NameDescriptionAndLocation = props => {
           />
         </div>
       </div>
-      <div className="form-group row">
-        <label className="col-form-label col-sm-3" htmlFor="description">
-          Description
-        </label>
-        <div className="col-sm-8">
-          <textarea
-            className="form-control"
-            placeholder="Event Description"
-            name="description"
-            value={props.values[1]}
-            onChange={props.onChange}
-            error={props.errors[1]}
-            disabled={props.disabled}
-          />
+      {(!isEmpty(props.values[1]) || props.formType !== "READONLY") && (
+        <div className="form-group row">
+          <label className="col-form-label col-sm-3" htmlFor="description">
+            Description
+          </label>
+          <div className="col-sm-8">
+            <textarea
+              className="form-control"
+              placeholder="Event Description"
+              name="description"
+              value={props.values[1]}
+              onChange={props.onChange}
+              error={props.errors[1]}
+              disabled={props.disabled}
+            />
+          </div>
         </div>
-      </div>
-      <div className="form-group row">
-        <label className="col-form-label col-sm-3" htmlFor="location">
-          Location
-        </label>
-        <div className="col-sm-8">
-          <InputGroup
-            placeholder="Event Location"
-            name="location"
-            value={props.values[2]}
-            onChange={props.onChange}
-            error={props.errors[2]}
-            disabled={props.disabled}
-          />
+      )}
+      {(!isEmpty(props.values[2]) || props.formType !== "READONLY") && (
+        <div className="form-group row">
+          <label className="col-form-label col-sm-3" htmlFor="location">
+            Location
+          </label>
+          <div className="col-sm-8">
+            <InputGroup
+              placeholder="Event Location"
+              name="location"
+              value={props.values[2]}
+              onChange={props.onChange}
+              error={props.errors[2]}
+              disabled={props.disabled}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -35,8 +35,12 @@ router.post(
       if (req.body.endDate) eventData.endDate = req.body.endDate;
 
       if (!req.body.allDay) {
-        if (req.body.startTime) eventData.startTime = req.body.startTime;
-        if (req.body.endTime) eventData.endTime = req.body.endTime;
+        req.body.startTime
+          ? (eventData.startTime = req.body.startTime)
+          : (eventData.startTime = null);
+        req.body.startTime && req.body.endTime
+          ? (eventData.endTime = req.body.endTime)
+          : (eventData.endTime = null);
       } else {
         eventData.startTime = null;
         eventData.endTime = null;
