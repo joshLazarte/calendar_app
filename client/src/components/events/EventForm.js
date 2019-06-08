@@ -293,14 +293,17 @@ class EventForm extends Component {
                         formType={this.state.formType}
                       />
                     )}
-                    <CheckboxInput
-                      name="shared"
-                      value={this.state.shared}
-                      onChange={this.toggleShared}
-                      checked={this.state.shared}
-                      disabled={this.state.disabled}
-                      label="Share This Event"
-                    />
+                    {(this.state.shared ||
+                      this.state.formType !== "READONLY") && (
+                      <CheckboxInput
+                        name="shared"
+                        value={this.state.shared}
+                        onChange={this.toggleShared}
+                        checked={this.state.shared}
+                        disabled={this.state.disabled}
+                        label="Share This Event"
+                      />
+                    )}
                     {this.state.shared && (
                       <AttendeeFields
                         stagedAttendees={stagedAttendees}
