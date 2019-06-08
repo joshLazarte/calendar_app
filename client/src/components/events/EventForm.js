@@ -82,7 +82,7 @@ class EventForm extends Component {
   }
 
   componentDidMount() {
-    autoLogOutIfNeeded();
+    autoLogOutIfNeeded(this.props.history);
     this.props.clearErrors();
     if (this.state.eventID && this.eventToDisplay.attendees.length > 1) {
       const { attendees } = this.eventToDisplay;

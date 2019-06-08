@@ -17,8 +17,8 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
+    autoLogOutIfNeeded(this.props.history);
     this.props.getEvents();
-    autoLogOutIfNeeded();
   }
 
   getMonthNameFromMonthValue = monthValue => {

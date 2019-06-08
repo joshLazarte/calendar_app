@@ -1,10 +1,9 @@
 import store from "../store";
 import { logoutUser } from "../actions/authActions";
 
-const autoLogOutIfNeeded = () => {
+const autoLogOutIfNeeded = history => {
   if (JSON.parse(localStorage.user).expireTime < Date.now()) {
-    store.dispatch(logoutUser());
-    window.location.href = "/login";
+    store.dispatch(logoutUser(history));
   }
 };
 

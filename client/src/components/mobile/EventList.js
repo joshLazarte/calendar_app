@@ -7,7 +7,7 @@ import CalendarIcon from "./CalendarIcon";
 
 class EventList extends Component {
   componentDidMount() {
-    autoLogOutIfNeeded();
+    autoLogOutIfNeeded(this.props.history);
   }
 
   goBack = e => {
