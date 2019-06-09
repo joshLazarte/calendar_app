@@ -41,10 +41,11 @@ export const logoutUser = history => dispatch => {
     })
     .then(() => history.push("/login"))
     .catch(err =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
-      })
+      // dispatch({
+      //   type: GET_ERRORS,
+      //   payload: err.response.data
+      // })
+      console.log(err)
     );
 };
 

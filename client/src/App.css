@@ -28,12 +28,6 @@ td {
   }
 }
 
-@media only screen and (max-width: 400px) {
-  .date-header-content {
-    font-size: 1.4rem !important;
-  }
-}
-
 .calendar-cell-number {
   padding: 5px;
 }

@@ -3,6 +3,7 @@ import autoLogOutIfNeeded from "../../validation/autoLogOut";
 import isEmpty from "../../validation/is-empty";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import BackArrow from "./BackArrow";
 import CalendarIcon from "./CalendarIcon";
 
 class EventList extends Component {
@@ -24,18 +25,12 @@ class EventList extends Component {
 
     return (
       <div>
-        <h2 className="mb-5 date-header-content">
-          <a
-            href="!#"
-            className="nav-link d-inline date-header-content"
-            onClick={this.goBack}
-          >
-            <i className="fas fa-chevron-left" />
-          </a>
+        <BackArrow goBack={this.goBack} />
+        <h1 className="text-center">All Events</h1>
+        <div className="text-center" style={{ fontSize: "1.2rem" }}>
           {moment(date).format("dddd, MMMM Do YYYY")}
-        </h2>
-
-        <ul className="list-group">
+        </div>
+        <ul className="list-group mt-5">
           {!isEmpty(multiDayEvents) &&
             multiDayEvents.map(event => (
               <li
@@ -83,7 +78,8 @@ class EventList extends Component {
                   <strong>{event.name}</strong>
                   {event.startTime && (
                     <span>
-                      : {event.startTime} - {event.endTime}
+                      : {event.startTime}{" "}
+                      {event.endTime && <span>- {event.endTime}</span>}
                     </span>
                   )}
                 </Link>

@@ -1,5 +1,7 @@
 import React from "react";
 import classnames from "classnames";
+import BackArrow from "../mobile/BackArrow";
+import CloseFormButton from "./CloseFormButton";
 
 const getFormHeaderContent = formType => {
   switch (formType) {
@@ -25,27 +27,12 @@ const FormHeader = props => {
         "mb-3": props.isMobile
       })}
     >
-      {props.isMobile && (
-        <a
-          href="!#"
-          className="nav-link"
-          onClick={goBack}
-          style={{ fontSize: "2rem", marginBottom: "-57px" }}
-        >
-          <i className="fas fa-chevron-left" />
-        </a>
+      {props.isMobile ? (
+        <BackArrow goBack={goBack} />
+      ) : (
+        <CloseFormButton hideModal={props.hideModal} />
       )}
 
-      {!props.isMobile && (
-        <a
-          href="!#"
-          onClick={props.hideModal}
-          className="nav-link text-right"
-          style={{ fontSize: "25px", marginBottom: "-50px" }}
-        >
-          &times;
-        </a>
-      )}
       <h1 className="text-center">{getFormHeaderContent(props.formType)}</h1>
       {props.errors.error && (
         <small className="text-danger text-center">{props.errors.error}</small>
