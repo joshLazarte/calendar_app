@@ -123,13 +123,9 @@ router.get(
 // @route    DELETE /api/user/logout
 // @desc     logout, destroys cookie
 // @access   Private
-router.delete(
-  "/logout",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.clearCookie("jwt");
-    res.status(200).json({ status: "logged out" });
-  }
-);
+router.delete("/logout", (req, res) => {
+  req.cookies["jwt"] && res.clearCookie("jwt");
+  res.status(200).json({ status: "logged out" });
+});
 
 module.exports = router;
