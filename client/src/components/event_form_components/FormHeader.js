@@ -25,24 +25,28 @@ const FormHeader = props => {
         "mb-3": props.isMobile
       })}
     >
+      {props.isMobile && (
+        <a
+          href="!#"
+          className="nav-link"
+          onClick={goBack}
+          style={{ fontSize: "2rem", marginBottom: "-57px" }}
+        >
+          <i className="fas fa-chevron-left" />
+        </a>
+      )}
+
       {!props.isMobile && (
         <a
           href="!#"
           onClick={props.hideModal}
-          className="float-right nav-link"
-          style={{ fontSize: "25px" }}
+          className="nav-link text-right"
+          style={{ fontSize: "25px", marginBottom: "-50px" }}
         >
           &times;
         </a>
       )}
-      <h1 className="text-center">
-        {props.isMobile && (
-          <a href="!#" className="nav-link d-inline" onClick={goBack}>
-            <i className="fas fa-chevron-left" />
-          </a>
-        )}
-        {getFormHeaderContent(props.formType)}
-      </h1>
+      <h1 className="text-center">{getFormHeaderContent(props.formType)}</h1>
       {props.errors.error && (
         <small className="text-danger text-center">{props.errors.error}</small>
       )}

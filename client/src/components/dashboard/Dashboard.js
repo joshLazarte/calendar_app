@@ -86,19 +86,21 @@ class Dashboard extends Component {
     } else {
       dashboardContent = (
         <div className="mb-5">
-          <div className="my-5">
+          <div className="mb-5 mt-1">
             <div className="d-flex justify-content-center align-items-center">
               <a
+                className="dashboard-header-content"
                 style={{ fontSize: "2rem" }}
                 href="!#"
                 onClick={this.setMonthToPreviousMonth}
               >
                 <i className="fas fa-chevron-left" />
               </a>
-              <h1 className="mx-5">
+              <h1 className="mx-3 dashboard-header-content">
                 {month} {year}
               </h1>
               <a
+                className="dashboard-header-content"
                 style={{ fontSize: "2rem" }}
                 href="!#"
                 onClick={this.setMonthToNextMonth}

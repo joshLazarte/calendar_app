@@ -24,8 +24,12 @@ class EventList extends Component {
 
     return (
       <div>
-        <h2 className="text-center mb-5">
-          <a href="!#" className="nav-link d-inline" onClick={this.goBack}>
+        <h2 className="mb-5 date-header-content">
+          <a
+            href="!#"
+            className="nav-link d-inline date-header-content"
+            onClick={this.goBack}
+          >
             <i className="fas fa-chevron-left" />
           </a>
           {moment(date).format("dddd, MMMM Do YYYY")}
