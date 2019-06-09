@@ -125,7 +125,7 @@ router.get(
 // @access   Private
 router.delete(
   "/logout",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     res.clearCookie("jwt");
     res.status(200).json({ status: "logged out" });

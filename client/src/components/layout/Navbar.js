@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import FormModal from "../modal/FormModal";
 import { logoutUser } from "../../actions/authActions";
 import Breakpoint from "react-socks";
+import { withRouter } from "react-router-dom";
 
 class Navbar extends Component {
   constructor(props) {
@@ -15,7 +16,7 @@ class Navbar extends Component {
   }
   onLogoutClick = e => {
     e.preventDefault();
-    this.props.logoutUser();
+    this.props.logoutUser(this.props.history);
   };
 
   showModal = e => {
@@ -122,7 +123,9 @@ const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated
 });
 
-export default connect(
-  mapStateToProps,
-  { logoutUser }
-)(Navbar);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    { logoutUser }
+  )(Navbar)
+);
