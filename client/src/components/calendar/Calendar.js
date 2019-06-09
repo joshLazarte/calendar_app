@@ -48,23 +48,29 @@ class Calendar extends Component {
     }
   }
 
-  eventIsInThisMonth = (startDate, endDate) => {
+  eventIsInThisMonth = (frequency, startDate, endDate) => {
     const { match, format } = this;
     const { monthValue, year } = this.props;
     const providedMonth = date => new Date(format(date)).getMonth();
     const providedYear = date => new Date(format(date)).getFullYear();
+    const isInMonth = () => {
+      return (
+        (match(monthValue, providedMonth(startDate)) &&
+          match(year, providedYear(startDate))) ||
+        (match(monthValue, providedMonth(endDate)) &&
+          match(year, providedYear(endDate)))
+      );
+    };
+    const isRecurring = () => {
+      return frequency !== "single" && frequency !== "multi-day";
+    };
 
-    return (
-      (match(monthValue, providedMonth(startDate)) &&
-        match(year, providedYear(startDate))) ||
-      (match(monthValue, providedMonth(endDate)) &&
-        match(year, providedYear(endDate)))
-    );
+    return isInMonth() || isRecurring();
   };
 
   matchMonth = events => {
     return events.filter(event =>
-      this.eventIsInThisMonth(event.startDate, event.endDate)
+      this.eventIsInThisMonth(event.frequency, event.startDate, event.endDate)
     );
   };
 
