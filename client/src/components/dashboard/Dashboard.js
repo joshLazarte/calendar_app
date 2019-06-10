@@ -17,7 +17,7 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    autoLogOutIfNeeded(this.props.history);
+    autoLogOutIfNeeded();
     this.props.getEvents();
   }
 

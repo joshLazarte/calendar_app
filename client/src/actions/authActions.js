@@ -32,20 +32,18 @@ export const loginUser = (user, history) => dispatch => {
 };
 
 //Logout action
-export const logoutUser = history => dispatch => {
+export const logoutUser = () => dispatch => {
   axios
     .delete("/api/user/logout")
     .then(res => {
       localStorage.removeItem("user");
       dispatch(setCurrentUser({}));
     })
-    .then(() => history.push("/login"))
     .catch(err =>
-      // dispatch({
-      //   type: GET_ERRORS,
-      //   payload: err.response.data
-      // })
-      console.log(err)
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
     );
 };
 

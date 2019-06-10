@@ -82,7 +82,7 @@ class EventForm extends Component {
   }
 
   componentDidMount() {
-    autoLogOutIfNeeded(this.props.history);
+    autoLogOutIfNeeded();
     this.props.clearErrors();
     if (this.state.eventID && this.eventToDisplay.attendees.length > 1) {
       const { attendees } = this.eventToDisplay;
@@ -120,9 +120,14 @@ class EventForm extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.errors !== prevState.errors) {
-      return {
-        errors: nextProps.errors
-      };
+      if (nextProps.errors.error === "Unauthorized") {
+        nextProps.history.push("/login");
+        return null;
+      } else {
+        return {
+          errors: nextProps.errors
+        };
+      }
     }
     return null;
   }
@@ -138,7 +143,10 @@ class EventForm extends Component {
   onAddAttendeeClick = e => {
     e.target.blur();
     e.preventDefault();
-    this.props.stageAttendee(this.state.attendeeSearchField);
+    this.props.stageAttendee(
+      this.state.attendeeSearchField,
+      this.props.history
+    );
     this.setState({ attendeeSearchField: "" });
   };
 
