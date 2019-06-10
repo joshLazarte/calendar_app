@@ -48,7 +48,8 @@ const sortByPosition = events => {
 
 const blankSpace = key => {
   return (
-    <div key={key} className="mb-1">
+    // 24.8px lineHeight is for weird display in firefox
+    <div key={key} className="mb-1 d-block" style={{ lineHeight: "24.8px" }}>
       &nbsp;
     </div>
   );
