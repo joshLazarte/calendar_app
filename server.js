@@ -5,7 +5,8 @@ const express = require("express"),
   cookieParser = require("cookie-parser"),
   databaseConfig = require("./config/database"),
   passport = require("passport"),
-  mongoose = require("mongoose");
+  mongoose = require("mongoose"),
+  path = require('path');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -19,6 +20,18 @@ const authRoutes = require("./routes/api/auth.js");
 const eventRoutes = require("./routes/api/event.js");
 app.use("/api/user", authRoutes);
 app.use("/api/event", eventRoutes);
+
+
+// Serve Static assets if in production
+if (process.env.NODE_ENV === "production") {
+  // set static folder
+  app.use(express.static("client/build"));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
+
 
 app.listen(process.env.PORT, () =>
   console.log(`server started on port ${process.env.PORT}`)
