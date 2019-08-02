@@ -47,9 +47,9 @@ class Navbar extends Component {
         </button>
     );
 
-    const authLinks = (
-      <span>
-        <li className="nav-item mr-4">
+
+    const addEventLink = (
+      <li className="nav-item mr-4">
           <Breakpoint medium up>
             <a
               href="!#"
@@ -76,7 +76,10 @@ class Navbar extends Component {
             </Link>
           </Breakpoint>
         </li>
-        <li className="nav-item">
+    );
+
+    const logoutLink = (
+      <li className="nav-item">
           <a
             className="align-middle text-white"
             onClick={this.onLogoutClick}
@@ -85,7 +88,6 @@ class Navbar extends Component {
             Logout
           </a>
         </li>
-      </span>
     );
 
     return (
@@ -109,7 +111,7 @@ class Navbar extends Component {
                 Back to Portfolio
               </a>
               </li>
-              {isAuthenticated && authLinks}
+              {isAuthenticated && addEventLink, logoutLink}
               </ul>
               {isAuthenticated && this.state.showModal && (
                 <FormModal
