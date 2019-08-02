@@ -35,20 +35,20 @@ class Navbar extends Component {
 
     const toggleBtn = (
       <button
-        className="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span className="navbar-toggler-icon" />
-      </button>
+          className="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon" />
+        </button>
     );
 
     const authLinks = (
-      <ul className="navbar-nav ml-auto">
+      <span>
         <li className="nav-item mr-4">
           <Breakpoint medium up>
             <a
@@ -85,7 +85,7 @@ class Navbar extends Component {
             Logout
           </a>
         </li>
-      </ul>
+      </span>
     );
 
     return (
@@ -94,27 +94,32 @@ class Navbar extends Component {
           <Link to="/calendar-app" className="navbar-brand">
             Calendar App
           </Link>
-         
-          {isAuthenticated ? (
-          <span>
-          {toggleBtn}
+         {toggleBtn}
             <div
               className="collapse navbar-collapse"
               id="navbarSupportedContent"
             >
               {" "}
-              {authLinks}
-              {this.state.showModal ? (
+              <ul className="navbar-nav ml-auto">
+              <li className="nav-item mr-4">
+                <a
+                href="https://jlazarte.com"
+                className="align-middle text-white"
+              >
+                Back to Portfolio
+              </a>
+              </li>
+              {isAuthenticated && authLinks}
+              </ul>
+              {isAuthenticated && this.state.showModal && (
                 <FormModal
                   disabled={false}
                   hideModal={this.hideModal}
                   eventToDisplay={{}}
                   formType={"ADD"}
                 />
-              ) : null}
+              )}
             </div>
-            </span>
-          ) : null}
         </div>
       </nav>
     );
