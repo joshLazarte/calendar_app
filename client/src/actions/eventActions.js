@@ -37,7 +37,7 @@ export const addEvent = (event, history, cb) => dispatch => {
   axios
     .post("/calendar-app/api/event", event)
     .then(res => cb && cb())
-    .then(res => history.push("/"))
+    .then(res => history.push("/calendar-app"))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -50,7 +50,7 @@ export const addEvent = (event, history, cb) => dispatch => {
 export const deleteEvent = (id, history) => dispatch => {
   axios
     .delete(`/calendar-app/api/event/${id}/delete`)
-    .then(res => history.push("/"))
+    .then(res => history.push("/calendar-app"))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
