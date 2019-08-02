@@ -111,7 +111,8 @@ class Navbar extends Component {
                 Back to Portfolio
               </a>
               </li>
-              {isAuthenticated && addEventLink, logoutLink}
+              {isAuthenticated && addEventLink}
+              {isAuthenticated && logoutLink}
               </ul>
               {isAuthenticated && this.state.showModal && (
                 <FormModal
