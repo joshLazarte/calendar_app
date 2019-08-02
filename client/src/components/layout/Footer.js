@@ -5,7 +5,7 @@ class Footer extends Component {
     return (
       <footer className="bg-dark text-white p-4 mt-auto">
         &copy; {new Date().getFullYear()} 
-        <a href="https://jlazarte.com" className="nav-link text-white">
+        <a href="https://jlazarte.com" className="text-white">
           J3L webDesign
         </a>
       </footer>
