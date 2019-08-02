@@ -15,10 +15,10 @@ class Landing extends Component {
       <div className="container">
         <h1 className="text-center mt-5">MERN Calendar App</h1>
         <div className="text-center mt-5">
-          <Link to="/login" className="btn btn-primary btn-lg">
+          <Link to="/calendar-app/login" className="btn btn-primary btn-lg">
             Log In
           </Link>
-          <Link to="/register" className="btn btn-success btn-lg ml-3">
+          <Link to="/calendar-app/register" className="btn btn-success btn-lg ml-3">
             Sign Up
           </Link>
         </div>
