@@ -77,7 +77,7 @@ class Navbar extends Component {
     return (
       <nav className="navbar navbar-expand-md navbar-dark bg-primary p-3 mb-5">
         <div className="container">
-          <Link to="/" className="navbar-brand">
+          <Link to="/calendar-app" className="navbar-brand">
             Calendar App
           </Link>
           <button
@@ -123,6 +123,5 @@ const mapStateToProps = state => ({
 });
 
 export default connect(
-  mapStateToProps,
-  { logoutUser }
+  mapStateToProps, { logoutUser }
 )(Navbar);

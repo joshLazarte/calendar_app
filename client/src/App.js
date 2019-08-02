@@ -36,14 +36,14 @@ class App extends Component {
             <div style={{ minHeight: "100vh" }} className="d-flex flex-column">
               <Navbar />
               <div className="container">
-                <Route exact path="/" component={Landing} />
-                <Route exact path="/register" component={Register} />
-                <Route exact path="/login" component={Login} />
+                <Route exact path="/calendar-app" component={Landing} />
+                <Route exact path="/calendar-app/register" component={Register} />
+                <Route exact path="/calendar-app/login" component={Login} />
                 <Switch>
-                  <PrivateRoute exact path="/dashboard" component={DashBoard} />
-                  <PrivateRoute exact path="/events" component={EventList} />
-                  <PrivateRoute exact path="/event/:id" component={EventForm} />
-                  <PrivateRoute exact path="/event/add" component={EventForm} />
+                  <PrivateRoute exact path="/calendar-app/dashboard" component={DashBoard} />
+                  <PrivateRoute exact path="/calendar-app/events" component={EventList} />
+                  <PrivateRoute exact path="/calendar-app/event/:id" component={EventForm} />
+                  <PrivateRoute exact path="/calendar-app/event/add" component={EventForm} />
                 </Switch>
               </div>
               <div style={{ height: "5rem" }} />
