@@ -33,6 +33,20 @@ class Navbar extends Component {
   render() {
     const { isAuthenticated } = this.props;
 
+    const toggleBtn = (
+      <button
+        className="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span className="navbar-toggler-icon" />
+      </button>
+    );
+
     const authLinks = (
       <ul className="navbar-nav ml-auto">
         <li className="nav-item mr-4">
@@ -80,18 +94,10 @@ class Navbar extends Component {
           <Link to="/calendar-app" className="navbar-brand">
             Calendar App
           </Link>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon" />
-          </button>
+         
           {isAuthenticated ? (
+          <span>
+          {toggleBtn}
             <div
               className="collapse navbar-collapse"
               id="navbarSupportedContent"
@@ -107,6 +113,7 @@ class Navbar extends Component {
                 />
               ) : null}
             </div>
+            </span>
           ) : null}
         </div>
       </nav>
