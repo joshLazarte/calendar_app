@@ -22,7 +22,8 @@ import {
   unstageAttendees,
   removeAttendee,
   clearErrors
-} from "../../actions/eventActions";
+}
+from "../../actions/eventActions";
 import ConfirmModal from "../modal/ConfirmModal";
 
 class EventForm extends Component {
@@ -31,15 +32,15 @@ class EventForm extends Component {
 
     this.isMobile = props.location.state ? true : false;
 
-    this.eventToDisplay = this.isMobile
-      ? props.location.state.eventToDisplay
-      : props.eventToDisplay;
-    this.formType = this.isMobile
-      ? props.location.state.formType
-      : props.formType;
-    this.disabled = this.isMobile
-      ? props.location.state.disabled
-      : props.disabled;
+    this.eventToDisplay = this.isMobile ?
+      props.location.state.eventToDisplay :
+      props.eventToDisplay;
+    this.formType = this.isMobile ?
+      props.location.state.formType :
+      props.formType;
+    this.disabled = this.isMobile ?
+      props.location.state.disabled :
+      props.disabled;
 
     this.state = {
       formType: this.formType,
@@ -121,9 +122,10 @@ class EventForm extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.errors !== prevState.errors) {
       if (nextProps.errors.error === "Unauthorized") {
-        nextProps.history.push("/login");
+        nextProps.history.push("/calendar-app/login");
         return null;
-      } else {
+      }
+      else {
         return {
           errors: nextProps.errors
         };
@@ -151,7 +153,8 @@ class EventForm extends Component {
   };
 
   onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({
+      [e.target.name]: e.target.value });
   };
 
   setFormToEditState = e => {
@@ -370,8 +373,7 @@ const mapStateToProps = state => ({
 });
 
 export default connect(
-  mapStateToProps,
-  {
+  mapStateToProps, {
     addEvent,
     deleteEvent,
     stageAttendee,

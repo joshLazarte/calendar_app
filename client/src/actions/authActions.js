@@ -5,7 +5,7 @@ import { GET_ERRORS, SET_CURRENT_USER } from "./types";
 export const registerUser = (user, history) => dispatch => {
   axios
     .post("/calendar-app/api/user/register", user)
-    .then(res => history.push("/login"))
+    .then(res => history.push("/calendar-app/login"))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -22,7 +22,7 @@ export const loginUser = (user, history) => dispatch => {
       localStorage.setItem("user", JSON.stringify(res.data));
       dispatch(setCurrentUser(res.data));
     })
-    .then(() => history.push("/dashboard"))
+    .then(() => history.push("/calendar-app/dashboard"))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

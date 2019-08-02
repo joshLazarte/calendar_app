@@ -10,13 +10,14 @@ import {
   UNSTAGE_ATTENDEES,
   ATTENDEE_NOT_FOUND,
   CLEAR_ERRORS
-} from "./types";
+}
+from "./types";
 
 //Get Events
 export const getEvents = () => dispatch => {
   dispatch(setEventLoading());
   axios
-    .get("/api/event/all")
+    .get("/calendar-app/api/event/all")
     .then(res => {
       dispatch({
         type: GET_EVENTS,
@@ -34,7 +35,7 @@ export const getEvents = () => dispatch => {
 //Add Event
 export const addEvent = (event, history, cb) => dispatch => {
   axios
-    .post("/api/event", event)
+    .post("/calendar-app/api/event", event)
     .then(res => cb && cb())
     .then(res => history.push("/"))
     .catch(err =>
@@ -48,7 +49,7 @@ export const addEvent = (event, history, cb) => dispatch => {
 //Delete Event
 export const deleteEvent = (id, history) => dispatch => {
   axios
-    .delete(`/api/event/${id}/delete`)
+    .delete(`/calendar-app/api/event/${id}/delete`)
     .then(res => history.push("/"))
     .catch(err =>
       dispatch({
@@ -63,7 +64,7 @@ export const stageAttendee = attendee => dispatch => {
   dispatch(clearErrors());
   dispatch(setAttendeeLoading());
   axios
-    .get(`/api/event/attendee/${attendee}`)
+    .get(`/calendar-app/api/event/attendee/${attendee}`)
     .then(res =>
       dispatch({
         type: STAGE_ATTENDEE,
@@ -107,9 +108,10 @@ export const unstageAttendees = () => dispatch => {
 
 export const removeAttendee = (id, attendee, history) => async dispatch => {
   try {
-    await axios.delete(`/api/event/${id}/attendee/${attendee}/delete`);
-    history.push("/");
-  } catch (err) {
+    await axios.delete(`/calendar-app/api/event/${id}/attendee/${attendee}/delete`);
+    history.push("/calendar-app");
+  }
+  catch (err) {
     dispatch({
       type: GET_ERRORS,
       payload: err.response.data

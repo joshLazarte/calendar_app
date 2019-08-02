@@ -5,7 +5,7 @@ const MobileDisplay = props => {
   const { multiDayEvents, notMultiDayEvents } = props;
   const count = multiDayEvents.length + notMultiDayEvents.length;
   return (
-    <Link to={{ pathname: "/events", state: { ...props } }}>
+    <Link to={{ pathname: "/calendar-app/events", state: { ...props } }}>
       <span className="badge badge-primary">{count}</span>
     </Link>
   );

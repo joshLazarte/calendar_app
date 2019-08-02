@@ -19,7 +19,7 @@ class Register extends Component {
 
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
-      this.props.history.push("/dashboard");
+      this.props.history.push("/calendar-app/dashboard");
     }
   }
   componentWillReceiveProps(nextProps) {
@@ -39,7 +39,8 @@ class Register extends Component {
   };
 
   onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({
+      [e.target.name]: e.target.value });
   };
   render() {
     const { errors } = this.state;
@@ -122,6 +123,5 @@ const mapStateToProps = state => ({
 });
 
 export default connect(
-  mapStateToProps,
-  { registerUser }
+  mapStateToProps, { registerUser }
 )(withRouter(Register));

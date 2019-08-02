@@ -40,7 +40,7 @@ class EventList extends Component {
                 <Link
                   className="text-dark"
                   to={{
-                    pathname: `/event/${event._id}`,
+                    pathname: `/calendar-app/event/${event._id}`,
                     state: {
                       disabled: true,
                       eventToDisplay: event,
@@ -65,7 +65,7 @@ class EventList extends Component {
                 <Link
                   className="text-dark"
                   to={{
-                    pathname: `/event/${event._id}`,
+                    pathname: `/calendar-app/event/${event._id}`,
                     state: {
                       disabled: true,
                       eventToDisplay: event,
