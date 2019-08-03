@@ -35,59 +35,58 @@ class Navbar extends Component {
 
     const toggleBtn = (
       <button
-          className="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon" />
-        </button>
+        className="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span className="navbar-toggler-icon" />
+      </button>
     );
-
 
     const addEventLink = (
       <li className="nav-item mr-4">
-          <Breakpoint medium up>
-            <a
-              href="!#"
-              className="align-middle text-white"
-              onClick={this.showModal}
-            >
-              Add Event
-            </a>
-          </Breakpoint>
-          <Breakpoint small down>
-            <Link
-              className="align-middle text-white"
-              to={{
-                pathname: "/event/add",
-                state: {
-                  disabled: false,
-                  eventToDisplay: {},
-                  hideModal: null,
-                  formType: "ADD"
-                }
-              }}
-            >
-              Add Event
-            </Link>
-          </Breakpoint>
-        </li>
+        <Breakpoint medium up>
+          <a
+            href="!#"
+            className="align-middle text-white"
+            onClick={this.showModal}
+          >
+            Add Event
+          </a>
+        </Breakpoint>
+        <Breakpoint small down>
+          <Link
+            className="align-middle text-white"
+            to={{
+              pathname: "/calendar-app/event/add",
+              state: {
+                disabled: false,
+                eventToDisplay: {},
+                hideModal: null,
+                formType: "ADD"
+              }
+            }}
+          >
+            Add Event
+          </Link>
+        </Breakpoint>
+      </li>
     );
 
     const logoutLink = (
       <li className="nav-item">
-          <a
-            className="align-middle text-white"
-            onClick={this.onLogoutClick}
-            href="!#"
-          >
-            Logout
-          </a>
-        </li>
+        <a
+          className="align-middle text-white"
+          onClick={this.onLogoutClick}
+          href="!#"
+        >
+          Logout
+        </a>
+      </li>
     );
 
     return (
@@ -96,33 +95,30 @@ class Navbar extends Component {
           <Link to="/calendar-app" className="navbar-brand">
             Calendar App
           </Link>
-         {toggleBtn}
-            <div
-              className="collapse navbar-collapse"
-              id="navbarSupportedContent"
-            >
-              {" "}
-              <ul className="navbar-nav ml-auto">
+          {toggleBtn}
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            {" "}
+            <ul className="navbar-nav ml-auto">
               <li className="nav-item mr-4">
                 <a
-                href="https://jlazarte.com"
-                className="align-middle text-white"
-              >
-                Back to Portfolio
-              </a>
+                  href="https://jlazarte.com"
+                  className="align-middle text-white"
+                >
+                  Back to Portfolio
+                </a>
               </li>
               {isAuthenticated && addEventLink}
               {isAuthenticated && logoutLink}
-              </ul>
-              {isAuthenticated && this.state.showModal && (
-                <FormModal
-                  disabled={false}
-                  hideModal={this.hideModal}
-                  eventToDisplay={{}}
-                  formType={"ADD"}
-                />
-              )}
-            </div>
+            </ul>
+            {isAuthenticated && this.state.showModal && (
+              <FormModal
+                disabled={false}
+                hideModal={this.hideModal}
+                eventToDisplay={{}}
+                formType={"ADD"}
+              />
+            )}
+          </div>
         </div>
       </nav>
     );
@@ -138,5 +134,6 @@ const mapStateToProps = state => ({
 });
 
 export default connect(
-  mapStateToProps, { logoutUser }
+  mapStateToProps,
+  { logoutUser }
 )(Navbar);
