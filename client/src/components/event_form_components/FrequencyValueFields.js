@@ -56,15 +56,15 @@ const displayCorrectFields = (props, onChange) => {
           values={[
             props.monthlyType,
             props.monthlyDate,
-            props.monthlyDay,
-            props.monthlySchedule
+            props.monthlySchedule,
+            props.monthlyDay
           ]}
           onChange={onChange}
           errors={[
             props.errors.monthlyType,
             props.errors.monthlyDate,
-            props.errors.monthlyDay,
-            props.errors.monthlySchedule
+            props.errors.monthlySchedule,
+            props.errors.monthlyDay
           ]}
           disabled={props.disabled}
         />

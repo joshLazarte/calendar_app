@@ -69,7 +69,6 @@ const Monthly = props => {
       </div>
     );
   }
-
   return (
     <div className="form-group row">
       <div className="col-sm-4">
