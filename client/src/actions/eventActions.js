@@ -10,8 +10,8 @@ import {
   UNSTAGE_ATTENDEES,
   ATTENDEE_NOT_FOUND,
   CLEAR_ERRORS
-}
-from "./types";
+} from "./types";
+import isEmpty from "../validation/is-empty";
 
 //Get Events
 export const getEvents = () => dispatch => {
@@ -63,6 +63,16 @@ export const deleteEvent = (id, history) => dispatch => {
 export const stageAttendee = attendee => dispatch => {
   dispatch(clearErrors());
   dispatch(setAttendeeLoading());
+  if (isEmpty(attendee)) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: { attendees: "Please enter an attendee" }
+    });
+    dispatch({
+      type: ATTENDEE_NOT_FOUND
+    });
+    return;
+  }
   axios
     .get(`/calendar-app/api/event/attendee/${attendee}`)
     .then(res =>
@@ -108,10 +118,11 @@ export const unstageAttendees = () => dispatch => {
 
 export const removeAttendee = (id, attendee, history) => async dispatch => {
   try {
-    await axios.delete(`/calendar-app/api/event/${id}/attendee/${attendee}/delete`);
+    await axios.delete(
+      `/calendar-app/api/event/${id}/attendee/${attendee}/delete`
+    );
     history.push("/calendar-app");
-  }
-  catch (err) {
+  } catch (err) {
     dispatch({
       type: GET_ERRORS,
       payload: err.response.data
