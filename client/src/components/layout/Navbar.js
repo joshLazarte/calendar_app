@@ -101,7 +101,7 @@ class Navbar extends Component {
             <ul className="navbar-nav ml-auto">
               <li className="nav-item mr-4">
                 <a
-                  href="https://jlazarte.com"
+                  href="https://jlazarte.com/#projects"
                   className="align-middle text-white"
                 >
                   Back to Portfolio
