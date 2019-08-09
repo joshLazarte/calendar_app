@@ -104,7 +104,7 @@ class Navbar extends Component {
                   href="https://jlazarte.com/#projects"
                   className="align-middle text-white"
                 >
-                  Back to Portfolio
+                  Back to Projects
                 </a>
               </li>
               {isAuthenticated && addEventLink}
